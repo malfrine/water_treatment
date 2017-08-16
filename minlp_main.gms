@@ -8,12 +8,12 @@ $Offtext
 *INITIALIZE SETS, DATA, and VARIABLES
 
 $include sets_init.gms
-$include data_init.gms
+$include params_init.gms
 $include vars_init.gms
 
 *EQUATIONS
 
-$include minlp_eqns.gms
+*$include minlp_eqns.gms
 
 *SOLVE MINLP
 

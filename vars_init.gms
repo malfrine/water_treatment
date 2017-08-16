@@ -9,12 +9,8 @@ $Offtext
 
 *FLOW RATES
 
-positive variable F(s)	'flow rate of s';
-F.fx('pw') = 1;
-F.fx('bbd') = 1;
-
 positive variables
-	F(s,tu) 		'flow rate of s entering tu'
+	F_s_tu(s,tu) 	'flow rate of s entering tu'
 	F_rec(tu_tup)	'flow rate of streams exiting tu that enter tup for recycle'
 	F_exit(tu) 		'flow rate of streams leaving tu to the discharge point'
 	F_in(tu)		'flow rate of streams entering tu'
@@ -32,7 +28,7 @@ positive variables
 *MASS LOADS
 
 positive variables
-	ML_rem(tu,c)	'mass Load of c removed in tu'
+	ML_rem_tu_c(tu,c)	'mass load of c removed from tu'
 	ML_in(tu,c)		'mass load of c entering tu'
 	ML_out(tu,c)	'mass load of c exiting tu'	;
 

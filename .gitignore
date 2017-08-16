@@ -1,0 +1,3 @@
+*.lst
+!minlp_main.lst
+decomp_algo.gms
