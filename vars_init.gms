@@ -11,7 +11,7 @@ $Offtext
 
 positive variables
 	F_s_tu(s,tu) 	'flow rate of s entering tu'
-	F_rec(tu_tup)	'flow rate of streams exiting tu that enter tup for recycle'
+	F_rec(tu,tup)	'flow rate of streams exiting tu that enter tup for recycle'
 	F_exit(tu) 		'flow rate of streams leaving tu to the discharge point'
 	F_in(tu)		'flow rate of streams entering tu'
 	F_out(tu)		'flow rate of streams directly exiting tu'	;
@@ -20,7 +20,7 @@ positive variables
 
 positive variables
 	C_in(tu,c)		'concentration of c in tu inlet'
-	C_rout(tu_tup,c)	'concentration of c exiting tu and entering tup for recycle'
+	C_rout(tu,tup,c)	'concentration of c exiting tu and entering tup for recycle'
 	C_exit(tu,c)	'concentration of c leaving tu to the discharge point'
 	C_out(tu,c)		'concentration of streamt directly exiting tu'
 	C_BFW(c)		'concentration of c in BFW'	;
@@ -46,7 +46,7 @@ positive variables
 
 binary variables
 	B_s_tu(s,tu)	'binary variable to show the existence of stream s into tu'
-	B_tu_tup(tu_tup)	'binary variable to show the existence of tu into tup recylce'
+	B_tu_tup(tu,tup)	'binary variable to show the existence of tu into tup recylce'
 	B_exit(tu)		'binary variable to show the existence of stream from tu to discharge'
 	B_tu(tu)		'binary variable to show the existence of tu'
 

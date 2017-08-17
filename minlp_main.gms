@@ -13,13 +13,11 @@ $include vars_init.gms
 
 *EQUATIONS
 
-*$include minlp_eqns.gms
+$include minlp_eqns.gms
 
 *SOLVE MINLP
 
+model water_treatment /all/ ;
 
-
-*OUTPUT
-
-
+solve water_treatment using minlp minimizing OF_cost ;
 
