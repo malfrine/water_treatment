@@ -1,4 +1,4 @@
-GAMS 24.8.5  r61358 Released May 10, 2017 DEX-DEG x86 64bit/Mac OS X                                                                                                                                                                   08/17/17 11:21:27 Page 1
+GAMS 24.8.5  r61358 Released May 10, 2017 DEX-DEG x86 64bit/Mac OS X                                                                                                                                                                   08/17/17 16:30:46 Page 1
 SAGD Optimization - MILNP Algorithm
 C o m p i l a t i o n
 
@@ -10,7 +10,7 @@ C o m p i l a t i o n
    8  *INITIALIZE SETS, DATA, and VARIABLES
    9   
 INCLUDE    /Users/Malfrine/Documents/Work/UAlberta-RA/ZL/gams/sets_init.gms
-GAMS 24.8.5  r61358 Released May 10, 2017 DEX-DEG x86 64bit/Mac OS X                                                                                                                                                                   08/17/17 11:21:27 Page 2
+GAMS 24.8.5  r61358 Released May 10, 2017 DEX-DEG x86 64bit/Mac OS X                                                                                                                                                                   08/17/17 16:30:46 Page 2
 sets_init
 C o m p i l a t i o n
 
@@ -52,7 +52,7 @@ C o m p i l a t i o n
   46   
   47   
 INCLUDE    /Users/Malfrine/Documents/Work/UAlberta-RA/ZL/gams/params_init.gms
-GAMS 24.8.5  r61358 Released May 10, 2017 DEX-DEG x86 64bit/Mac OS X                                                                                                                                                                   08/17/17 11:21:27 Page 3
+GAMS 24.8.5  r61358 Released May 10, 2017 DEX-DEG x86 64bit/Mac OS X                                                                                                                                                                   08/17/17 16:30:46 Page 3
 params_init
 C o m p i l a t i o n
 
@@ -70,155 +70,151 @@ C o m p i l a t i o n
   62  scalar F_BFW    'boiler feed water flow'
   63          /                       625 /;
   64   
-  65  parameter F_s(s) 'flow of stream s'
-  66          /         pw    475
-  67                    bbd   0
-  68                          /;
-  69  F_s('muw') = F_BFW - F_s('pw') - F_s('bbd');
-  70   
-  71  parameter F_loss(tu)    'flow loss in tu'
-  72          /         st    1
-  73                    igf   1
-  74                    orf   1
-  75                    hcy   1
-  76                    ls    1
-  77                    evap  1
-  78                    wac   1       /;
-  79   
-  80  *CONCENTRATIONS---------------------------------------------------------------------------
-  81  *did not include C(s,tu,c) and C_ave(c) - they were not used in the equations
+      parameter F_s(s) 'flow of stream s'
+      	/ 	  pw	475 
+      		  bbd	0
+      		  	/;
+      F_s('muw') = F_BFW - F_s('pw') - F_s('bbd');
+  72   
+  73   
+  74  parameter F_loss(tu)    'flow loss in tu'
+  75          /         st    0
+  76                    igf   0
+  77                    orf   0
+  78                    hcy   0
+  79                    ls    0
+  80                    evap  0
+  81                    wac   0       /;
   82   
-  83  table C_c_s(s,c)        'concentration of c in s'
-  84                     o         s       th      tss
-  85            pw       2000     350     20      50
-  86            muw      0        15      245     0
-  87            bbd      10       150     1       1       ;
-  88  **pw and muw data collected from Forshomi thesis Table 3-1
-  89  **muw is assumed to be fresh no brackish
-  90  **bbd data collected from Forshomi appendix A Table A3 for OTSG
-  91   
-  92  table C_in_max(tu,c)    'maximum allowable inlet concentration of c in tu'
-  93                  o               s               th              tss
-  94  st              1               1               1               1
-  95  igf             1               1               1               1
-  96  orf             1               1               1               1
-  97  hcy             1               1               1               1
-  98  ls              1               1               1               1
-  99  evap            1               1               1               1
- 100  wac             1               1               1               1       ;
- 101   
- 102  table C_loss(tu,c)      'concentration loss of c in tu'
- 103                  o               s               th              tss
- 104  st              1               1               1               1
-GAMS 24.8.5  r61358 Released May 10, 2017 DEX-DEG x86 64bit/Mac OS X                                                                                                                                                                   08/17/17 11:21:27 Page 4
+  83  *CONCENTRATIONS---------------------------------------------------------------------------
+  84  *did not include C(s,tu,c) and C_ave(c) - they were not used in the equations
+  85   
+  86  table C_c_s(s,c)        'concentration of c in s'
+  87                     o         s       th      tss
+  88            pw       2000     350     20      50
+  89            muw      0        15      245     0
+  90            bbd      10       150     1       1       ;
+  91  **pw and muw data collected from Forshomi thesis Table 3-1
+  92  **muw is assumed to be fresh no brackish
+  93  **bbd data collected from Forshomi appendix A Table A3 for OTSG
+  94   
+  95  table C_in_max(tu,c)    'maximum allowable inlet concentration of c in tu'
+  96                  o               s               th              tss
+  97  st              2500            400             400             100
+  98  igf             2500            400             400             100
+  99  orf             2500            400             400             100
+ 100  hcy             2500            400             400             100
+ 101  ls              2500            400             400             100
+ 102  evap            2500            400             400             100
+ 103  wac             2500            400             400             100     ;
+ 104   
+ 105  table C_loss(tu,c)      'concentration loss of c in tu'
+ 106                  o               s               th              tss
+GAMS 24.8.5  r61358 Released May 10, 2017 DEX-DEG x86 64bit/Mac OS X                                                                                                                                                                   08/17/17 16:30:46 Page 4
 params_init
 C o m p i l a t i o n
 
 
- 105  igf             1               1               1               1
- 106  orf             1               1               1               1
- 107  hcy             1               1               1               1
- 108  ls              1               1               1               1
- 109  evap            1               1               1               1
- 110  wac             1               1               1               1       ;
- 111   
- 112  parameter C_target(c)   'target concentration required at discharge'
- 113          /       o               10
- 114                  s               150
- 115                  th              1
- 116                  tss             1       /;
- 117   
- 118  *MASS LOADS-------------------------------------------------------------------------------
- 119  *did not include ML_tot(c) - it was not used in the equations
+ 107  st              0               0               0               0
+ 108  igf             0               0               0               0
+ 109  orf             0               0               0               0
+ 110  hcy             0               0               0               0
+ 111  ls              0               0               0               0
+ 112  evap            0               0               0               0
+ 113  wac             0               0               0               0       ;
+ 114   
+ 115  parameter C_target(c)   'target concentration required at discharge'
+ 116          /       o               10
+ 117                  s               150
+ 118                  th              1
+ 119                  tss             1       /;
  120   
- 121  parameter ML_rem_c(c)   'mass load of contaminant to be removed from the system';
- 122          ML_rem_c(c) = sum( s, F_s(s) * (C_c_s(s,c) - C_target(c)) );
- 123  ** E17 - double check this formula, there might be problems with brackets**
- 124   
- 125  *COST PARAMETERS--------------------------------------------------------------------------
- 126   
- 127  parameter cost_var_s(s) 'variable cost of s'
- 128          /       pw              1
- 129                  muw             1
- 130                  bbd             1       /;
+ 121  *MASS LOADS-------------------------------------------------------------------------------
+ 122  *did not include ML_tot(c) - it was not used in the equations
+ 123   
+      parameter ML_rem_c(c)	'mass load of contaminant to be removed from the system';
+      	ML_rem_c(c) = sum( s, F_s(s) * (C_c_s(s,c) - C_target(c)) );
+      ** E17 - double check this formula, there might be problems with brackets**
+ 129   
+ 130  *COST PARAMETERS--------------------------------------------------------------------------
  131   
- 132  parameter cost_fix_s(s) 'fixed cost of s'
+ 132  parameter cost_var_s(s) 'variable cost of s'
  133          /       pw              1
  134                  muw             1
  135                  bbd             1       /;
  136   
- 137  parameter cost_var_tu(tu)       'variable cost of tu'
- 138                  /       st              1
- 139                     igf             1
- 140                     orf             1
- 141                     hcy             1
- 142                     ls              1
- 143                     evap            1
- 144                     wac             1       /;
- 145   
- 146   
- 147  parameter cost_fix_tu_a(tu)     'fixed cost of tu - function slope'
- 148             /       st              1
- 149                     igf             1
- 150                     orf             1
- 151                     hcy             1
- 152                     ls              1
- 153                     evap            1
- 154                     wac             1       /;
- 155   
- 156   
- 157  parameter cost_fix_tu_b(tu)     'fixed cost of tu - function intercept'
-GAMS 24.8.5  r61358 Released May 10, 2017 DEX-DEG x86 64bit/Mac OS X                                                                                                                                                                   08/17/17 11:21:27 Page 5
+ 137  parameter cost_fix_s(s) 'fixed cost of s'
+ 138          /       pw              1
+ 139                  muw             1
+ 140                  bbd             1       /;
+ 141   
+ 142  parameter cost_var_tu(tu)       'variable cost of tu'
+ 143                  /       st             1
+ 144                     igf             1
+ 145                     orf             1
+ 146                     hcy             1
+ 147                     ls              1
+ 148                     evap            1
+ 149                     wac             1       /;
+ 150   
+ 151   
+ 152  parameter cost_fix_tu_a(tu)     'fixed cost of tu - function slope'
+ 153             /       st              1
+ 154                     igf             1
+ 155                     orf             1
+ 156                     hcy             1
+ 157                     ls              1
+ 158                     evap            1
+ 159                     wac             1       /;
+ 160   
+ 161   
+GAMS 24.8.5  r61358 Released May 10, 2017 DEX-DEG x86 64bit/Mac OS X                                                                                                                                                                   08/17/17 16:30:46 Page 5
 params_init
 C o m p i l a t i o n
 
 
- 158             /       st              1
- 159                     igf             1
- 160                     orf             1
- 161                     hcy             1
- 162                     ls              1
- 163                     evap            1
- 164                     wac             1       /;
- 165   
- 166  *OTHER PARAMETERS-------------------------------------------------------------------------
- 167   
- 168  table RR(tu,c)  'removal ratio of contaminant c'
- 169                             o       s       th      tss
- 170             st              0.9     0       0       0.5
- 171             igf             0.9     0       0       0.7
- 172             orf             0.91    0       0       0.95
- 173             hcy             0.93    0       0       0
- 174             ls              0       0.9     0.5     0
- 175             evap            0.99    0.99    0.99    0.99
- 176             wac             0       0       0.99    0       ;
- 177   
- 178  scalar Bound_up 'upper bound for stream flow rates';
- 179          Bound_up = sum(s, F_s(s));
- 180  *EQN 20
- 181   
- 182  scalar Bound_low        'lower bound for stream flow rates'
- 183          /200/;
- 184  *arbitrary values - model values not given by Forshomi
- 185   
- 186  parameter NS_max(tu)    'maximum number of streams that can go through tu'
- 187          /         st    10
- 188                    igf   10
- 189                    orf   10
- 190                    hcy   10
- 191                    ls    10
- 192                    evap  10
- 193                    wac   10      /;
- 194  *arbitrary values - model values not given by Forshomi
- 195   
- 196  scalar HY       'number of operational hours per year'
- 197          /8322/;
- 198  **assuming 95% on-stream time
- 199   
+ 162  parameter cost_fix_tu_b(tu)     'fixed cost of tu - function intercept'
+ 163             /       st              1
+ 164                     igf             1
+ 165                     orf             1
+ 166                     hcy             1
+ 167                     ls              1
+ 168                     evap            1
+ 169                     wac             1       /;
+ 170   
+ 171  *OTHER PARAMETERS-------------------------------------------------------------------------
+ 172   
+ 173  table RR(tu,c)  'removal ratio of contaminant c'
+ 174                             o       s       th      tss
+ 175             st              0.9     0       0       0.5
+ 176             igf             0.9     0       0       0.7
+ 177             orf             0.91    0       0       0.95
+ 178             hcy             0.93    0       0       0
+ 179             ls              0       0.9     0.5     0
+ 180             evap            0.99    0.99    0.99    0.99
+ 181             wac             0       0       0.99    0       ;
+ 182   
+ 183  scalar Bound_up 'upper bound for stream flow rates';
+ 184          Bound_up = F_BFW + sum(tu, F_loss(tu));
+ 185  *EQN 20
+ 186   
+ 187  scalar Bound_low        'lower bound for stream flow rates'
+ 188          /200/;
+ 189  *arbitrary values - model values not given by Forshomi
+ 190   
+ 191  parameter NS_max(tu)    'maximum number of streams that can go through tu'
+ 192          /         st    10
+ 193                    igf   10
+ 194                    orf   10
+ 195                    hcy   10
+ 196                    ls    10
+ 197                    evap  10
+ 198                    wac   10      /;
+ 199  *arbitrary values - model values not given by Forshomi
  200   
- 201   
- 202   
- 203   
+ 201  scalar HY       'number of operational hours per year'
+ 202          /8322/;
+ 203  **assuming 95% on-stream time
  204   
  205   
  206   
@@ -226,239 +222,216 @@ C o m p i l a t i o n
  208   
  209   
  210   
-GAMS 24.8.5  r61358 Released May 10, 2017 DEX-DEG x86 64bit/Mac OS X                                                                                                                                                                   08/17/17 11:21:27 Page 6
+ 211   
+ 212   
+ 213   
+ 214   
+GAMS 24.8.5  r61358 Released May 10, 2017 DEX-DEG x86 64bit/Mac OS X                                                                                                                                                                   08/17/17 16:30:46 Page 6
 params_init
 C o m p i l a t i o n
 
 
- 211   
- 212   
+ 215   
+ 216   
+ 217   
 INCLUDE    /Users/Malfrine/Documents/Work/UAlberta-RA/ZL/gams/vars_init.gms
-GAMS 24.8.5  r61358 Released May 10, 2017 DEX-DEG x86 64bit/Mac OS X                                                                                                                                                                   08/17/17 11:21:27 Page 7
+GAMS 24.8.5  r61358 Released May 10, 2017 DEX-DEG x86 64bit/Mac OS X                                                                                                                                                                   08/17/17 16:30:46 Page 7
 vars_init
 C o m p i l a t i o n
 
 
- 215   
+ 220   
        
       The variables for flow rates, concentrations, mass loads, cost, and others are
       initialized in this script.
        
- 222   
- 223  *FLOW RATES
- 224   
- 225  positive variables
- 226          F_s_tu(s,tu)    'flow rate of s entering tu'
- 227          F_rec(tu,tup)   'flow rate of streams exiting tu that enter tup for recycle'
- 228          F_exit(tu)              'flow rate of streams leaving tu to the discharge point'
- 229          F_in(tu)                'flow rate of streams entering tu'
- 230          F_out(tu)               'flow rate of streams directly exiting tu'      ;
- 231   
- 232  *CONCENTRATIONS
- 233   
- 234  positive variables
- 235          C_in(tu,c)              'concentration of c in tu inlet'
- 236          C_rout(tu,tup,c)        'concentration of c exiting tu and entering tup for recycle'
- 237          C_exit(tu,c)    'concentration of c leaving tu to the discharge point'
- 238          C_out(tu,c)             'concentration of streamt directly exiting tu'
- 239          C_BFW(c)                'concentration of c in BFW'     ;
+ 227   
+ 228  *FLOW RATES
+ 229   
+ 230  positive variables
+ 231          F_s(s)                  'flow rate of source water'
+ 232          F_s_tu(s,tu)    'flow rate of s entering tu'
+ 233          F_rec(tu,tup)   'flow rate of streams exiting tu that enter tup for recycle'
+ 234          F_exit(tu)              'flow rate of streams leaving tu to the discharge point'
+ 235          F_in(tu)                'flow rate of streams entering tu'
+ 236          F_out(tu)               'flow rate of streams directly exiting tu'      ;
+ 237   
+ 238  F_s.fx('pw') = 475 ;
+ 239  F_s.fx('bbd') = 0 ;
  240   
- 241  *MASS LOADS
+ 241  *CONCENTRATIONS
  242   
  243  positive variables
- 244          ML_rem_tu_c(tu,c)       'mass load of c removed from tu'
- 245          ML_in(tu,c)             'mass load of c entering tu'
- 246          ML_out(tu,c)    'mass load of c exiting tu'     ;
- 247   
- 248  *COST AND ENERGY VARIABLES
+ 244          C_in(tu,c)              'concentration of c in tu inlet'
+ 245          C_rout(tu,tup,c)        'concentration of c exiting tu and entering tup for recycle'
+ 246          C_exit(tu,c)    'concentration of c leaving tu to the discharge point'
+ 247          C_out(tu,c)             'concentration of streamt directly exiting tu'
+ 248          C_BFW(c)                'concentration of c in BFW'     ;
  249   
- 250  positive variables
- 251          Cost_tot(tu)    'total cost of tu'
- 252          Cost_op                 'operating cost of the system'
- 253          Cost_cap                'capital cost of the system'
- 254          Cost_tot                'total capital cost of the system'
- 255          energy_var(tu)  'energy consumption of tu'
- 256          energy_tot              'total energy consumption of the system'
- 257          OF_cost
- 258   
- 259  *BINARY VARIABLES
- 260   
- 261  binary variables
- 262          B_s_tu(s,tu)    'binary variable to show the existence of stream s into tu'
- 263          B_tu_tup(tu,tup)        'binary variable to show the existence of tu into tup recylce'
- 264          B_exit(tu)              'binary variable to show the existence of stream from tu to discharge'
- 265          B_tu(tu)                'binary variable to show the existence of tu'
- 266   
+ 250  *MASS LOADS
+ 251   
+ 252  positive variables
+ 253          ML_rem_tu_c(tu,c)       'mass load of c removed from tu'
+ 254          ML_in(tu,c)             'mass load of c entering tu'
+ 255          ML_out(tu,c)    'mass load of c exiting tu'
+ 256          ML_rem_c(c)             'mass load of c removed from system'    ;
+ 257   
+ 258  *COST AND ENERGY VARIABLES
+ 259   
+ 260  positive variables
+ 261          Cost_tot_tu(tu) 'total cost of tu'
+ 262          Cost_op                 'operating cost of the system'
+ 263          Cost_cap                'capital cost of the system'
+ 264          Cost_tot                'total capital cost of the system'
+ 265          energy_var(tu)  'energy consumption of tu'
+ 266          energy_tot              'total energy consumption of the system' ;
  267   
- 268   
+ 268  *BINARY VARIABLES
  269   
-GAMS 24.8.5  r61358 Released May 10, 2017 DEX-DEG x86 64bit/Mac OS X                                                                                                                                                                   08/17/17 11:21:27 Page 8
+ 270  binary variables
+ 271          B_s_tu(s,tu)    'binary variable to show the existence of stream s into tu'
+ 272          B_tu_tup(tu,tup)        'binary variable to show the existence of tu into tup recylce'
+ 273          B_exit(tu)              'binary variable to show the existence of stream from tu to discharge'
+ 274          B_tu(tu)                'binary variable to show the existence of tu' ;
+GAMS 24.8.5  r61358 Released May 10, 2017 DEX-DEG x86 64bit/Mac OS X                                                                                                                                                                   08/17/17 16:30:46 Page 8
 vars_init
 C o m p i l a t i o n
 
 
- 270   
- 271  *EQUATIONS
- 272   
+ 275   
+ 276   
+ 277   
+ 278   
+ 279   
+ 280  *EQUATIONS
+ 281   
 INCLUDE    /Users/Malfrine/Documents/Work/UAlberta-RA/ZL/gams/minlp_eqns.gms
-GAMS 24.8.5  r61358 Released May 10, 2017 DEX-DEG x86 64bit/Mac OS X                                                                                                                                                                   08/17/17 11:21:27 Page 9
+GAMS 24.8.5  r61358 Released May 10, 2017 DEX-DEG x86 64bit/Mac OS X                                                                                                                                                                   08/17/17 16:30:46 Page 9
 minlp_eqns
 C o m p i l a t i o n
 
 
- 275   
+ 284   
        
       The variables for the MINLP algorithm are provided in this file
        
- 281   
- 282  Equations
- 283      eq4                         'overall mass balance'
- 284      eq5(s)              'mass balance around splitter 1'
- 285      eq6(tu)             'mass balance around mixer 1'
- 286          eq7(tu)                 'mass balance around splitter 2'
- 287          eq8                             'mass balance around mixer 3'
- 288          eq9(tu)                 'mass balance around tu'
- 289          eq12(tu,c)              'definition of ML_in'
- 290          eq13(tu,c)              'definition of ML_out'
- 291          eq10(tu,c)              'component mass balance around each tu - 1'
- 292          eq11(tu,c)              'component mass balance around each tu - 2'
- 293          eq14(tu,c)              'concentration limit for tu inlet'
- 294          eq15(c)                 'discharge concentration to meet BFW requirement'
- 295          eq16(c)                 'total mass load of c removed from system'
- 296          eq18(tu)                'cost of tu'
- 297          eq19(tu)                'eliminating cycles'
- 298          eq21(s,tu)              's,tu upper bound'
- 299          eq22(tu)                'tu,tup upper bound'
- 300          eq23(tu)                'exit tu upper bound'
- 301          eq24(tu)                'in tu upper bound'
- 302          eq25(s,tu)              's,tu lower bound'
- 303          eq26(tu)                'tu,tup lower bound'
- 304          eq27(tu)                'exit tu lower bound'
- 305          eq28(tu)                'in tu lower bound'
- 306          eq29(tu)                'maximum number of streams going through a tu'
- 307          OF_cost                 'objective cost function' ;
-****                $195
-**** LINE     34 INCLUDE     /Users/Malfrine/Documents/Work/UAlberta-RA/ZL/gams/minlp_eqns.gms
-**** LINE     16 INPUT       /Users/Malfrine/Documents/Work/UAlberta-RA/ZL/gams/minlp_main.gms
- 308   
- 309  eq4 ..                  sum(s, F_s(s)) - F_BFW =e= sum(tu, F_loss(tu)) ;
- 310   
- 311  eq5(s) ..               F_s(s) =e= sum(tu, F_s_tu(s,tu)) ;
- 312   
- 313  eq6(tu) ..          sum(s, F_s_tu(s,tu)) + sum(tup$(ord(tup) ne ord(tu)), F_rec(tu,tup))  =e= F_in(tu) ;
- 314   
- 315  eq7(tu) ..              F_out(tu) =e= sum(tup$(ord(tup) ne ord(tu)), F_rec(tu,tup)) + F_exit(tu) ;
- 316   
- 317  eq8 ..                  sum(tu, F_exit(tu)) =e= F_BFW ;
+ 290   
+ 291  Equations
+ 292      eq4                         'overall mass balance'
+ 293      eq5(s)              'mass balance around splitter 1'
+ 294      eq6(tu)             'mass balance around mixer 1'
+ 295          eq7(tu)                 'mass balance around splitter 2'
+ 296          eq8                             'mass balance around mixer 3'
+ 297          eq9(tu)                 'mass balance around tu'
+ 298          eq12(tu,c)              'definition of ML_in'
+ 299          eq13(tu,c)              'definition of ML_out'
+ 300          eq10(tu,c)              'component mass balance around each tu - 1'
+ 301          eq11(tu,c)              'component mass balance around each tu - 2'
+ 302          eq14(tu,c)              'concentration limit for tu inlet'
+ 303          eq15(c)                 'discharge concentration to meet BFW requirement'
+ 304          eq16(c)                 'total mass load of c removed from system'
+ 305          eq17(c)                 'defining ML_rem_c(c)'
+ 306          eq18(tu)                'cost of tu'
+ 307          eq19(tu,tup)    'eliminating cycles'
+ 308          eq21(s,tu)              's,tu upper bound'
+ 309          eq22(tu,tup)            'tu,tup upper bound'
+ 310          eq23(tu)                'exit tu upper bound'
+ 311          eq24(tu)                'in tu upper bound'
+ 312          eq25(s,tu)              's,tu lower bound'
+ 313          eq26(tu,tup)            'tu,tup lower bound'
+ 314          eq27(tu)                'exit tu lower bound'
+ 315          eq28(tu)                'in tu lower bound'
+ 316          eq29(tu)                'maximum number of streams going through a tu'
+ 317          OF_cost                 'objective cost function' ;
  318   
- 319  eq9(tu) ..              F_in(tu) - F_out(tu) =e= F_loss(tu) ;
+ 319  eq4 ..                  sum(s, F_s(s)) - F_BFW =e= sum(tu, F_loss(tu)) ;
  320   
- 321  eq12(tu,c) ..   sum(tup$(ord(tup) ne ord(tu)), F_rec(tu,tup) * C_rout(tu,tup,c)) + sum(s, F_s_tu(s,tu) * C_c_s(s,c)) =e= ML_in(tu,c) ;
+ 321  eq5(s) ..               F_s(s) =e= sum(tu, F_s_tu(s,tu)) ;
  322   
- 323  eq13(tu,c) ..   C_out(tu,c) * ( sum(tup$(ord(tup) ne ord(tu)), F_rec(tu,tup)) + sum(s, F_s_tu(s,tu) ) - F_loss(tu) ) =e= ML_out(tu,c) ;
+ 323  eq6(tu) ..          sum(s, F_s_tu(s,tu)) + sum(tup$(ord(tup) ne ord(tu)), F_rec(tu,tup))  =e= F_in(tu) ;
  324   
- 325  eq10(tu,c) ..   (1 - RR(tu,c)) * ML_in(tu,c) - ML_out(tu,c) - F_loss(tu) * C_loss(tu,c) =e= 0 ;
+ 325  eq7(tu) ..              F_out(tu) =e= sum(tup$(ord(tup) ne ord(tu)), F_rec(tu,tup)) + F_exit(tu) ;
  326   
-GAMS 24.8.5  r61358 Released May 10, 2017 DEX-DEG x86 64bit/Mac OS X                                                                                                                                                                  08/17/17 11:21:27 Page 10
-minlp_eqns
-C o m p i l a t i o n
-
-
- 327  eq11(tu,c) ..   ML_in(tu,c) - ML_out(tu,c) - ML_rem_tu_c(tu,c) =e= F_loss(tu) * C_loss(tu,c) ;
+ 327  eq8 ..                  sum(tu, F_exit(tu)) =e= F_BFW ;
  328   
- 329  eq14(tu,c) ..   ML_in(tu,c) =l= C_in_max(tu,c) * F_in(tu) ;
+ 329  eq9(tu) ..              F_in(tu) - F_out(tu) =e= F_loss(tu) ;
  330   
- 331  eq15(c) ..              sum(tu, F_exit(tu) * C_out(tu,c)) =l= C_target(c) * sum(tu, F_exit(tu)) ;
+ 331  eq12(tu,c) ..   sum(tup$(ord(tup) ne ord(tu)), F_rec(tu,tup) * C_rout(tu,tup,c)) + sum(s, F_s_tu(s,tu) * C_c_s(s,c)) =e= ML_in(tu,c) ;
  332   
- 333  eq16(c) ..              ML_rem_c(c) =l= sum(tu, ML_rem_tu_c(tu,c)) + sum(tu, RR(tu,c) * ML_in(tu,c)) ;
+ 333  eq13(tu,c) ..   C_out(tu,c) * ( sum(tup$(ord(tup) ne ord(tu)), F_rec(tu,tup)) + sum(s, F_s_tu(s,tu) ) - F_loss(tu) ) =e= ML_out(tu,c) ;
  334   
- 335  eq18(tu) ..             Cost_tot(tu) =e= Cost_var_tu(tu) * F_in(tu) + cost_fix_tu_a(tu) * F_in(tu) + cost_fix_tu_b(tu) ;
+ 335  eq10(tu,c) ..   (1 - RR(tu,c)) * ML_in(tu,c) - ML_out(tu,c) - F_loss(tu) * C_loss(tu,c) =e= 0 ;
  336   
- 337  eq19(tu) ..             B_tu_tup$(ord(tup) ne ord(tu)) + B_tu_tup$(ord(tu) ne ord(tup)) =l= 1 ;
-****                                  $148    $154                     $148               $154
-**** LINE     64 INCLUDE     /Users/Malfrine/Documents/Work/UAlberta-RA/ZL/gams/minlp_eqns.gms
-**** LINE     16 INPUT       /Users/Malfrine/Documents/Work/UAlberta-RA/ZL/gams/minlp_main.gms
+ 337  eq11(tu,c) ..   ML_in(tu,c) - ML_out(tu,c) - ML_rem_tu_c(tu,c) =e= F_loss(tu) * C_loss(tu,c) ;
  338   
- 339  eq21(s,tu) ..   F_s_tu(s,tu) - B_s_tu(s,tu) * Bound_up =l= 0 ;
- 340   
- 341  eq22(tu) ..     F_rec(tu,tup)$(ord(tup) ne ord(tu)) - B_tu_tup$(ord(tup) ne ord(tu)) * Bound_up =l= 0 ;
-****                              $149     $154                     $148    $154
-**** LINE     68 INCLUDE     /Users/Malfrine/Documents/Work/UAlberta-RA/ZL/gams/minlp_eqns.gms
-**** LINE     16 INPUT       /Users/Malfrine/Documents/Work/UAlberta-RA/ZL/gams/minlp_main.gms
- 342   
- 343  eq23(tu) ..     F_exit(tu) - B_exit(tu) * Bound_up =l= 0 ;
- 344   
- 345  eq24(tu) ..             F_in(tu) - B_tu(tu) * Bound_up =l= 0 ;
- 346   
- 347  eq25(s,tu) ..   F_s_tu(s,tu) - B_s_tu(s,tu) * Bound_low =g= 0 ;
- 348   
- 349  eq26(tu) ..     F_rec(tu,tup)$(ord(tup) ne ord(tu)) - B_tu_tup$(ord(tup) ne ord(tu)) * Bound_low =g= 0 ;
-****                              $149     $154                     $148    $154
-**** LINE     76 INCLUDE     /Users/Malfrine/Documents/Work/UAlberta-RA/ZL/gams/minlp_eqns.gms
-**** LINE     16 INPUT       /Users/Malfrine/Documents/Work/UAlberta-RA/ZL/gams/minlp_main.gms
- 350   
- 351  eq27(tu) ..     F_exit(tu) - B_exit(tu) * Bound_low =g= 0 ;
- 352   
- 353  eq28(tu) ..             F_in(tu) - B_tu(tu) * Bound_low =g= 0 ;
- 354   
- 355  eq29(tu) ..             sum(s, B_s_tu(t,su)) + sum( tup$(ord(tup) ne ord(tu)), B_tu_tup(tu,tup)) =l= NS_max(tu) ;
-****                                        $120,340,149,171,120,340,149,171
-**** LINE     82 INCLUDE     /Users/Malfrine/Documents/Work/UAlberta-RA/ZL/gams/minlp_eqns.gms
-**** LINE     16 INPUT       /Users/Malfrine/Documents/Work/UAlberta-RA/ZL/gams/minlp_main.gms
- 356   
- 357  OF_cost ..              Cost_tot =e= sum(tu, cost_tot(tu)) + HY * sum(s, F_s(s) * cost_var_s(s)) ;
-****        $143,81                  $143,141,148,409
-**** LINE     84 INCLUDE     /Users/Malfrine/Documents/Work/UAlberta-RA/ZL/gams/minlp_eqns.gms
-**** LINE     16 INPUT       /Users/Malfrine/Documents/Work/UAlberta-RA/ZL/gams/minlp_main.gms
- 358   
- 359   
- 360   
- 361   
- 362   
- 363   
- 364  *SOLVE MINLP
-GAMS 24.8.5  r61358 Released May 10, 2017 DEX-DEG x86 64bit/Mac OS X                                                                                                                                                                  08/17/17 11:21:27 Page 11
+GAMS 24.8.5  r61358 Released May 10, 2017 DEX-DEG x86 64bit/Mac OS X                                                                                                                                                                  08/17/17 16:30:46 Page 10
 minlp_eqns
 C o m p i l a t i o n
 
 
- 365   
- 366  model water_treatment /all/ ;
- 367   
- 368  solve water_treatment using minlp minimizing OF_cost ;
-****                                                     $246,257
+ 339  eq14(tu,c) ..   ML_in(tu,c) =l= C_in_max(tu,c) * F_in(tu) ;
+ 340   
+ 341  eq15(c) ..              sum(tu, F_exit(tu) * C_out(tu,c)) =l= C_target(c) * sum(tu, F_exit(tu)) ;
+ 342   
+ 343  eq16(c) ..              ML_rem_c(c) =l= sum(tu, ML_rem_tu_c(tu,c)) + sum(tu, RR(tu,c) * ML_in(tu,c)) ;
+ 344   
+ 345  eq17(c) ..              ML_rem_c(c) =e= sum( s, F_s(s) * (C_c_s(s,c) - C_target(c)) );
+ 346   
+ 347  *eq18(tu) ..            Cost_tot_tu(tu) =e= Cost_var_tu(tu) * F_in(tu) + cost_fix_tu_a(tu) * F_in(tu) + cost_fix_tu_b(tu) ;
+ 348   
+ 349  eq19(tu,tup)$(ord(tup) ne ord(tu)) .. B_tu_tup(tu,tup) + B_tu_tup(tup,tu) =l= 1 ;
+ 350   
+ 351  eq21(s,tu) ..   F_s_tu(s,tu) - B_s_tu(s,tu) * Bound_up =l= 0 ;
+ 352   
+ 353  eq22(tu,tup) ..         F_rec(tu,tup)$(ord(tup) ne ord(tu)) - B_tu_tup(tu,tup)$(ord(tup) ne ord(tu)) * Bound_up =l= 0 ;
+ 354   
+ 355  eq23(tu) ..     F_exit(tu) - B_exit(tu) * Bound_up =l= 0 ;
+ 356   
+ 357  eq24(tu) ..             F_in(tu) - B_tu(tu) * Bound_up =l= 0 ;
+ 358   
+ 359  eq25(s,tu) ..   F_s_tu(s,tu) - B_s_tu(s,tu) * Bound_low =g= 0 ;
+ 360   
+ 361  eq26(tu,tup) ..         F_rec(tu,tup)$(ord(tup) ne ord(tu)) - B_tu_tup(tu,tup)$(ord(tup) ne ord(tu)) * Bound_low =g= 0 ;
+ 362   
+ 363  eq27(tu) ..     F_exit(tu) - B_exit(tu) * Bound_low =g= 0 ;
+ 364   
+ 365  eq28(tu) ..             F_in(tu) - B_tu(tu) * Bound_low =g= 0 ;
+ 366   
+ 367  eq29(tu) ..             sum(s, B_s_tu(s,tu)) + sum( tup$(ord(tup) ne ord(tu)), B_tu_tup(tu,tup)) =l= NS_max(tu) ;
+ 368   
+ 369  *OF_cost ..             Cost_tot =e= sum(tu, Cost_tot_tu(tu)) + HY * sum(s, F_s(s) * cost_var_s(s)) ;
+ 370   
+ 371   
+ 372   
+ 373   
+ 374   
+ 375   
+ 376   
+ 377   
+ 378   
+ 379  *SOLVE MINLP
+ 380   
+ 381  model water_treatment /all/ ;
+ 382   
+ 383  solve water_treatment using minlp minimizing F_s('muw');
+****                                                 $148,246,257,409
 **** LINE     22 INPUT       /Users/Malfrine/Documents/Work/UAlberta-RA/ZL/gams/minlp_main.gms
- 369   
-GAMS 24.8.5  r61358 Released May 10, 2017 DEX-DEG x86 64bit/Mac OS X                                                                                                                                                                  08/17/17 11:21:27 Page 12
+ 384   
+ 385   
+GAMS 24.8.5  r61358 Released May 10, 2017 DEX-DEG x86 64bit/Mac OS X                                                                                                                                                                  08/17/17 16:30:46 Page 11
 minlp_eqns
 Error Messages
 
 
- 81  A '=' expected for assignment statements. Alternative
-        assignment operators are '$=' and ':='.
-120  Unknown identifier entered as set
-141  Symbol declared but no values have been assigned. Check for missing
-        data definition, assignment, data loading or implicit assignment
-        via a solve statement.
-        A wild shot: You may have spurious commas in the explanatory
-        text of a declaration. Check symbol reference list.
-143  A suffix is missing
 148  Dimension different - The symbol is referenced with more/less
         indices as declared
-149  Uncontrolled set entered as constant
-154  Set for 'ord' is not controlled
-171  Domain violation for set
-195  Symbol redefined with a different type
 246  Objective variable is not a free variable
 257  Solve statement not checked because of previous errors
-340  A label/element with the same name exist. You may have forgotten
-        to quote a label/element reference. For example,
-        set i / a,b,c /; parameter x(i); x('a') = 10;
 409  Unrecognizable item - skip to find a new statement
        looking for a ';' or a key word to get started again
 
-**** 29 ERROR(S)   0 WARNING(S)
-GAMS 24.8.5  r61358 Released May 10, 2017 DEX-DEG x86 64bit/Mac OS X                                                                                                                                                                  08/17/17 11:21:27 Page 13
+**** 4 ERROR(S)   0 WARNING(S)
+GAMS 24.8.5  r61358 Released May 10, 2017 DEX-DEG x86 64bit/Mac OS X                                                                                                                                                                  08/17/17 16:30:46 Page 12
 minlp_eqns
 Include File Summary
 
@@ -468,11 +441,11 @@ Include File Summary
      1        1 INPUT          0       0  /Users/Malfrine/Documents/Work/UAlberta-RA/ZL/gams/minlp_main.gms
      2       10 INCLUDE        1      10  ./Users/Malfrine/Documents/Work/UAlberta-RA/ZL/gams/sets_init.gms
      3       48 INCLUDE        1      11  ./Users/Malfrine/Documents/Work/UAlberta-RA/ZL/gams/params_init.gms
-     4      213 INCLUDE        1      12  ./Users/Malfrine/Documents/Work/UAlberta-RA/ZL/gams/vars_init.gms
-     5      273 INCLUDE        1      16  ./Users/Malfrine/Documents/Work/UAlberta-RA/ZL/gams/minlp_eqns.gms
+     4      218 INCLUDE        1      12  ./Users/Malfrine/Documents/Work/UAlberta-RA/ZL/gams/vars_init.gms
+     5      282 INCLUDE        1      16  ./Users/Malfrine/Documents/Work/UAlberta-RA/ZL/gams/minlp_eqns.gms
 
 
-COMPILATION TIME     =        0.009 SECONDS      3 MB  24.8.5 r61358 DEX-DEG
+COMPILATION TIME     =        0.006 SECONDS      3 MB  24.8.5 r61358 DEX-DEG
 
 
 USER: GAMS Development Corporation, Washington, DC   G871201/0000CA-ANY

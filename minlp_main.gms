@@ -19,5 +19,6 @@ $include minlp_eqns.gms
 
 model water_treatment /all/ ;
 
-solve water_treatment using minlp minimizing OF_cost ;
+solve water_treatment using minlp minimizing F_s('muw');
+
 

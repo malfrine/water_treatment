@@ -20,14 +20,15 @@ Equations
 	eq14(tu,c)		'concentration limit for tu inlet'
 	eq15(c)			'discharge concentration to meet BFW requirement'
 	eq16(c)			'total mass load of c removed from system'
+	eq17(c)			'defining ML_rem_c(c)'
 	eq18(tu)		'cost of tu'
-	eq19(tu)		'eliminating cycles'
+	eq19(tu,tup)	'eliminating cycles'
 	eq21(s,tu)		's,tu upper bound'
-	eq22(tu)		'tu,tup upper bound'
+	eq22(tu,tup)		'tu,tup upper bound'
 	eq23(tu)		'exit tu upper bound'
 	eq24(tu)		'in tu upper bound' 
 	eq25(s,tu)		's,tu lower bound'
-	eq26(tu)		'tu,tup lower bound'
+	eq26(tu,tup)		'tu,tup lower bound'
 	eq27(tu)		'exit tu lower bound'
 	eq28(tu)		'in tu lower bound'
 	eq29(tu)		'maximum number of streams going through a tu'
@@ -59,13 +60,15 @@ eq15(c) ..		sum(tu, F_exit(tu) * C_out(tu,c)) =l= C_target(c) * sum(tu, F_exit(t
 
 eq16(c) ..		ML_rem_c(c) =l= sum(tu, ML_rem_tu_c(tu,c)) + sum(tu, RR(tu,c) * ML_in(tu,c)) ;
 
-eq18(tu) ..		Cost_tot(tu) =e= Cost_var_tu(tu) * F_in(tu) + cost_fix_tu_a(tu) * F_in(tu) + cost_fix_tu_b(tu) ;
+eq17(c) ..		ML_rem_c(c) =e= sum( s, F_s(s) * (C_c_s(s,c) - C_target(c)) );
 
-eq19(tu) ..		B_tu_tup$(ord(tup) ne ord(tu)) + B_tu_tup$(ord(tu) ne ord(tup)) =l= 1 ;
+*eq18(tu) ..		Cost_tot_tu(tu) =e= Cost_var_tu(tu) * F_in(tu) + cost_fix_tu_a(tu) * F_in(tu) + cost_fix_tu_b(tu) ;
+
+eq19(tu,tup)$(ord(tup) ne ord(tu)) .. B_tu_tup(tu,tup) + B_tu_tup(tup,tu) =l= 1 ;
 
 eq21(s,tu) .. 	F_s_tu(s,tu) - B_s_tu(s,tu) * Bound_up =l= 0 ;
 
-eq22(tu) .. 	F_rec(tu,tup)$(ord(tup) ne ord(tu)) - B_tu_tup$(ord(tup) ne ord(tu)) * Bound_up =l= 0 ;
+eq22(tu,tup) .. 	F_rec(tu,tup)$(ord(tup) ne ord(tu)) - B_tu_tup(tu,tup)$(ord(tup) ne ord(tu)) * Bound_up =l= 0 ;
 				
 eq23(tu) .. 	F_exit(tu) - B_exit(tu) * Bound_up =l= 0 ;
 
@@ -73,17 +76,20 @@ eq24(tu) ..		F_in(tu) - B_tu(tu) * Bound_up =l= 0 ;
 
 eq25(s,tu) ..	F_s_tu(s,tu) - B_s_tu(s,tu) * Bound_low =g= 0 ;
 
-eq26(tu) .. 	F_rec(tu,tup)$(ord(tup) ne ord(tu)) - B_tu_tup$(ord(tup) ne ord(tu)) * Bound_low =g= 0 ;
+eq26(tu,tup) .. 	F_rec(tu,tup)$(ord(tup) ne ord(tu)) - B_tu_tup(tu,tup)$(ord(tup) ne ord(tu)) * Bound_low =g= 0 ;
 
 eq27(tu) .. 	F_exit(tu) - B_exit(tu) * Bound_low =g= 0 ;
 
 eq28(tu) ..		F_in(tu) - B_tu(tu) * Bound_low =g= 0 ;
 
-eq29(tu) ..		sum(s, B_s_tu(t,su)) + sum( tup$(ord(tup) ne ord(tu)), B_tu_tup(tu,tup)) =l= NS_max(tu) ;
+eq29(tu) ..		sum(s, B_s_tu(s,tu)) + sum( tup$(ord(tup) ne ord(tu)), B_tu_tup(tu,tup)) =l= NS_max(tu) ;
 
-OF_cost ..		Cost_tot =e= sum(tu, cost_tot(tu)) + HY * sum(s, F_s(s) * cost_var_s(s)) ;
+*OF_cost ..		Cost_tot =e= sum(tu, Cost_tot_tu(tu)) + HY * sum(s, F_s(s) * cost_var_s(s)) ;
 
-				
+
+
+
+
 
 
 
