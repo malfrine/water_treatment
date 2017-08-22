@@ -1,7 +1,7 @@
 $Title SAGD Optimization - MILNP Algorithm
 $Ontext
-	This is the main file for the SAGD Water Treatment Optimization using the 
-	MILNP Optimization.	
+        This is the main file for the SAGD Water Treatment Optimization using the
+        MILNP Optimization.
 $Offtext
 
 
@@ -17,8 +17,8 @@ $include minlp_eqns.gms
 
 *SOLVE MINLP
 
-model water_treatment /all/ ;
+model water /all/ ;
 
-solve water_treatment using minlp minimizing F_s('muw');
+Solve  water using minlp minimization obj ;
 
 

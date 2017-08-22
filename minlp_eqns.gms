@@ -2,89 +2,78 @@ $Title minlp_eqns
 
 $Ontext
 
-The variables for the MINLP algorithm are provided in this file
+The equations for the MINLP algorithm are provided in this file
 
 $Offtext
 
-Equations
-    eq4				'overall mass balance'   
-    eq5(s)  		'mass balance around splitter 1'
-    eq6(tu)   		'mass balance around mixer 1'
-	eq7(tu)			'mass balance around splitter 2'
-	eq8				'mass balance around mixer 3'
-	eq9(tu)			'mass balance around tu'
-	eq12(tu,c)		'definition of ML_in'
-	eq13(tu,c)		'definition of ML_out'
-	eq10(tu,c)		'component mass balance around each tu - 1'
-	eq11(tu,c)		'component mass balance around each tu - 2'
-	eq14(tu,c)		'concentration limit for tu inlet'
-	eq15(c)			'discharge concentration to meet BFW requirement'
-	eq16(c)			'total mass load of c removed from system'
-	eq17(c)			'defining ML_rem_c(c)'
-	eq18(tu)		'cost of tu'
-	eq19(tu,tup)	'eliminating cycles'
-	eq21(s,tu)		's,tu upper bound'
-	eq22(tu,tup)		'tu,tup upper bound'
-	eq23(tu)		'exit tu upper bound'
-	eq24(tu)		'in tu upper bound' 
-	eq25(s,tu)		's,tu lower bound'
-	eq26(tu,tup)		'tu,tup lower bound'
-	eq27(tu)		'exit tu lower bound'
-	eq28(tu)		'in tu lower bound'
-	eq29(tu)		'maximum number of streams going through a tu'
-	OF_cost			'objective cost function' ;
+*ML of C to be Removed from System
+equation eq17(c); eq17(c) .. ML_rem_c(c) =e= sum( s, F_s(s) * (C_c_s(s,c) - C_target(c)) );
 
-eq4 ..			sum(s, F_s(s)) - F_BFW =e= sum(tu, F_loss(tu)) ;
+*Overall Mass Balance
+equation eq4; eq4 .. sum(s, F_s(s)) - F_BFW =e= sum(tu, F_loss(tu)) ;
 
-eq5(s) ..		F_s(s) =e= sum(tu, F_s_tu(s,tu)) ;
+*Splitter 1 Mass Balance
+equation eq5(s); eq5(s) .. F_s(s) =e= sum(tu, F_s_tu(s,tu)) ;
 
-eq6(tu) ..	    sum(s, F_s_tu(s,tu)) + sum(tup$(ord(tup) ne ord(tu)), F_rec(tu,tup))  =e= F_in(tu) ;
+*Limiting Flow from S to TU
+equation eq21(s,tu); eq21(s,tu) .. F_s_tu(s,tu) - B_s_tu(s,tu) * Bound_up =l= 0 ;
+equation eq25(s,tu); eq25(s,tu) .. F_s_tu(s,tu) - B_s_tu(s,tu) * Bound_low =g= 0 ;
 
-eq7(tu) ..		F_out(tu) =e= sum(tup$(ord(tup) ne ord(tu)), F_rec(tu,tup)) + F_exit(tu) ;
+*Mixer 1 Mass Balance
+equation eq6(tu); eq6(tu) .. sum(s, F_s_tu(s,tu)) + sum(tup, F_rec(tu,tup))  =e= F_in(tu) ;
 
-eq8 ..			sum(tu, F_exit(tu)) =e= F_BFW ;
+*Limiting TU Inlet Flow
+equation eq24(tu); eq24(tu) .. F_in(tu) - B_tu(tu) * Bound_up =l= 0 ;
+equation eq28(tu); eq28(tu) .. F_in(tu) - B_tu(tu) * Bound_low =g= 0 ;
 
-eq9(tu) ..		F_in(tu) - F_out(tu) =e= F_loss(tu) ;
+*TU Mass Balance
+equation eq9(tu); eq9(tu) .. F_in(tu) - F_out(tu) =e= F_loss(tu) ;
 
-eq12(tu,c) ..	sum(tup$(ord(tup) ne ord(tu)), F_rec(tu,tup) * C_rout(tu,tup,c)) + sum(s, F_s_tu(s,tu) * C_c_s(s,c)) =e= ML_in(tu,c) ;
+*TU Component Mass Balance
+equation eq12(tu,c); eq12(tu,c) .. sum(tup, F_rec(tup,tu) * C_out(tu,c)) + sum(s, F_s_tu(s,tu) * C_c_s(s,c)) =e= ML_in(tu,c) ;
+equation eq13(tu,c); eq13(tu,c) .. C_out(tu,c) * ( sum(tup, F_rec(tup,tu)) + sum(s, F_s_tu(s,tu) ) - F_loss(tu) ) =e= ML_out(tu,c) ;
+*equation eq10(tu,c); eq10(tu,c) .. (1 - RR(tu,c)) * ML_in(tu,c) - ML_out(tu,c) - F_loss(tu) * C_loss(tu,c) =e= 0 ;
+*equation eq11(tu,c); eq11(tu,c) .. ML_in(tu,c) - ML_out(tu,c) - ML_rem_tu_c(tu,c) =e= F_loss(tu) * C_loss(tu,c) ;
 
-eq13(tu,c) ..	C_out(tu,c) * ( sum(tup$(ord(tup) ne ord(tu)), F_rec(tu,tup)) + sum(s, F_s_tu(s,tu) ) - F_loss(tu) ) =e= ML_out(tu,c) ;
+*Concentration Limit for TUs
+equation eq14(tu,c); eq14(tu,c) .. ML_in(tu,c) =l= C_in_max(tu,c) * F_in(tu);
 
-eq10(tu,c) ..	(1 - RR(tu,c)) * ML_in(tu,c) - ML_out(tu,c) - F_loss(tu) * C_loss(tu,c) =e= 0 ;
+*Splitter 2 Mass Balance - Recycle
+equation eq7(tu); eq7(tu) .. F_out(tu) =e= sum(tup, F_rec(tu,tup)) + F_exit(tu) ;
 
-eq11(tu,c) ..	ML_in(tu,c) - ML_out(tu,c) - ML_rem_tu_c(tu,c) =e= F_loss(tu) * C_loss(tu,c) ;
-				
-eq14(tu,c) ..	ML_in(tu,c) =l= C_in_max(tu,c) * F_in(tu) ;		
+*Eliminiating Repeated Recycle
+equation eq19(tu,tup); eq19(tu,tup)$(ord(tup) ne ord(tu)) .. B_tu_tup(tu,tup) + B_tu_tup(tup,tu) =l= 1 ;
 
-eq15(c) ..		sum(tu, F_exit(tu) * C_out(tu,c)) =l= C_target(c) * sum(tu, F_exit(tu)) ;
+*Limiting Maximum Number of Strems in TU
+equation eq29(tu); eq29(tu) .. sum(s, B_s_tu(s,tu)) + sum( tup, B_tu_tup(tu,tup)) =l= NS_max(tu) ;
 
-eq16(c) ..		ML_rem_c(c) =l= sum(tu, ML_rem_tu_c(tu,c)) + sum(tu, RR(tu,c) * ML_in(tu,c)) ;
+*Limiting Flow from Recycles
+equation eq22(tu,tup); eq22(tu,tup) .. F_rec(tu,tup) - B_tu_tup(tu,tup) * Bound_up =l= 0 ;
+equation eq26(tu,tup); eq26(tu,tup) .. F_rec(tu,tup) - B_tu_tup(tu,tup) * Bound_low =g= 0 ;
 
-eq17(c) ..		ML_rem_c(c) =e= sum( s, F_s(s) * (C_c_s(s,c) - C_target(c)) );
+*Mixer 3 Mass Balance
+equation eq8; eq8 .. sum(tu, F_exit(tu)) =e= F_BFW ;
 
-*eq18(tu) ..		Cost_tot_tu(tu) =e= Cost_var_tu(tu) * F_in(tu) + cost_fix_tu_a(tu) * F_in(tu) + cost_fix_tu_b(tu) ;
+*Limiting TU Exit Flow
+equation eq23(tu); eq23(tu) .. F_exit(tu) - B_exit(tu) * Bound_up =l= 0 ;
+equation eq27(tu); eq27(tu) .. F_exit(tu) - B_exit(tu) * Bound_low =g= 0 ;
 
-eq19(tu,tup)$(ord(tup) ne ord(tu)) .. B_tu_tup(tu,tup) + B_tu_tup(tup,tu) =l= 1 ;
+*BFW Concentration Requirements
+equation eq15(c); eq15(c) .. sum(tu, F_exit(tu) * C_out(tu,c)) =l= C_target(c) * sum(tu, F_exit(tu)) ;
 
-eq21(s,tu) .. 	F_s_tu(s,tu) - B_s_tu(s,tu) * Bound_up =l= 0 ;
+*Constraint to Ensure ML of C is Removed from the System
+*equation eq16(c); eq16(c) .. ML_rem_c(c) =l= sum(tu, ML_rem_tu_c(tu,c)) + sum(tu, RR(tu,c) * ML_in(tu,c)) ;
 
-eq22(tu,tup) .. 	F_rec(tu,tup)$(ord(tup) ne ord(tu)) - B_tu_tup(tu,tup)$(ord(tup) ne ord(tu)) * Bound_up =l= 0 ;
-				
-eq23(tu) .. 	F_exit(tu) - B_exit(tu) * Bound_up =l= 0 ;
+*Cost / Energy of TUs
+equation eq18(tu); eq18(tu) .. Cost_tot_tu(tu) =e= Cost_var_tu(tu) * F_in(tu) + cost_fix_tu_a(tu) * F_in(tu) + cost_fix_tu_b(tu)
 
-eq24(tu) ..		F_in(tu) - B_tu(tu) * Bound_up =l= 0 ;
+*Cost / Energy of System
+equation eq2; eq2 .. Cost_tot =e= sum(tu, Cost_tot_tu(tu)) + HY * sum(s, F_s(s) * cost_var_s(s)) ;
 
-eq25(s,tu) ..	F_s_tu(s,tu) - B_s_tu(s,tu) * Bound_low =g= 0 ;
+*Objective Equation
+equation objective; objective .. obj =e= Cost_tot ;
 
-eq26(tu,tup) .. 	F_rec(tu,tup)$(ord(tup) ne ord(tu)) - B_tu_tup(tu,tup)$(ord(tup) ne ord(tu)) * Bound_low =g= 0 ;
 
-eq27(tu) .. 	F_exit(tu) - B_exit(tu) * Bound_low =g= 0 ;
-
-eq28(tu) ..		F_in(tu) - B_tu(tu) * Bound_low =g= 0 ;
-
-eq29(tu) ..		sum(s, B_s_tu(s,tu)) + sum( tup$(ord(tup) ne ord(tu)), B_tu_tup(tu,tup)) =l= NS_max(tu) ;
-
-*OF_cost ..		Cost_tot =e= sum(tu, Cost_tot_tu(tu)) + HY * sum(s, F_s(s) * cost_var_s(s)) ;
 
 
 

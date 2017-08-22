@@ -1,3 +1,8 @@
 *.lst
+*.lxi
+*.~gm
+*.log
+*.dat
+*.gpr
 !minlp_main.lst
 decomp_algo.gms
