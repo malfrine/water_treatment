@@ -1,4 +1,4 @@
-GAMS Rev 239  WEX-WEI 23.9.5 x86_64/MS Windows          08/21/17 19:06:53 Page 1
+GAMS Rev 239  WEX-WEI 23.9.5 x86_64/MS Windows          08/22/17 16:00:58 Page 1
 SAGD Optimization - MILNP Algorithm
 C o m p i l a t i o n
 
@@ -11,7 +11,7 @@ C o m p i l a t i o n
    8  *INITIALIZE SETS, DATA, and VARIABLES
    9   
 INCLUDE    E:\Work\UAlberta-RA\ZL\gams_sagd\sets_init.gms
-GAMS Rev 239  WEX-WEI 23.9.5 x86_64/MS Windows          08/21/17 19:06:53 Page 2
+GAMS Rev 239  WEX-WEI 23.9.5 x86_64/MS Windows          08/22/17 16:00:58 Page 2
 sets_init
 C o m p i l a t i o n
 
@@ -53,7 +53,7 @@ C o m p i l a t i o n
   46   
   47   
 INCLUDE    E:\Work\UAlberta-RA\ZL\gams_sagd\params_init.gms
-GAMS Rev 239  WEX-WEI 23.9.5 x86_64/MS Windows          08/21/17 19:06:53 Page 3
+GAMS Rev 239  WEX-WEI 23.9.5 x86_64/MS Windows          08/22/17 16:00:58 Page 3
 params_init
 C o m p i l a t i o n
 
@@ -97,9 +97,9 @@ C o m p i l a t i o n
   85   
   86  table C_c_s(s,c)        'concentration of c in s'
   87                     o         s       th      tss
-  88            pw       2000     350     20      50
-  89            muw      0        15      245     0
-  90            bbd      10       150     1       1       ;
+  88            pw       2000     350     20       50
+  89            muw      0        15      245      0
+  90            bbd      10       150     1        1       ;
   91  **pw and muw data collected from Forshomi thesis Table 3-1
   92  **muw is assumed to be fresh no brackish
   93  **bbd data collected from Forshomi appendix A Table A3 for OTSG
@@ -231,7 +231,7 @@ C o m p i l a t i o n
  216   
  217   
 INCLUDE    E:\Work\UAlberta-RA\ZL\gams_sagd\vars_init.gms
-GAMS Rev 239  WEX-WEI 23.9.5 x86_64/MS Windows          08/21/17 19:06:53 Page 4
+GAMS Rev 239  WEX-WEI 23.9.5 x86_64/MS Windows          08/22/17 16:00:58 Page 4
 vars_init
 C o m p i l a t i o n
 
@@ -248,7 +248,7 @@ C o m p i l a t i o n
  230  positive variables
  231          F_s(s)                  'flow rate of source water'
  232          F_s_tu(s,tu)    'flow rate of s entering tu'
- 233          F_rec(tu,tup)   'flow rate of streams exiting tu that enter tup fo
+ 233          F_rec(tup,tu)   'flow rate of streams exiting tu that enter tup fo
       r recycle'
  234          F_exit(tu)              'flow rate of streams leaving tu to the di
       scharge point'
@@ -306,109 +306,110 @@ C o m p i l a t i o n
  278  variable
  279          obj                             'objective variable' ;
  280   
- 281   
- 282   
- 283  *EQUATIONS
+ 281  variable
+ 282           dummy(tu,c)               ;
+ 283   
  284   
+ 285  *EQUATIONS
+ 286   
 INCLUDE    E:\Work\UAlberta-RA\ZL\gams_sagd\minlp_eqns.gms
-GAMS Rev 239  WEX-WEI 23.9.5 x86_64/MS Windows          08/21/17 19:06:53 Page 5
+GAMS Rev 239  WEX-WEI 23.9.5 x86_64/MS Windows          08/22/17 16:00:58 Page 5
 minlp_eqns
 C o m p i l a t i o n
 
 
- 287   
+ 289   
        
       The equations for the MINLP algorithm are provided in this file
        
- 293   
- 294  *ML of C to be Removed from System
- 295  equation eq17(c); eq17(c) .. ML_rem_c(c) =e= sum( s, F_s(s) * (C_c_s(s,c) 
-      - C_target(c)) );
+ 295   
  296   
- 297  *Overall Mass Balance
- 298  equation eq4; eq4 .. sum(s, F_s(s)) - F_BFW =e= sum(tu, F_loss(tu)) ;
+ 297  *ML of C to be Removed from System
+ 298  equation eq17(c); eq17(c) .. ML_rem_c(c) =e= sum( s, F_s(s) * (C_c_s(s,c) 
+      - C_target(c)) );
  299   
- 300  *Splitter 1 Mass Balance
- 301  equation eq5(s); eq5(s) .. F_s(s) =e= sum(tu, F_s_tu(s,tu)) ;
+ 300  *Overall Mass Balance
+ 301  equation eq4; eq4 .. sum(s, F_s(s)) - F_BFW =e= sum(tu, F_loss(tu)) ;
  302   
- 303  *Limiting Flow from S to TU
- 304  equation eq21(s,tu); eq21(s,tu) .. F_s_tu(s,tu) - B_s_tu(s,tu) * Bound_up 
-      =l= 0 ;
- 305  equation eq25(s,tu); eq25(s,tu) .. F_s_tu(s,tu) - B_s_tu(s,tu) * Bound_low
-       =g= 0 ;
- 306   
- 307  *Mixer 1 Mass Balance
- 308  equation eq6(tu); eq6(tu) .. sum(s, F_s_tu(s,tu)) + sum(tup, F_rec(tu,tup)
-      )  =e= F_in(tu) ;
+ 303  *Splitter 1 Mass Balance
+ 304  equation eq5(s); eq5(s) .. F_s(s) =e= sum(tu, F_s_tu(s,tu)) ;
+ 305   
+ 306  *Limiting Flow from S to TU
+ 307  *equation eq21(s,tu); eq21(s,tu) .. F_s_tu(s,tu) - B_s_tu(s,tu) * Bound_up
+       =l= 0 ;
+ 308  *equation eq25(s,tu); eq25(s,tu) .. F_s_tu(s,tu) - B_s_tu(s,tu) * Bound_lo
+      w =g= 0 ;
  309   
- 310  *Limiting TU Inlet Flow
- 311  equation eq24(tu); eq24(tu) .. F_in(tu) - B_tu(tu) * Bound_up =l= 0 ;
- 312  equation eq28(tu); eq28(tu) .. F_in(tu) - B_tu(tu) * Bound_low =g= 0 ;
+ 310  *Mixer 1 Mass Balance
+ 311  equation eq6(tu); eq6(tu) .. sum(s, F_s_tu(s,tu)) + sum(tup, F_rec(tup,tu)
+      )  =e= F_in(tu) ;
+ 312   
  313   
- 314  *TU Mass Balance
- 315  equation eq9(tu); eq9(tu) .. F_in(tu) - F_out(tu) =e= F_loss(tu) ;
- 316   
- 317  *TU Component Mass Balance
- 318  equation eq12(tu,c); eq12(tu,c) .. sum(tup, F_rec(tup,tu) * C_out(tu,c)) +
-       sum(s, F_s_tu(s,tu) * C_c_s(s,c)) =e= ML_in(tu,c) ;
- 319  equation eq13(tu,c); eq13(tu,c) .. C_out(tu,c) * ( sum(tup, F_rec(tup,tu))
-       + sum(s, F_s_tu(s,tu) ) - F_loss(tu) ) =e= ML_out(tu,c) ;
- 320  *equation eq10(tu,c); eq10(tu,c) .. (1 - RR(tu,c)) * ML_in(tu,c) - ML_out(
-      tu,c) - F_loss(tu) * C_loss(tu,c) =e= 0 ;
- 321  *equation eq11(tu,c); eq11(tu,c) .. ML_in(tu,c) - ML_out(tu,c) - ML_rem_tu
+ 314  *Limiting TU Inlet Flow
+ 315  *equation eq24(tu); eq24(tu) .. F_in(tu) - B_tu(tu) * Bound_up =l= 0 ;
+ 316  *equation eq28(tu); eq28(tu) .. F_in(tu) - B_tu(tu) * Bound_low =g= 0 ;
+ 317   
+ 318  *TU Mass Balance
+ 319  equation eq9(tu); eq9(tu) .. F_in(tu) - F_out(tu) =e= F_loss(tu) ;
+ 320   
+ 321  *TU Component Mass Balance
+ 322  equation eq12(tu,c); eq12(tu,c) .. sum(tup, F_rec(tup,tu) * C_rout(tup,tu,
+      c)) + sum(s, F_s_tu(s,tu) * C_c_s(s,c)) =e= ML_in(tu,c) ;
+ 323  equation eq13(tu,c); eq13(tu,c) .. C_out(tu,c) * ( sum(tup, F_rec(tu,tup))
+       + F_exit(tu) ) + dummy(tu,c) =e= ML_out(tu,c) ;
+ 324  equation eq10(tu,c); eq10(tu,c) .. (1 - RR(tu,c)) * ML_in(tu,c) - ML_out(t
+      u,c) - F_loss(tu) * C_loss(tu,c) =e= 0 ;
+ 325  *equation eq11(tu,c); eq11(tu,c) .. ML_in(tu,c) - ML_out(tu,c) - ML_rem_tu
       _c(tu,c) =e= F_loss(tu) * C_loss(tu,c) ;
- 322   
- 323  *Concentration Limit for TUs
- 324  equation eq14(tu,c); eq14(tu,c) .. ML_in(tu,c) =l= C_in_max(tu,c) * F_in(t
-      u);
- 325   
- 326  *Splitter 2 Mass Balance - Recycle
- 327  equation eq7(tu); eq7(tu) .. F_out(tu) =e= sum(tup, F_rec(tu,tup)) + F_exi
+ 326   
+ 327  *Concentration Limit for TUs
+ 328  *equation eq14(tu,c); eq14(tu,c) .. ML_in(tu,c) =l= C_in_max(tu,c) * F_in(
+      tu);
+ 329   
+ 330  *Splitter 2 Mass Balance - Recycle
+ 331  equation eq7(tu); eq7(tu) .. F_out(tu) =e= sum(tup, F_rec(tu,tup)) + F_exi
       t(tu) ;
- 328   
- 329  *Eliminiating Repeated Recycle
- 330  equation eq19(tu,tup); eq19(tu,tup)$(ord(tup) ne ord(tu)) .. B_tu_tup(tu,t
-      up) + B_tu_tup(tup,tu) =l= 1 ;
- 331   
- 332  *Limiting Maximum Number of Strems in TU
- 333  equation eq29(tu); eq29(tu) .. sum(s, B_s_tu(s,tu)) + sum( tup, B_tu_tup(t
-      u,tup)) =l= NS_max(tu) ;
- 334   
- 335  *Limiting Flow from Recycles
- 336  equation eq22(tu,tup); eq22(tu,tup) .. F_rec(tu,tup) - B_tu_tup(tu,tup) * 
-      Bound_up =l= 0 ;
- 337  equation eq26(tu,tup); eq26(tu,tup) .. F_rec(tu,tup) - B_tu_tup(tu,tup) * 
-      Bound_low =g= 0 ;
+ 332   
+ 333  *Eliminiating Repeated Recycle
+ 334  *equation eq19(tu,tup); eq19(tu,tup)$(ord(tup) ne ord(tu)) .. B_tu_tup(tu,
+      tup) + B_tu_tup(tup,tu) =l= 1 ;
+ 335   
+ 336  *Limiting Maximum Number of Strems in TU
+ 337  *equation eq29(tu); eq29(tu) .. sum(s, B_s_tu(s,tu)) + sum( tup, B_tu_tup(
+      tu,tup)) =l= NS_max(tu) ;
  338   
- 339  *Mixer 3 Mass Balance
- 340  equation eq8; eq8 .. sum(tu, F_exit(tu)) =e= F_BFW ;
- 341   
- 342  *Limiting TU Exit Flow
- 343  equation eq23(tu); eq23(tu) .. F_exit(tu) - B_exit(tu) * Bound_up =l= 0 ;
- 344  equation eq27(tu); eq27(tu) .. F_exit(tu) - B_exit(tu) * Bound_low =g= 0 ;
+ 339  *Limiting Flow from Recycles
+ 340  *equation eq22(tu,tup); eq22(tu,tup) .. F_rec(tu,tup) - B_tu_tup(tu,tup) *
+       Bound_up =l= 0 ;
+ 341  *equation eq26(tu,tup); eq26(tu,tup) .. F_rec(tu,tup) - B_tu_tup(tu,tup) *
+       Bound_low =g= 0 ;
+ 342   
+ 343  *Mixer 3 Mass Balance
+ 344  equation eq8; eq8 .. sum(tu, F_exit(tu)) =e= F_BFW ;
  345   
- 346  *BFW Concentration Requirements
- 347  equation eq15(c); eq15(c) .. sum(tu, F_exit(tu) * C_out(tu,c)) =l= C_targe
-      t(c) * sum(tu, F_exit(tu)) ;
- 348   
- 349  *Constraint to Ensure ML of C is Removed from the System
- 350  *equation eq16(c); eq16(c) .. ML_rem_c(c) =l= sum(tu, ML_rem_tu_c(tu,c)) +
-       sum(tu, RR(tu,c) * ML_in(tu,c)) ;
- 351   
- 352  *Cost / Energy of TUs
- 353  equation eq18(tu); eq18(tu) .. Cost_tot_tu(tu) =e= Cost_var_tu(tu) * F_in(
-      tu) + cost_fix_tu_a(tu) * F_in(tu) + cost_fix_tu_b(tu)
- 354   
- 355  *Cost / Energy of System
- 356  equation eq2; eq2 .. Cost_tot =e= sum(tu, Cost_tot_tu(tu)) + HY * sum(s, F
-      _s(s) * cost_var_s(s)) ;
- 357   
- 358  *Objective Equation
- 359  equation objective; objective .. obj =e= Cost_tot ;
- 360   
+ 346  *Limiting TU Exit Flow
+ 347  *equation eq23(tu); eq23(tu) .. F_exit(tu) - B_exit(tu) * Bound_up =l= 0 ;
+ 348  *equation eq27(tu); eq27(tu) .. F_exit(tu) - B_exit(tu) * Bound_low =g= 0 
+      ;
+ 349   
+ 350  *BFW Concentration Requirements
+ 351  *equation eq15(c); eq15(c) .. sum(tu, F_exit(tu) * C_out(tu,c)) =l= C_targ
+      et(c) * sum(tu, F_exit(tu)) ;
+ 352   
+ 353  *Constraint to Ensure ML of C is Removed from the System
+ 354  *equation eq16(c); eq16(c) .. ML_rem_c(c) =l= sum(tu, RR(tu,c) * ML_in(tu,
+      c)) ;
+ 355   
+ 356  *Cost / Energy of TUs
+ 357  *equation eq18(tu); eq18(tu) .. Cost_tot_tu(tu) =e= Cost_var_tu(tu) * F_in
+      (tu) + cost_fix_tu_a(tu) * F_in(tu) + cost_fix_tu_b(tu)
+ 358   
+ 359  *Cost / Energy of System
+ 360  *equation eq2; eq2 .. Cost_tot =e= sum(tu, Cost_tot_tu(tu)) + HY * sum(s, 
+      F_s(s) * cost_var_s(s)) ;
  361   
- 362   
- 363   
+ 362  *Objective Equation
+ 363  equation objective; objective .. obj =e= F_s('muw') ;
  364   
  365   
  366   
@@ -416,14 +417,20 @@ C o m p i l a t i o n
  368   
  369   
  370   
- 371  *SOLVE MINLP
+ 371   
  372   
- 373  model water /all/ ;
+ 373   
  374   
- 375  Solve  water using minlp minimization obj ;
+ 375   
  376   
- 377   
-GAMS Rev 239  WEX-WEI 23.9.5 x86_64/MS Windows          08/21/17 19:06:53 Page 6
+ 377  *SOLVE MINLP
+ 378   
+ 379  model water /all/ ;
+ 380   
+ 381  Solve  water using minlp minimization obj ;
+ 382   
+ 383   
+GAMS Rev 239  WEX-WEI 23.9.5 x86_64/MS Windows          08/22/17 16:00:58 Page 6
 minlp_eqns
 Include File Summary
 
@@ -438,14 +445,14 @@ Include File Summary
                                            ms_init.gms
      4      218 INCLUDE        1      12  .E:\Work\UAlberta-RA\ZL\gams_sagd\vars
                                            _init.gms
-     5      285 INCLUDE        1      16  .E:\Work\UAlberta-RA\ZL\gams_sagd\minl
+     5      287 INCLUDE        1      16  .E:\Work\UAlberta-RA\ZL\gams_sagd\minl
                                            p_eqns.gms
 
 
-COMPILATION TIME     =        0.016 SECONDS      3 Mb  WEX239-239 Nov  9, 2012
-GAMS Rev 239  WEX-WEI 23.9.5 x86_64/MS Windows          08/21/17 19:06:53 Page 7
+COMPILATION TIME     =        0.031 SECONDS      3 Mb  WEX239-239 Nov  9, 2012
+GAMS Rev 239  WEX-WEI 23.9.5 x86_64/MS Windows          08/22/17 16:00:58 Page 7
 minlp_eqns
-Equation Listing    SOLVE water Using MINLP From line 375
+Equation Listing    SOLVE water Using MINLP From line 381
 
 
 ---- eq17  =E=  
@@ -488,69 +495,25 @@ eq5(bbd)..  F_s(bbd) - F_s_tu(bbd,st) - F_s_tu(bbd,igf) - F_s_tu(bbd,orf)
       =E= 0 ; (LHS = 0)
      
 
----- eq21  =L=  
-
-eq21(pw,st)..  F_s_tu(pw,st) - 625*B_s_tu(pw,st) =L= 0 ; (LHS = 0)
-     
-eq21(pw,igf)..  F_s_tu(pw,igf) - 625*B_s_tu(pw,igf) =L= 0 ; (LHS = 0)
-     
-eq21(pw,orf)..  F_s_tu(pw,orf) - 625*B_s_tu(pw,orf) =L= 0 ; (LHS = 0)
-     
-REMAINING 18 ENTRIES SKIPPED
-
-
----- eq25  =G=  
-
-eq25(pw,st)..  F_s_tu(pw,st) - 200*B_s_tu(pw,st) =G= 0 ; (LHS = 0)
-     
-eq25(pw,igf)..  F_s_tu(pw,igf) - 200*B_s_tu(pw,igf) =G= 0 ; (LHS = 0)
-     
-eq25(pw,orf)..  F_s_tu(pw,orf) - 200*B_s_tu(pw,orf) =G= 0 ; (LHS = 0)
-     
-REMAINING 18 ENTRIES SKIPPED
-
-
 ---- eq6  =E=  
 
 eq6(st)..  F_s_tu(pw,st) + F_s_tu(muw,st) + F_s_tu(bbd,st) + F_rec(st,st)
      
-      + F_rec(st,igf) + F_rec(st,orf) + F_rec(st,hcy) + F_rec(st,ls)
+      + F_rec(igf,st) + F_rec(orf,st) + F_rec(hcy,st) + F_rec(ls,st)
      
-      + F_rec(st,evap) + F_rec(st,wac) - F_in(st) =E= 0 ; (LHS = 0)
+      + F_rec(evap,st) + F_rec(wac,st) - F_in(st) =E= 0 ; (LHS = 0)
      
-eq6(igf)..  F_s_tu(pw,igf) + F_s_tu(muw,igf) + F_s_tu(bbd,igf) + F_rec(igf,st)
+eq6(igf)..  F_s_tu(pw,igf) + F_s_tu(muw,igf) + F_s_tu(bbd,igf) + F_rec(st,igf)
      
-      + F_rec(igf,igf) + F_rec(igf,orf) + F_rec(igf,hcy) + F_rec(igf,ls)
+      + F_rec(igf,igf) + F_rec(orf,igf) + F_rec(hcy,igf) + F_rec(ls,igf)
      
-      + F_rec(igf,evap) + F_rec(igf,wac) - F_in(igf) =E= 0 ; (LHS = 0)
+      + F_rec(evap,igf) + F_rec(wac,igf) - F_in(igf) =E= 0 ; (LHS = 0)
      
-eq6(orf)..  F_s_tu(pw,orf) + F_s_tu(muw,orf) + F_s_tu(bbd,orf) + F_rec(orf,st)
+eq6(orf)..  F_s_tu(pw,orf) + F_s_tu(muw,orf) + F_s_tu(bbd,orf) + F_rec(st,orf)
      
-      + F_rec(orf,igf) + F_rec(orf,orf) + F_rec(orf,hcy) + F_rec(orf,ls)
+      + F_rec(igf,orf) + F_rec(orf,orf) + F_rec(hcy,orf) + F_rec(ls,orf)
      
-      + F_rec(orf,evap) + F_rec(orf,wac) - F_in(orf) =E= 0 ; (LHS = 0)
-     
-REMAINING 4 ENTRIES SKIPPED
-
-
----- eq24  =L=  
-
-eq24(st)..  F_in(st) - 625*B_tu(st) =L= 0 ; (LHS = 0)
-     
-eq24(igf)..  F_in(igf) - 625*B_tu(igf) =L= 0 ; (LHS = 0)
-     
-eq24(orf)..  F_in(orf) - 625*B_tu(orf) =L= 0 ; (LHS = 0)
-     
-REMAINING 4 ENTRIES SKIPPED
-
-
----- eq28  =G=  
-
-eq28(st)..  F_in(st) - 200*B_tu(st) =G= 0 ; (LHS = 0)
-     
-eq28(igf)..  F_in(igf) - 200*B_tu(igf) =G= 0 ; (LHS = 0)
-     
-eq28(orf)..  F_in(orf) - 200*B_tu(orf) =G= 0 ; (LHS = 0)
+      + F_rec(evap,orf) + F_rec(wac,orf) - F_in(orf) =E= 0 ; (LHS = 0)
      
 REMAINING 4 ENTRIES SKIPPED
 
@@ -574,7 +537,11 @@ eq12(st,o)..  2000*F_s_tu(pw,st) + 10*F_s_tu(bbd,st) + (0)*F_rec(st,st)
      
       + (0)*F_rec(ls,st) + (0)*F_rec(evap,st) + (0)*F_rec(wac,st)
      
-      + (0)*C_out(st,o) - ML_in(st,o) =E= 0 ; (LHS = 0)
+      + (0)*C_rout(st,st,o) + (0)*C_rout(igf,st,o) + (0)*C_rout(orf,st,o)
+     
+      + (0)*C_rout(hcy,st,o) + (0)*C_rout(ls,st,o) + (0)*C_rout(evap,st,o)
+     
+      + (0)*C_rout(wac,st,o) - ML_in(st,o) =E= 0 ; (LHS = 0)
      
 eq12(st,s)..  350*F_s_tu(pw,st) + 15*F_s_tu(muw,st) + 150*F_s_tu(bbd,st)
      
@@ -582,7 +549,13 @@ eq12(st,s)..  350*F_s_tu(pw,st) + 15*F_s_tu(muw,st) + 150*F_s_tu(bbd,st)
      
       + (0)*F_rec(hcy,st) + (0)*F_rec(ls,st) + (0)*F_rec(evap,st)
      
-      + (0)*F_rec(wac,st) + (0)*C_out(st,s) - ML_in(st,s) =E= 0 ; (LHS = 0)
+      + (0)*F_rec(wac,st) + (0)*C_rout(st,st,s) + (0)*C_rout(igf,st,s)
+     
+      + (0)*C_rout(orf,st,s) + (0)*C_rout(hcy,st,s) + (0)*C_rout(ls,st,s)
+     
+      + (0)*C_rout(evap,st,s) + (0)*C_rout(wac,st,s) - ML_in(st,s) =E= 0 ;
+     
+      (LHS = 0)
      
 eq12(st,th)..  20*F_s_tu(pw,st) + 245*F_s_tu(muw,st) + F_s_tu(bbd,st)
      
@@ -590,47 +563,53 @@ eq12(st,th)..  20*F_s_tu(pw,st) + 245*F_s_tu(muw,st) + F_s_tu(bbd,st)
      
       + (0)*F_rec(hcy,st) + (0)*F_rec(ls,st) + (0)*F_rec(evap,st)
      
-      + (0)*F_rec(wac,st) + (0)*C_out(st,th) - ML_in(st,th) =E= 0 ; (LHS = 0)
+      + (0)*F_rec(wac,st) + (0)*C_rout(st,st,th) + (0)*C_rout(igf,st,th)
+     
+      + (0)*C_rout(orf,st,th) + (0)*C_rout(hcy,st,th) + (0)*C_rout(ls,st,th)
+     
+      + (0)*C_rout(evap,st,th) + (0)*C_rout(wac,st,th) - ML_in(st,th) =E= 0 ;
+     
+      (LHS = 0)
      
 REMAINING 25 ENTRIES SKIPPED
 
 
 ---- eq13  =E=  
 
-eq13(st,o)..  (0)*F_s_tu(pw,st) + (0)*F_s_tu(muw,st) + (0)*F_s_tu(bbd,st)
+eq13(st,o)..  (0)*F_rec(st,st) + (0)*F_rec(st,igf) + (0)*F_rec(st,orf)
      
-      + (0)*F_rec(st,st) + (0)*F_rec(igf,st) + (0)*F_rec(orf,st)
+      + (0)*F_rec(st,hcy) + (0)*F_rec(st,ls) + (0)*F_rec(st,evap)
      
-      + (0)*F_rec(hcy,st) + (0)*F_rec(ls,st) + (0)*F_rec(evap,st)
+      + (0)*F_rec(st,wac) + (0)*F_exit(st) + (0)*C_out(st,o) - ML_out(st,o)
      
-      + (0)*F_rec(wac,st) + (0)*C_out(st,o) - ML_out(st,o) =E= 0 ; (LHS = 0)
+      + dummy(st,o) =E= 0 ; (LHS = 0)
      
-eq13(st,s)..  (0)*F_s_tu(pw,st) + (0)*F_s_tu(muw,st) + (0)*F_s_tu(bbd,st)
+eq13(st,s)..  (0)*F_rec(st,st) + (0)*F_rec(st,igf) + (0)*F_rec(st,orf)
      
-      + (0)*F_rec(st,st) + (0)*F_rec(igf,st) + (0)*F_rec(orf,st)
+      + (0)*F_rec(st,hcy) + (0)*F_rec(st,ls) + (0)*F_rec(st,evap)
      
-      + (0)*F_rec(hcy,st) + (0)*F_rec(ls,st) + (0)*F_rec(evap,st)
+      + (0)*F_rec(st,wac) + (0)*F_exit(st) + (0)*C_out(st,s) - ML_out(st,s)
      
-      + (0)*F_rec(wac,st) + (0)*C_out(st,s) - ML_out(st,s) =E= 0 ; (LHS = 0)
+      + dummy(st,s) =E= 0 ; (LHS = 0)
      
-eq13(st,th)..  (0)*F_s_tu(pw,st) + (0)*F_s_tu(muw,st) + (0)*F_s_tu(bbd,st)
+eq13(st,th)..  (0)*F_rec(st,st) + (0)*F_rec(st,igf) + (0)*F_rec(st,orf)
      
-      + (0)*F_rec(st,st) + (0)*F_rec(igf,st) + (0)*F_rec(orf,st)
+      + (0)*F_rec(st,hcy) + (0)*F_rec(st,ls) + (0)*F_rec(st,evap)
      
-      + (0)*F_rec(hcy,st) + (0)*F_rec(ls,st) + (0)*F_rec(evap,st)
+      + (0)*F_rec(st,wac) + (0)*F_exit(st) + (0)*C_out(st,th) - ML_out(st,th)
      
-      + (0)*F_rec(wac,st) + (0)*C_out(st,th) - ML_out(st,th) =E= 0 ; (LHS = 0)
+      + dummy(st,th) =E= 0 ; (LHS = 0)
      
 REMAINING 25 ENTRIES SKIPPED
 
 
----- eq14  =L=  
+---- eq10  =E=  
 
-eq14(st,o)..  - 2500*F_in(st) + ML_in(st,o) =L= 0 ; (LHS = 0)
+eq10(st,o)..  0.1*ML_in(st,o) - ML_out(st,o) =E= 0 ; (LHS = 0)
      
-eq14(st,s)..  - 400*F_in(st) + ML_in(st,s) =L= 0 ; (LHS = 0)
+eq10(st,s)..  ML_in(st,s) - ML_out(st,s) =E= 0 ; (LHS = 0)
      
-eq14(st,th)..  - 400*F_in(st) + ML_in(st,th) =L= 0 ; (LHS = 0)
+eq10(st,th)..  ML_in(st,th) - ML_out(st,th) =E= 0 ; (LHS = 0)
      
 REMAINING 25 ENTRIES SKIPPED
 
@@ -657,66 +636,6 @@ eq7(orf)..  - F_rec(orf,st) - F_rec(orf,igf) - F_rec(orf,orf) - F_rec(orf,hcy)
 REMAINING 4 ENTRIES SKIPPED
 
 
----- eq19  =L=  
-
-eq19(st,igf)..  B_tu_tup(st,igf) + B_tu_tup(igf,st) =L= 1 ; (LHS = 0)
-     
-eq19(st,orf)..  B_tu_tup(st,orf) + B_tu_tup(orf,st) =L= 1 ; (LHS = 0)
-     
-eq19(st,hcy)..  B_tu_tup(st,hcy) + B_tu_tup(hcy,st) =L= 1 ; (LHS = 0)
-     
-REMAINING 39 ENTRIES SKIPPED
-
-
----- eq29  =L=  
-
-eq29(st)..  B_s_tu(pw,st) + B_s_tu(muw,st) + B_s_tu(bbd,st) + B_tu_tup(st,st)
-     
-      + B_tu_tup(st,igf) + B_tu_tup(st,orf) + B_tu_tup(st,hcy) + B_tu_tup(st,ls)
-     
-      + B_tu_tup(st,evap) + B_tu_tup(st,wac) =L= 10 ; (LHS = 0)
-     
-eq29(igf)..  B_s_tu(pw,igf) + B_s_tu(muw,igf) + B_s_tu(bbd,igf)
-     
-      + B_tu_tup(igf,st) + B_tu_tup(igf,igf) + B_tu_tup(igf,orf)
-     
-      + B_tu_tup(igf,hcy) + B_tu_tup(igf,ls) + B_tu_tup(igf,evap)
-     
-      + B_tu_tup(igf,wac) =L= 10 ; (LHS = 0)
-     
-eq29(orf)..  B_s_tu(pw,orf) + B_s_tu(muw,orf) + B_s_tu(bbd,orf)
-     
-      + B_tu_tup(orf,st) + B_tu_tup(orf,igf) + B_tu_tup(orf,orf)
-     
-      + B_tu_tup(orf,hcy) + B_tu_tup(orf,ls) + B_tu_tup(orf,evap)
-     
-      + B_tu_tup(orf,wac) =L= 10 ; (LHS = 0)
-     
-REMAINING 4 ENTRIES SKIPPED
-
-
----- eq22  =L=  
-
-eq22(st,st)..  F_rec(st,st) - 625*B_tu_tup(st,st) =L= 0 ; (LHS = 0)
-     
-eq22(st,igf)..  F_rec(st,igf) - 625*B_tu_tup(st,igf) =L= 0 ; (LHS = 0)
-     
-eq22(st,orf)..  F_rec(st,orf) - 625*B_tu_tup(st,orf) =L= 0 ; (LHS = 0)
-     
-REMAINING 46 ENTRIES SKIPPED
-
-
----- eq26  =G=  
-
-eq26(st,st)..  F_rec(st,st) - 200*B_tu_tup(st,st) =G= 0 ; (LHS = 0)
-     
-eq26(st,igf)..  F_rec(st,igf) - 200*B_tu_tup(st,igf) =G= 0 ; (LHS = 0)
-     
-eq26(st,orf)..  F_rec(st,orf) - 200*B_tu_tup(st,orf) =G= 0 ; (LHS = 0)
-     
-REMAINING 46 ENTRIES SKIPPED
-
-
 ---- eq8  =E=  
 
 eq8..  F_exit(st) + F_exit(igf) + F_exit(orf) + F_exit(hcy) + F_exit(ls)
@@ -724,92 +643,13 @@ eq8..  F_exit(st) + F_exit(igf) + F_exit(orf) + F_exit(hcy) + F_exit(ls)
       + F_exit(evap) + F_exit(wac) =E= 625 ; (LHS = 0, INFES = 625 ****)
      
 
----- eq23  =L=  
-
-eq23(st)..  F_exit(st) - 625*B_exit(st) =L= 0 ; (LHS = 0)
-     
-eq23(igf)..  F_exit(igf) - 625*B_exit(igf) =L= 0 ; (LHS = 0)
-     
-eq23(orf)..  F_exit(orf) - 625*B_exit(orf) =L= 0 ; (LHS = 0)
-     
-REMAINING 4 ENTRIES SKIPPED
-
-
----- eq27  =G=  
-
-eq27(st)..  F_exit(st) - 200*B_exit(st) =G= 0 ; (LHS = 0)
-     
-eq27(igf)..  F_exit(igf) - 200*B_exit(igf) =G= 0 ; (LHS = 0)
-     
-eq27(orf)..  F_exit(orf) - 200*B_exit(orf) =G= 0 ; (LHS = 0)
-     
-REMAINING 4 ENTRIES SKIPPED
-
-
----- eq15  =L=  
-
-eq15(o)..  - (10)*F_exit(st) - (10)*F_exit(igf) - (10)*F_exit(orf)
-     
-      - (10)*F_exit(hcy) - (10)*F_exit(ls) - (10)*F_exit(evap)
-     
-      - (10)*F_exit(wac) + (0)*C_out(st,o) + (0)*C_out(igf,o) + (0)*C_out(orf,o)
-     
-      + (0)*C_out(hcy,o) + (0)*C_out(ls,o) + (0)*C_out(evap,o)
-     
-      + (0)*C_out(wac,o) =L= 0 ; (LHS = 0)
-     
-eq15(s)..  - (150)*F_exit(st) - (150)*F_exit(igf) - (150)*F_exit(orf)
-     
-      - (150)*F_exit(hcy) - (150)*F_exit(ls) - (150)*F_exit(evap)
-     
-      - (150)*F_exit(wac) + (0)*C_out(st,s) + (0)*C_out(igf,s)
-     
-      + (0)*C_out(orf,s) + (0)*C_out(hcy,s) + (0)*C_out(ls,s)
-     
-      + (0)*C_out(evap,s) + (0)*C_out(wac,s) =L= 0 ; (LHS = 0)
-     
-eq15(th)..  - (1)*F_exit(st) - (1)*F_exit(igf) - (1)*F_exit(orf)
-     
-      - (1)*F_exit(hcy) - (1)*F_exit(ls) - (1)*F_exit(evap) - (1)*F_exit(wac)
-     
-      + (0)*C_out(st,th) + (0)*C_out(igf,th) + (0)*C_out(orf,th)
-     
-      + (0)*C_out(hcy,th) + (0)*C_out(ls,th) + (0)*C_out(evap,th)
-     
-      + (0)*C_out(wac,th) =L= 0 ; (LHS = 0)
-     
-REMAINING ENTRY SKIPPED
-
-
----- eq18  =E=  
-
-eq18(st)..  - 2*F_in(st) + Cost_tot_tu(st) =E= 1 ; (LHS = 0, INFES = 1 ****)
-     
-eq18(igf)..  - 2*F_in(igf) + Cost_tot_tu(igf) =E= 1 ; (LHS = 0, INFES = 1 ****)
-     
-eq18(orf)..  - 2*F_in(orf) + Cost_tot_tu(orf) =E= 1 ; (LHS = 0, INFES = 1 ****)
-     
-REMAINING 4 ENTRIES SKIPPED
-
-
----- eq2  =E=  
-
-eq2..  - 8322*F_s(pw) - 8322*F_s(muw) - 8322*F_s(bbd) - Cost_tot_tu(st)
-     
-      - Cost_tot_tu(igf) - Cost_tot_tu(orf) - Cost_tot_tu(hcy) - Cost_tot_tu(ls)
-     
-      - Cost_tot_tu(evap) - Cost_tot_tu(wac) + Cost_tot =E= 0 ;
-     
-      (LHS = -3952950, INFES = 3952950 ****)
-     
-
 ---- objective  =E=  
 
-objective..  - Cost_tot + obj =E= 0 ; (LHS = 0)
+objective..  - F_s(muw) + obj =E= 0 ; (LHS = 0)
      
-GAMS Rev 239  WEX-WEI 23.9.5 x86_64/MS Windows          08/21/17 19:06:53 Page 8
+GAMS Rev 239  WEX-WEI 23.9.5 x86_64/MS Windows          08/22/17 16:00:58 Page 8
 minlp_eqns
-Column Listing      SOLVE water Using MINLP From line 375
+Column Listing      SOLVE water Using MINLP From line 381
 
 
 ---- F_s  flow rate of source water
@@ -822,7 +662,6 @@ F_s(pw)
       -49       eq17(tss)
         1       eq4
         1       eq5(pw)
-    -8322       eq2
 
 F_s(muw)
                 (.LO, .L, .UP, .M = 0, 0, +INF, 0)
@@ -832,13 +671,12 @@ F_s(muw)
         1       eq17(tss)
         1       eq4
         1       eq5(muw)
-    -8322       eq2
+       -1       objective
 
 F_s(bbd)
                 (.LO, .L, .UP, .M = 0, 0, 0, 0)
         1       eq4
         1       eq5(bbd)
-    -8322       eq2
 
 
 ---- F_s_tu  flow rate of s entering tu
@@ -846,47 +684,29 @@ F_s(bbd)
 F_s_tu(pw,st)
                 (.LO, .L, .UP, .M = 0, 0, +INF, 0)
        -1       eq5(pw)
-        1       eq21(pw,st)
-        1       eq25(pw,st)
         1       eq6(st)
      2000       eq12(st,o)
       350       eq12(st,s)
        20       eq12(st,th)
        50       eq12(st,tss)
-       (0)      eq13(st,o)
-       (0)      eq13(st,s)
-       (0)      eq13(st,th)
-       (0)      eq13(st,tss)
 
 F_s_tu(pw,igf)
                 (.LO, .L, .UP, .M = 0, 0, +INF, 0)
        -1       eq5(pw)
-        1       eq21(pw,igf)
-        1       eq25(pw,igf)
         1       eq6(igf)
      2000       eq12(igf,o)
       350       eq12(igf,s)
        20       eq12(igf,th)
        50       eq12(igf,tss)
-       (0)      eq13(igf,o)
-       (0)      eq13(igf,s)
-       (0)      eq13(igf,th)
-       (0)      eq13(igf,tss)
 
 F_s_tu(pw,orf)
                 (.LO, .L, .UP, .M = 0, 0, +INF, 0)
        -1       eq5(pw)
-        1       eq21(pw,orf)
-        1       eq25(pw,orf)
         1       eq6(orf)
      2000       eq12(orf,o)
       350       eq12(orf,s)
        20       eq12(orf,th)
        50       eq12(orf,tss)
-       (0)      eq13(orf,o)
-       (0)      eq13(orf,s)
-       (0)      eq13(orf,th)
-       (0)      eq13(orf,tss)
 
 REMAINING 18 ENTRIES SKIPPED
 
@@ -904,38 +724,32 @@ F_rec(st,st)
        (0)      eq13(st,th)
        (0)      eq13(st,tss)
        -1       eq7(st)
-        1       eq22(st,st)
-        1       eq26(st,st)
 
 F_rec(st,igf)
                 (.LO, .L, .UP, .M = 0, 0, +INF, 0)
-        1       eq6(st)
+        1       eq6(igf)
        (0)      eq12(igf,o)
        (0)      eq12(igf,s)
        (0)      eq12(igf,th)
        (0)      eq12(igf,tss)
-       (0)      eq13(igf,o)
-       (0)      eq13(igf,s)
-       (0)      eq13(igf,th)
-       (0)      eq13(igf,tss)
+       (0)      eq13(st,o)
+       (0)      eq13(st,s)
+       (0)      eq13(st,th)
+       (0)      eq13(st,tss)
        -1       eq7(st)
-        1       eq22(st,igf)
-        1       eq26(st,igf)
 
 F_rec(st,orf)
                 (.LO, .L, .UP, .M = 0, 0, +INF, 0)
-        1       eq6(st)
+        1       eq6(orf)
        (0)      eq12(orf,o)
        (0)      eq12(orf,s)
        (0)      eq12(orf,th)
        (0)      eq12(orf,tss)
-       (0)      eq13(orf,o)
-       (0)      eq13(orf,s)
-       (0)      eq13(orf,th)
-       (0)      eq13(orf,tss)
+       (0)      eq13(st,o)
+       (0)      eq13(st,s)
+       (0)      eq13(st,th)
+       (0)      eq13(st,tss)
        -1       eq7(st)
-        1       eq22(st,orf)
-        1       eq26(st,orf)
 
 REMAINING 46 ENTRIES SKIPPED
 
@@ -943,36 +757,30 @@ REMAINING 46 ENTRIES SKIPPED
 
 F_exit(st)
                 (.LO, .L, .UP, .M = 0, 0, +INF, 0)
+       (0)      eq13(st,o)
+       (0)      eq13(st,s)
+       (0)      eq13(st,th)
+       (0)      eq13(st,tss)
        -1       eq7(st)
         1       eq8
-        1       eq23(st)
-        1       eq27(st)
-     (-10)      eq15(o)
-    (-150)      eq15(s)
-      (-1)      eq15(th)
-      (-1)      eq15(tss)
 
 F_exit(igf)
                 (.LO, .L, .UP, .M = 0, 0, +INF, 0)
+       (0)      eq13(igf,o)
+       (0)      eq13(igf,s)
+       (0)      eq13(igf,th)
+       (0)      eq13(igf,tss)
        -1       eq7(igf)
         1       eq8
-        1       eq23(igf)
-        1       eq27(igf)
-     (-10)      eq15(o)
-    (-150)      eq15(s)
-      (-1)      eq15(th)
-      (-1)      eq15(tss)
 
 F_exit(orf)
                 (.LO, .L, .UP, .M = 0, 0, +INF, 0)
+       (0)      eq13(orf,o)
+       (0)      eq13(orf,s)
+       (0)      eq13(orf,th)
+       (0)      eq13(orf,tss)
        -1       eq7(orf)
         1       eq8
-        1       eq23(orf)
-        1       eq27(orf)
-     (-10)      eq15(o)
-    (-150)      eq15(s)
-      (-1)      eq15(th)
-      (-1)      eq15(tss)
 
 REMAINING 4 ENTRIES SKIPPED
 
@@ -981,38 +789,17 @@ REMAINING 4 ENTRIES SKIPPED
 F_in(st)
                 (.LO, .L, .UP, .M = 0, 0, +INF, 0)
        -1       eq6(st)
-        1       eq24(st)
-        1       eq28(st)
         1       eq9(st)
-    -2500       eq14(st,o)
-     -400       eq14(st,s)
-     -400       eq14(st,th)
-     -100       eq14(st,tss)
-       -2       eq18(st)
 
 F_in(igf)
                 (.LO, .L, .UP, .M = 0, 0, +INF, 0)
        -1       eq6(igf)
-        1       eq24(igf)
-        1       eq28(igf)
         1       eq9(igf)
-    -2500       eq14(igf,o)
-     -400       eq14(igf,s)
-     -400       eq14(igf,th)
-     -100       eq14(igf,tss)
-       -2       eq18(igf)
 
 F_in(orf)
                 (.LO, .L, .UP, .M = 0, 0, +INF, 0)
        -1       eq6(orf)
-        1       eq24(orf)
-        1       eq28(orf)
         1       eq9(orf)
-    -2500       eq14(orf,o)
-     -400       eq14(orf,s)
-     -400       eq14(orf,th)
-     -100       eq14(orf,tss)
-       -2       eq18(orf)
 
 REMAINING 4 ENTRIES SKIPPED
 
@@ -1035,25 +822,35 @@ F_out(orf)
 
 REMAINING 4 ENTRIES SKIPPED
 
+---- C_rout  concentration of c exiting tu and entering tup for recycle
+
+C_rout(st,st,o)
+                (.LO, .L, .UP, .M = 0, 0, +INF, 0)
+       (0)      eq12(st,o)
+
+C_rout(st,st,s)
+                (.LO, .L, .UP, .M = 0, 0, +INF, 0)
+       (0)      eq12(st,s)
+
+C_rout(st,st,th)
+                (.LO, .L, .UP, .M = 0, 0, +INF, 0)
+       (0)      eq12(st,th)
+
+REMAINING 193 ENTRIES SKIPPED
+
 ---- C_out  concentration of streamt directly exiting tu
 
 C_out(st,o)
                 (.LO, .L, .UP, .M = 0, 0, +INF, 0)
-       (0)      eq12(st,o)
        (0)      eq13(st,o)
-       (0)      eq15(o)
 
 C_out(st,s)
                 (.LO, .L, .UP, .M = 0, 0, +INF, 0)
-       (0)      eq12(st,s)
        (0)      eq13(st,s)
-       (0)      eq15(s)
 
 C_out(st,th)
                 (.LO, .L, .UP, .M = 0, 0, +INF, 0)
-       (0)      eq12(st,th)
        (0)      eq13(st,th)
-       (0)      eq15(th)
 
 REMAINING 25 ENTRIES SKIPPED
 
@@ -1062,17 +859,17 @@ REMAINING 25 ENTRIES SKIPPED
 ML_in(st,o)
                 (.LO, .L, .UP, .M = 0, 0, +INF, 0)
        -1       eq12(st,o)
-        1       eq14(st,o)
+        0.1     eq10(st,o)
 
 ML_in(st,s)
                 (.LO, .L, .UP, .M = 0, 0, +INF, 0)
        -1       eq12(st,s)
-        1       eq14(st,s)
+        1       eq10(st,s)
 
 ML_in(st,th)
                 (.LO, .L, .UP, .M = 0, 0, +INF, 0)
        -1       eq12(st,th)
-        1       eq14(st,th)
+        1       eq10(st,th)
 
 REMAINING 25 ENTRIES SKIPPED
 
@@ -1081,14 +878,17 @@ REMAINING 25 ENTRIES SKIPPED
 ML_out(st,o)
                 (.LO, .L, .UP, .M = 0, 0, +INF, 0)
        -1       eq13(st,o)
+       -1       eq10(st,o)
 
 ML_out(st,s)
                 (.LO, .L, .UP, .M = 0, 0, +INF, 0)
        -1       eq13(st,s)
+       -1       eq10(st,s)
 
 ML_out(st,th)
                 (.LO, .L, .UP, .M = 0, 0, +INF, 0)
        -1       eq13(st,th)
+       -1       eq10(st,th)
 
 REMAINING 25 ENTRIES SKIPPED
 
@@ -1108,160 +908,62 @@ ML_rem_c(th)
 
 REMAINING ENTRY SKIPPED
 
----- Cost_tot_tu  total cost of tu
-
-Cost_tot_tu(st)
-                (.LO, .L, .UP, .M = 0, 0, +INF, 0)
-        1       eq18(st)
-       -1       eq2
-
-Cost_tot_tu(igf)
-                (.LO, .L, .UP, .M = 0, 0, +INF, 0)
-        1       eq18(igf)
-       -1       eq2
-
-Cost_tot_tu(orf)
-                (.LO, .L, .UP, .M = 0, 0, +INF, 0)
-        1       eq18(orf)
-       -1       eq2
-
-REMAINING 4 ENTRIES SKIPPED
-
----- Cost_tot  total capital cost of the system
-
-Cost_tot
-                (.LO, .L, .UP, .M = 0, 0, +INF, 0)
-        1       eq2
-       -1       objective
-
-
----- B_s_tu  binary variable to show the existence of stream s into tu
-
-B_s_tu(pw,st)
-                (.LO, .L, .UP, .M = 0, 0, 1, 0)
-     -625       eq21(pw,st)
-     -200       eq25(pw,st)
-        1       eq29(st)
-
-B_s_tu(pw,igf)
-                (.LO, .L, .UP, .M = 0, 0, 1, 0)
-     -625       eq21(pw,igf)
-     -200       eq25(pw,igf)
-        1       eq29(igf)
-
-B_s_tu(pw,orf)
-                (.LO, .L, .UP, .M = 0, 0, 1, 0)
-     -625       eq21(pw,orf)
-     -200       eq25(pw,orf)
-        1       eq29(orf)
-
-REMAINING 18 ENTRIES SKIPPED
-
----- B_tu_tup  binary variable to show the existence of tu into tup recylce
-
-B_tu_tup(st,st)
-                (.LO, .L, .UP, .M = 0, 0, 1, 0)
-        1       eq29(st)
-     -625       eq22(st,st)
-     -200       eq26(st,st)
-
-B_tu_tup(st,igf)
-                (.LO, .L, .UP, .M = 0, 0, 1, 0)
-        1       eq19(st,igf)
-        1       eq19(igf,st)
-        1       eq29(st)
-     -625       eq22(st,igf)
-     -200       eq26(st,igf)
-
-B_tu_tup(st,orf)
-                (.LO, .L, .UP, .M = 0, 0, 1, 0)
-        1       eq19(st,orf)
-        1       eq19(orf,st)
-        1       eq29(st)
-     -625       eq22(st,orf)
-     -200       eq26(st,orf)
-
-REMAINING 46 ENTRIES SKIPPED
-
----- B_exit  binary variable to show the existence of stream from tu to discharg
-             e
-
-B_exit(st)
-                (.LO, .L, .UP, .M = 0, 0, 1, 0)
-     -625       eq23(st)
-     -200       eq27(st)
-
-B_exit(igf)
-                (.LO, .L, .UP, .M = 0, 0, 1, 0)
-     -625       eq23(igf)
-     -200       eq27(igf)
-
-B_exit(orf)
-                (.LO, .L, .UP, .M = 0, 0, 1, 0)
-     -625       eq23(orf)
-     -200       eq27(orf)
-
-REMAINING 4 ENTRIES SKIPPED
-
----- B_tu  binary variable to show the existence of tu
-
-B_tu(st)
-                (.LO, .L, .UP, .M = 0, 0, 1, 0)
-     -625       eq24(st)
-     -200       eq28(st)
-
-B_tu(igf)
-                (.LO, .L, .UP, .M = 0, 0, 1, 0)
-     -625       eq24(igf)
-     -200       eq28(igf)
-
-B_tu(orf)
-                (.LO, .L, .UP, .M = 0, 0, 1, 0)
-     -625       eq24(orf)
-     -200       eq28(orf)
-
-REMAINING 4 ENTRIES SKIPPED
-
 ---- obj  objective variable
 
 obj
                 (.LO, .L, .UP, .M = -INF, 0, +INF, 0)
         1       objective
 
-GAMS Rev 239  WEX-WEI 23.9.5 x86_64/MS Windows          08/21/17 19:06:53 Page 9
+
+---- dummy  
+
+dummy(st,o)
+                (.LO, .L, .UP, .M = -INF, 0, +INF, 0)
+        1       eq13(st,o)
+
+dummy(st,s)
+                (.LO, .L, .UP, .M = -INF, 0, +INF, 0)
+        1       eq13(st,s)
+
+dummy(st,th)
+                (.LO, .L, .UP, .M = -INF, 0, +INF, 0)
+        1       eq13(st,th)
+
+REMAINING 25 ENTRIES SKIPPED
+GAMS Rev 239  WEX-WEI 23.9.5 x86_64/MS Windows          08/22/17 16:00:58 Page 9
 minlp_eqns
-Model Statistics    SOLVE water Using MINLP From line 375
+Model Statistics    SOLVE water Using MINLP From line 381
 
 
 MODEL STATISTICS
 
-BLOCKS OF EQUATIONS          24     SINGLE EQUATIONS          344
-BLOCKS OF VARIABLES          17     SINGLE VARIABLES          275
-NON ZERO ELEMENTS         1,487     NON LINEAR N-Z            588
-DERIVATIVE POOL              10     CONSTANT POOL              18
-CODE LENGTH               1,138     DISCRETE VARIABLES         84
+BLOCKS OF EQUATIONS          11     SINGLE EQUATIONS          115
+BLOCKS OF VARIABLES          13     SINGLE VARIABLES          407
+NON ZERO ELEMENTS         1,056     NON LINEAR N-Z            644
+DERIVATIVE POOL              10     CONSTANT POOL              16
+CODE LENGTH                 952
 
 
-GENERATION TIME      =        0.157 SECONDS      4 Mb  WEX239-239 Nov  9, 2012
+GENERATION TIME      =        0.031 SECONDS      4 Mb  WEX239-239 Nov  9, 2012
 
 
-EXECUTION TIME       =        0.172 SECONDS      4 Mb  WEX239-239 Nov  9, 2012
-GAMS Rev 239  WEX-WEI 23.9.5 x86_64/MS Windows         08/21/17 19:06:53 Page 10
+EXECUTION TIME       =        0.031 SECONDS      4 Mb  WEX239-239 Nov  9, 2012
+GAMS Rev 239  WEX-WEI 23.9.5 x86_64/MS Windows         08/22/17 16:00:58 Page 10
 minlp_eqns
-Solution Report     SOLVE water Using MINLP From line 375
+Solution Report     SOLVE water Using MINLP From line 381
 
 
                S O L V E      S U M M A R Y
 
      MODEL   water               OBJECTIVE  obj
      TYPE    MINLP               DIRECTION  MINIMIZE
-     SOLVER  DICOPT              FROM LINE  375
+     SOLVER  DICOPT              FROM LINE  381
 
 **** SOLVER STATUS     1 Normal Completion         
-**** MODEL STATUS      10 Integer Infeasible       
-**** OBJECTIVE VALUE          5202507.0000
+**** MODEL STATUS      2 Locally Optimal           
+**** OBJECTIVE VALUE              150.0000
 
- RESOURCE USAGE, LIMIT          0.219      1000.000
+ RESOURCE USAGE, LIMIT          0.093      1000.000
  ITERATION COUNT, LIMIT         3    2000000000
  EVALUATION ERRORS              0             0
 
@@ -1282,13 +984,13 @@ CONOPT 3         Jul  4, 2012 23.9.5 WEX 36376.36401 WEI x86_64/MS Windows
                     DK-2880 Bagsvaerd, Denmark
  
  
-    The model has 275 variables and 344 constraints
-    with 1487 Jacobian elements, 588 of which are nonlinear.
+    The model has 407 variables and 115 constraints
+    with 1056 Jacobian elements, 644 of which are nonlinear.
     The Hessian of the Lagrangian has 0 elements on the diagonal,
-    308 elements below the diagonal, and 105 nonlinear variables.
+    420 elements below the diagonal, and 280 nonlinear variables.
  
  ** Warning **  The number of nonlinear derivatives equal to zero
-                in the initial point is large (= 37 percent).
+                in the initial point is large (= 60 percent).
                 A better initial point will probably help the
                 optimization.
  
@@ -1296,32 +998,659 @@ CONOPT 3         Jul  4, 2012 23.9.5 WEX 36376.36401 WEI x86_64/MS Windows
  ** Optimal solution. There are no superbasic variables.
  
  
- CONOPT time Total                            0.080 seconds
-   of which: Function evaluations             0.001 =  1.3%
+ CONOPT time Total                            0.092 seconds
+   of which: Function evaluations             0.001 =  1.1%
              1st Derivative evaluations       0.000 =  0.0%
  
+--- DICOPT: No discrete variables found
+--- DICOPT: Returning NLP solution
 
-IBM ILOG CPLEX   Jul  4, 2012 23.9.5 WEX 36376.36401 WEI x86_64/MS Windows
---- Cplex link licensed for continuous and discrete problems.
-Cplex 12.4.0.1
-
-Unable to load names.
-MIP status(119): integer infeasible or unbounded
-Problem is integer infeasible.
---- DICOPT: Stopped on infeasible first MIP
-
-      Integer infeasible: the first MIP master problem was infeasible.
-
-      For a general MINLP we can not guarantee no integer solutions
-      exist.
-
-      The relaxed NLP solution will be reported.
+      The model does not contain any discrete variables.
+      The NLP solution is returned to GAMS.
+      Advice: use an NLP solver for this model.
 
 
-No solution returned
+---- EQU eq17  
+
+       LOWER     LEVEL     UPPER    MARGINAL
+
+o        .         .         .         EPS       
+s        .         .         .         EPS       
+th       .         .         .         EPS       
+tss      .         .         .         EPS       
+
+                       LOWER     LEVEL     UPPER    MARGINAL
+
+---- EQU eq4          625.000   625.000   625.000     1.000      
+
+---- EQU eq5  
+
+       LOWER     LEVEL     UPPER    MARGINAL
+
+pw       .         .         .         EPS       
+muw      .         .         .         EPS       
+bbd      .         .         .         EPS       
+
+---- EQU eq6  
+
+        LOWER     LEVEL     UPPER    MARGINAL
+
+st        .         .         .         EPS       
+igf       .         .         .         EPS       
+orf       .         .         .         EPS       
+hcy       .         .         .         EPS       
+ls        .         .         .         EPS       
+evap      .         .         .         EPS       
+wac       .         .         .         EPS       
+
+---- EQU eq9  
+
+        LOWER     LEVEL     UPPER    MARGINAL
+
+st        .         .         .         EPS       
+igf       .         .         .         EPS       
+orf       .         .         .         EPS       
+hcy       .         .         .         EPS       
+ls        .         .         .         EPS       
+evap      .         .         .         EPS       
+wac       .         .         .         EPS       
+
+---- EQU eq12  
+
+            LOWER     LEVEL     UPPER    MARGINAL
+
+st  .o        .         .         .         EPS       
+st  .s        .         .         .         EPS       
+st  .th       .         .         .         EPS       
+st  .tss      .         .         .         EPS       
+igf .o        .         .         .         EPS       
+igf .s        .         .         .         EPS       
+igf .th       .         .         .         EPS       
+igf .tss      .         .         .         EPS       
+orf .o        .         .         .         EPS       
+orf .s        .         .         .         EPS       
+orf .th       .         .         .         EPS       
+orf .tss      .         .         .         EPS       
+hcy .o        .         .         .         EPS       
+hcy .s        .         .         .         EPS       
+hcy .th       .         .         .         EPS       
+hcy .tss      .         .         .         EPS       
+ls  .o        .         .         .         EPS       
+ls  .s        .         .         .         EPS       
+ls  .th       .         .         .         EPS       
+ls  .tss      .         .         .         EPS       
+evap.o        .         .         .         EPS       
+evap.s        .         .         .         EPS       
+evap.th       .         .         .         EPS       
+evap.tss      .         .         .         EPS       
+wac .o        .         .         .         EPS       
+wac .s        .         .         .         EPS       
+wac .th       .         .         .         EPS       
+wac .tss      .         .         .         EPS       
+
+---- EQU eq13  
+
+            LOWER     LEVEL     UPPER    MARGINAL
+
+st  .o        .         .         .         EPS       
+st  .s        .         .         .         EPS       
+st  .th       .         .         .         EPS       
+st  .tss      .         .         .         EPS       
+igf .o        .         .         .         EPS       
+igf .s        .         .         .         EPS       
+igf .th       .         .         .         EPS       
+igf .tss      .         .         .         EPS       
+orf .o        .         .         .         EPS       
+orf .s        .         .         .         EPS       
+orf .th       .         .         .         EPS       
+orf .tss      .         .         .         EPS       
+hcy .o        .         .         .         EPS       
+hcy .s        .         .         .         EPS       
+hcy .th       .         .         .         EPS       
+hcy .tss      .         .         .         EPS       
+ls  .o        .         .         .         EPS       
+ls  .s        .         .         .         EPS       
+ls  .th       .         .         .         EPS       
+ls  .tss      .         .         .         EPS       
+evap.o        .         .         .         EPS       
+evap.s        .         .         .         EPS       
+evap.th       .         .         .         EPS       
+evap.tss      .         .         .         EPS       
+wac .o        .         .         .         EPS       
+wac .s        .         .         .         EPS       
+wac .th       .         .         .         EPS       
+wac .tss      .         .         .         EPS       
+
+---- EQU eq10  
+
+            LOWER     LEVEL     UPPER    MARGINAL
+
+st  .o        .         .         .         EPS       
+st  .s        .         .         .         EPS       
+st  .th       .         .         .         EPS       
+st  .tss      .         .         .         EPS       
+igf .o        .         .         .         EPS       
+igf .s        .         .         .         EPS       
+igf .th       .         .         .         EPS       
+igf .tss      .         .         .         EPS       
+orf .o        .         .         .         EPS       
+orf .s        .         .         .         EPS       
+orf .th       .         .         .         EPS       
+orf .tss      .         .         .         EPS       
+hcy .o        .         .         .         EPS       
+hcy .s        .         .         .         EPS       
+hcy .th       .         .         .         EPS       
+hcy .tss      .         .         .         EPS       
+ls  .o        .         .         .         EPS       
+ls  .s        .         .         .         EPS       
+ls  .th       .         .         .         EPS       
+ls  .tss      .         .         .         EPS       
+evap.o        .         .         .         EPS       
+evap.s        .         .         .         EPS       
+evap.th       .         .         .         EPS       
+evap.tss      .         .         .         EPS       
+wac .o        .         .         .         EPS       
+wac .s        .         .         .         EPS       
+wac .th       .         .         .         EPS       
+wac .tss      .         .         .         EPS       
+
+---- EQU eq7  
+
+        LOWER     LEVEL     UPPER    MARGINAL
+
+st        .         .         .         EPS       
+igf       .         .         .         EPS       
+orf       .         .         .         EPS       
+hcy       .         .         .         EPS       
+ls        .         .         .         EPS       
+evap      .         .         .         EPS       
+wac       .         .         .         EPS       
+
+                       LOWER     LEVEL     UPPER    MARGINAL
+
+---- EQU eq8          625.000   625.000   625.000      .         
+---- EQU objective       .         .         .        1.000      
+
+---- VAR F_s  flow rate of source water
+
+       LOWER     LEVEL     UPPER    MARGINAL
+
+pw    475.000   475.000   475.000    -1.000      
+muw      .      150.000     +INF       .         
+bbd      .         .         .       -1.000      
+
+---- VAR F_s_tu  flow rate of s entering tu
+
+            LOWER     LEVEL     UPPER    MARGINAL
+
+pw .st        .         .        +INF       EPS       
+pw .igf       .         .        +INF       EPS       
+pw .orf       .         .        +INF       EPS       
+pw .hcy       .         .        +INF       EPS       
+pw .ls        .         .        +INF       EPS       
+pw .evap      .      475.000     +INF       .         
+pw .wac       .         .        +INF       EPS       
+muw.st        .         .        +INF       EPS       
+muw.igf       .         .        +INF       EPS       
+muw.orf       .         .        +INF       EPS       
+muw.hcy       .         .        +INF       EPS       
+muw.ls        .         .        +INF       EPS       
+muw.evap      .         .        +INF       EPS       
+muw.wac       .      150.000     +INF       .         
+bbd.st        .         .        +INF       .         
+bbd.igf       .         .        +INF       .         
+bbd.orf       .         .        +INF       .         
+bbd.hcy       .         .        +INF       .         
+bbd.ls        .         .        +INF       .         
+bbd.evap      .         .        +INF       EPS       
+bbd.wac       .         .        +INF       EPS       
+
+---- VAR F_rec  flow rate of streams exiting tu that enter tup for recycle
+
+             LOWER     LEVEL     UPPER    MARGINAL
+
+st  .st        .         .        +INF       EPS       
+st  .igf       .         .        +INF       EPS       
+st  .orf       .         .        +INF       EPS       
+st  .hcy       .         .        +INF       EPS       
+st  .ls        .         .        +INF       EPS       
+st  .evap      .         .        +INF       EPS       
+st  .wac       .         .        +INF       EPS       
+igf .st        .         .        +INF       EPS       
+igf .igf       .         .        +INF       EPS       
+igf .orf       .         .        +INF       EPS       
+igf .hcy       .         .        +INF       EPS       
+igf .ls        .         .        +INF       EPS       
+igf .evap      .         .        +INF       EPS       
+igf .wac       .         .        +INF       EPS       
+orf .st        .         .        +INF       EPS       
+orf .igf       .         .        +INF       EPS       
+orf .orf       .         .        +INF       EPS       
+orf .hcy       .         .        +INF       EPS       
+orf .ls        .         .        +INF       EPS       
+orf .evap      .         .        +INF       EPS       
+orf .wac       .         .        +INF       EPS       
+hcy .st        .         .        +INF       EPS       
+hcy .igf       .         .        +INF       EPS       
+hcy .orf       .         .        +INF       EPS       
+hcy .hcy       .         .        +INF       EPS       
+hcy .ls        .         .        +INF       EPS       
+hcy .evap      .         .        +INF       EPS       
+hcy .wac       .         .        +INF       EPS       
+ls  .st        .         .        +INF       EPS       
+ls  .igf       .         .        +INF       EPS       
+ls  .orf       .         .        +INF       EPS       
+ls  .hcy       .         .        +INF       EPS       
+ls  .ls        .         .        +INF       EPS       
+ls  .evap      .         .        +INF       EPS       
+ls  .wac       .         .        +INF       EPS       
+evap.st        .      475.000     +INF       .         
+evap.igf       .         .        +INF       EPS       
+evap.orf       .         .        +INF       EPS       
+evap.hcy       .         .        +INF       EPS       
+evap.ls        .         .        +INF       EPS       
+evap.evap      .         .        +INF       EPS       
+evap.wac       .         .        +INF       EPS       
+wac .st        .         .        +INF       EPS       
+wac .igf       .         .        +INF       EPS       
+wac .orf       .         .        +INF       EPS       
+wac .hcy       .         .        +INF       EPS       
+wac .ls        .         .        +INF       EPS       
+wac .evap      .         .        +INF       EPS       
+wac .wac       .         .        +INF       EPS       
+
+---- VAR F_exit  flow rate of streams leaving tu to the discharge point
+
+        LOWER     LEVEL     UPPER    MARGINAL
+
+st        .      475.000     +INF       .         
+igf       .         .        +INF       EPS       
+orf       .         .        +INF       EPS       
+hcy       .         .        +INF       EPS       
+ls        .         .        +INF       EPS       
+evap      .         .        +INF       EPS       
+wac       .      150.000     +INF       .         
+
+---- VAR F_in  flow rate of streams entering tu
+
+        LOWER     LEVEL     UPPER    MARGINAL
+
+st        .      475.000     +INF       .         
+igf       .         .        +INF       .         
+orf       .         .        +INF       .         
+hcy       .         .        +INF       .         
+ls        .         .        +INF       .         
+evap      .      475.000     +INF       .         
+wac       .      150.000     +INF       .         
+
+---- VAR F_out  flow rate of streams directly exiting tu
+
+        LOWER     LEVEL     UPPER    MARGINAL
+
+st        .      475.000     +INF       .         
+igf       .         .        +INF       .         
+orf       .         .        +INF       .         
+hcy       .         .        +INF       .         
+ls        .         .        +INF       .         
+evap      .      475.000     +INF       .         
+wac       .      150.000     +INF       .         
+
+---- VAR C_rout  concentration of c exiting tu and entering tup for recycle
+
+                 LOWER     LEVEL     UPPER    MARGINAL
+
+st  .st  .o        .         .        +INF       EPS       
+st  .st  .s        .         .        +INF       EPS       
+st  .st  .th       .         .        +INF       EPS       
+st  .st  .tss      .         .        +INF       EPS       
+st  .igf .o        .         .        +INF       EPS       
+st  .igf .s        .         .        +INF       EPS       
+st  .igf .th       .         .        +INF       EPS       
+st  .igf .tss      .         .        +INF       EPS       
+st  .orf .o        .         .        +INF       EPS       
+st  .orf .s        .         .        +INF       EPS       
+st  .orf .th       .         .        +INF       EPS       
+st  .orf .tss      .         .        +INF       EPS       
+st  .hcy .o        .         .        +INF       EPS       
+st  .hcy .s        .         .        +INF       EPS       
+st  .hcy .th       .         .        +INF       EPS       
+st  .hcy .tss      .         .        +INF       EPS       
+st  .ls  .o        .         .        +INF       EPS       
+st  .ls  .s        .         .        +INF       EPS       
+st  .ls  .th       .         .        +INF       EPS       
+st  .ls  .tss      .         .        +INF       EPS       
+st  .evap.o        .         .        +INF       EPS       
+st  .evap.s        .         .        +INF       EPS       
+st  .evap.th       .         .        +INF       EPS       
+st  .evap.tss      .         .        +INF       EPS       
+st  .wac .o        .         .        +INF       EPS       
+st  .wac .s        .         .        +INF       EPS       
+st  .wac .th       .         .        +INF       EPS       
+st  .wac .tss      .         .        +INF       EPS       
+igf .st  .o        .         .        +INF       EPS       
+igf .st  .s        .         .        +INF       EPS       
+igf .st  .th       .         .        +INF       EPS       
+igf .st  .tss      .         .        +INF       EPS       
+igf .igf .o        .         .        +INF       EPS       
+igf .igf .s        .         .        +INF       EPS       
+igf .igf .th       .         .        +INF       EPS       
+igf .igf .tss      .         .        +INF       EPS       
+igf .orf .o        .         .        +INF       EPS       
+igf .orf .s        .         .        +INF       EPS       
+igf .orf .th       .         .        +INF       EPS       
+igf .orf .tss      .         .        +INF       EPS       
+igf .hcy .o        .         .        +INF       EPS       
+igf .hcy .s        .         .        +INF       EPS       
+igf .hcy .th       .         .        +INF       EPS       
+igf .hcy .tss      .         .        +INF       EPS       
+igf .ls  .o        .         .        +INF       EPS       
+igf .ls  .s        .         .        +INF       EPS       
+igf .ls  .th       .         .        +INF       EPS       
+igf .ls  .tss      .         .        +INF       EPS       
+igf .evap.o        .         .        +INF       EPS       
+igf .evap.s        .         .        +INF       EPS       
+igf .evap.th       .         .        +INF       EPS       
+igf .evap.tss      .         .        +INF       EPS       
+igf .wac .o        .         .        +INF       EPS       
+igf .wac .s        .         .        +INF       EPS       
+igf .wac .th       .         .        +INF       EPS       
+igf .wac .tss      .         .        +INF       EPS       
+orf .st  .o        .         .        +INF       EPS       
+orf .st  .s        .         .        +INF       EPS       
+orf .st  .th       .         .        +INF       EPS       
+orf .st  .tss      .         .        +INF       EPS       
+orf .igf .o        .         .        +INF       EPS       
+orf .igf .s        .         .        +INF       EPS       
+orf .igf .th       .         .        +INF       EPS       
+orf .igf .tss      .         .        +INF       EPS       
+orf .orf .o        .         .        +INF       EPS       
+orf .orf .s        .         .        +INF       EPS       
+orf .orf .th       .         .        +INF       EPS       
+orf .orf .tss      .         .        +INF       EPS       
+orf .hcy .o        .         .        +INF       EPS       
+orf .hcy .s        .         .        +INF       EPS       
+orf .hcy .th       .         .        +INF       EPS       
+orf .hcy .tss      .         .        +INF       EPS       
+orf .ls  .o        .         .        +INF       EPS       
+orf .ls  .s        .         .        +INF       EPS       
+orf .ls  .th       .         .        +INF       EPS       
+orf .ls  .tss      .         .        +INF       EPS       
+orf .evap.o        .         .        +INF       EPS       
+orf .evap.s        .         .        +INF       EPS       
+orf .evap.th       .         .        +INF       EPS       
+orf .evap.tss      .         .        +INF       EPS       
+orf .wac .o        .         .        +INF       EPS       
+orf .wac .s        .         .        +INF       EPS       
+orf .wac .th       .         .        +INF       EPS       
+orf .wac .tss      .         .        +INF       EPS       
+hcy .st  .o        .         .        +INF       EPS       
+hcy .st  .s        .         .        +INF       EPS       
+hcy .st  .th       .         .        +INF       EPS       
+hcy .st  .tss      .         .        +INF       EPS       
+hcy .igf .o        .         .        +INF       EPS       
+hcy .igf .s        .         .        +INF       EPS       
+hcy .igf .th       .         .        +INF       EPS       
+hcy .igf .tss      .         .        +INF       EPS       
+hcy .orf .o        .         .        +INF       EPS       
+hcy .orf .s        .         .        +INF       EPS       
+hcy .orf .th       .         .        +INF       EPS       
+hcy .orf .tss      .         .        +INF       EPS       
+hcy .hcy .o        .         .        +INF       EPS       
+hcy .hcy .s        .         .        +INF       EPS       
+hcy .hcy .th       .         .        +INF       EPS       
+hcy .hcy .tss      .         .        +INF       EPS       
+hcy .ls  .o        .         .        +INF       EPS       
+hcy .ls  .s        .         .        +INF       EPS       
+hcy .ls  .th       .         .        +INF       EPS       
+hcy .ls  .tss      .         .        +INF       EPS       
+hcy .evap.o        .         .        +INF       EPS       
+hcy .evap.s        .         .        +INF       EPS       
+hcy .evap.th       .         .        +INF       EPS       
+hcy .evap.tss      .         .        +INF       EPS       
+hcy .wac .o        .         .        +INF       EPS       
+hcy .wac .s        .         .        +INF       EPS       
+hcy .wac .th       .         .        +INF       EPS       
+hcy .wac .tss      .         .        +INF       EPS       
+ls  .st  .o        .         .        +INF       EPS       
+ls  .st  .s        .         .        +INF       EPS       
+ls  .st  .th       .         .        +INF       EPS       
+ls  .st  .tss      .         .        +INF       EPS       
+ls  .igf .o        .         .        +INF       EPS       
+ls  .igf .s        .         .        +INF       EPS       
+ls  .igf .th       .         .        +INF       EPS       
+ls  .igf .tss      .         .        +INF       EPS       
+ls  .orf .o        .         .        +INF       EPS       
+ls  .orf .s        .         .        +INF       EPS       
+ls  .orf .th       .         .        +INF       EPS       
+ls  .orf .tss      .         .        +INF       EPS       
+ls  .hcy .o        .         .        +INF       EPS       
+ls  .hcy .s        .         .        +INF       EPS       
+ls  .hcy .th       .         .        +INF       EPS       
+ls  .hcy .tss      .         .        +INF       EPS       
+ls  .ls  .o        .         .        +INF       EPS       
+ls  .ls  .s        .         .        +INF       EPS       
+ls  .ls  .th       .         .        +INF       EPS       
+ls  .ls  .tss      .         .        +INF       EPS       
+ls  .evap.o        .         .        +INF       EPS       
+ls  .evap.s        .         .        +INF       EPS       
+ls  .evap.th       .         .        +INF       EPS       
+ls  .evap.tss      .         .        +INF       EPS       
+ls  .wac .o        .         .        +INF       EPS       
+ls  .wac .s        .         .        +INF       EPS       
+ls  .wac .th       .         .        +INF       EPS       
+ls  .wac .tss      .         .        +INF       EPS       
+evap.st  .o        .         .        +INF       EPS       
+evap.st  .s        .         .        +INF       EPS       
+evap.st  .th       .         .        +INF       EPS       
+evap.st  .tss      .         .        +INF       EPS       
+evap.igf .o        .         .        +INF       EPS       
+evap.igf .s        .         .        +INF       EPS       
+evap.igf .th       .         .        +INF       EPS       
+evap.igf .tss      .         .        +INF       EPS       
+evap.orf .o        .         .        +INF       EPS       
+evap.orf .s        .         .        +INF       EPS       
+evap.orf .th       .         .        +INF       EPS       
+evap.orf .tss      .         .        +INF       EPS       
+evap.hcy .o        .         .        +INF       EPS       
+evap.hcy .s        .         .        +INF       EPS       
+evap.hcy .th       .         .        +INF       EPS       
+evap.hcy .tss      .         .        +INF       EPS       
+evap.ls  .o        .         .        +INF       EPS       
+evap.ls  .s        .         .        +INF       EPS       
+evap.ls  .th       .         .        +INF       EPS       
+evap.ls  .tss      .         .        +INF       EPS       
+evap.evap.o        .         .        +INF       EPS       
+evap.evap.s        .         .        +INF       EPS       
+evap.evap.th       .         .        +INF       EPS       
+evap.evap.tss      .         .        +INF       EPS       
+evap.wac .o        .         .        +INF       EPS       
+evap.wac .s        .         .        +INF       EPS       
+evap.wac .th       .         .        +INF       EPS       
+evap.wac .tss      .         .        +INF       EPS       
+wac .st  .o        .         .        +INF       EPS       
+wac .st  .s        .         .        +INF       EPS       
+wac .st  .th       .         .        +INF       EPS       
+wac .st  .tss      .         .        +INF       EPS       
+wac .igf .o        .         .        +INF       EPS       
+wac .igf .s        .         .        +INF       EPS       
+wac .igf .th       .         .        +INF       EPS       
+wac .igf .tss      .         .        +INF       EPS       
+wac .orf .o        .         .        +INF       EPS       
+wac .orf .s        .         .        +INF       EPS       
+wac .orf .th       .         .        +INF       EPS       
+wac .orf .tss      .         .        +INF       EPS       
+wac .hcy .o        .         .        +INF       EPS       
+wac .hcy .s        .         .        +INF       EPS       
+wac .hcy .th       .         .        +INF       EPS       
+wac .hcy .tss      .         .        +INF       EPS       
+wac .ls  .o        .         .        +INF       EPS       
+wac .ls  .s        .         .        +INF       EPS       
+wac .ls  .th       .         .        +INF       EPS       
+wac .ls  .tss      .         .        +INF       EPS       
+wac .evap.o        .         .        +INF       EPS       
+wac .evap.s        .         .        +INF       EPS       
+wac .evap.th       .         .        +INF       EPS       
+wac .evap.tss      .         .        +INF       EPS       
+wac .wac .o        .         .        +INF       EPS       
+wac .wac .s        .         .        +INF       EPS       
+wac .wac .th       .         .        +INF       EPS       
+wac .wac .tss      .         .        +INF       EPS       
+
+---- VAR C_out  concentration of streamt directly exiting tu
+
+            LOWER     LEVEL     UPPER    MARGINAL
+
+st  .o        .         .        +INF       EPS       
+st  .s        .         .        +INF       EPS       
+st  .th       .         .        +INF       EPS       
+st  .tss      .         .        +INF       EPS       
+igf .o        .         .        +INF       EPS       
+igf .s        .         .        +INF       EPS       
+igf .th       .         .        +INF       EPS       
+igf .tss      .         .        +INF       EPS       
+orf .o        .         .        +INF       EPS       
+orf .s        .         .        +INF       EPS       
+orf .th       .         .        +INF       EPS       
+orf .tss      .         .        +INF       EPS       
+hcy .o        .         .        +INF       EPS       
+hcy .s        .         .        +INF       EPS       
+hcy .th       .         .        +INF       EPS       
+hcy .tss      .         .        +INF       EPS       
+ls  .o        .         .        +INF       EPS       
+ls  .s        .         .        +INF       EPS       
+ls  .th       .         .        +INF       EPS       
+ls  .tss      .         .        +INF       EPS       
+evap.o        .         .        +INF       EPS       
+evap.s        .         .        +INF       EPS       
+evap.th       .         .        +INF       EPS       
+evap.tss      .         .        +INF       EPS       
+wac .o        .         .        +INF       EPS       
+wac .s        .         .        +INF       EPS       
+wac .th       .         .        +INF       EPS       
+wac .tss      .         .        +INF       EPS       
+
+---- VAR ML_in  mass load of c entering tu
+
+            LOWER     LEVEL     UPPER    MARGINAL
+
+st  .o        .         .        +INF       .         
+st  .s        .         .        +INF       .         
+st  .th       .         .        +INF       .         
+st  .tss      .         .        +INF       .         
+igf .o        .         .        +INF       .         
+igf .s        .         .        +INF       .         
+igf .th       .         .        +INF       .         
+igf .tss      .         .        +INF       .         
+orf .o        .         .        +INF       .         
+orf .s        .         .        +INF       .         
+orf .th       .         .        +INF       .         
+orf .tss      .         .        +INF       .         
+hcy .o        .         .        +INF       .         
+hcy .s        .         .        +INF       .         
+hcy .th       .         .        +INF       .         
+hcy .tss      .         .        +INF       .         
+ls  .o        .         .        +INF       .         
+ls  .s        .         .        +INF       .         
+ls  .th       .         .        +INF       .         
+ls  .tss      .         .        +INF       .         
+evap.o        .    9.5000E+5     +INF       .         
+evap.s        .    1.6625E+5     +INF       .         
+evap.th       .     9500.000     +INF       .         
+evap.tss      .    23750.000     +INF       .         
+wac .o        .         .        +INF       .         
+wac .s        .     2250.000     +INF       .         
+wac .th       .    36750.000     +INF       .         
+wac .tss      .         .        +INF       .         
+
+---- VAR ML_out  mass load of c exiting tu
+
+            LOWER     LEVEL     UPPER    MARGINAL
+
+st  .o        .         .        +INF       .         
+st  .s        .         .        +INF       .         
+st  .th       .         .        +INF       .         
+st  .tss      .         .        +INF       .         
+igf .o        .         .        +INF       .         
+igf .s        .         .        +INF       .         
+igf .th       .         .        +INF       .         
+igf .tss      .         .        +INF       .         
+orf .o        .         .        +INF       .         
+orf .s        .         .        +INF       .         
+orf .th       .         .        +INF       .         
+orf .tss      .         .        +INF       .         
+hcy .o        .         .        +INF       .         
+hcy .s        .         .        +INF       .         
+hcy .th       .         .        +INF       .         
+hcy .tss      .         .        +INF       .         
+ls  .o        .         .        +INF       .         
+ls  .s        .         .        +INF       .         
+ls  .th       .         .        +INF       .         
+ls  .tss      .         .        +INF       .         
+evap.o        .     9500.000     +INF       .         
+evap.s        .     1662.500     +INF       .         
+evap.th       .       95.000     +INF       .         
+evap.tss      .      237.500     +INF       .         
+wac .o        .         .        +INF       .         
+wac .s        .     2250.000     +INF       .         
+wac .th       .      367.500     +INF       .         
+wac .tss      .         .        +INF       .         
+
+---- VAR ML_rem_c  mass load of c removed from system
+
+       LOWER     LEVEL     UPPER    MARGINAL
+
+o        .    9.4375E+5     +INF       .         
+s        .    74750.000     +INF       .         
+th       .    45625.000     +INF       .         
+tss      .    23125.000     +INF       .         
+
+                       LOWER     LEVEL     UPPER    MARGINAL
+
+---- VAR obj            -INF    150.000     +INF       .         
+
+  obj  objective variable
+
+---- VAR dummy  
+
+            LOWER     LEVEL     UPPER    MARGINAL
+
+st  .o       -INF       .        +INF       .         
+st  .s       -INF       .        +INF       .         
+st  .th      -INF       .        +INF       .         
+st  .tss     -INF       .        +INF       .         
+igf .o       -INF       .        +INF       .         
+igf .s       -INF       .        +INF       .         
+igf .th      -INF       .        +INF       .         
+igf .tss     -INF       .        +INF       .         
+orf .o       -INF       .        +INF       .         
+orf .s       -INF       .        +INF       .         
+orf .th      -INF       .        +INF       .         
+orf .tss     -INF       .        +INF       .         
+hcy .o       -INF       .        +INF       .         
+hcy .s       -INF       .        +INF       .         
+hcy .th      -INF       .        +INF       .         
+hcy .tss     -INF       .        +INF       .         
+ls  .o       -INF       .        +INF       .         
+ls  .s       -INF       .        +INF       .         
+ls  .th      -INF       .        +INF       .         
+ls  .tss     -INF       .        +INF       .         
+evap.o       -INF   9500.000     +INF       .         
+evap.s       -INF   1662.500     +INF       .         
+evap.th      -INF     95.000     +INF       .         
+evap.tss     -INF    237.500     +INF       .         
+wac .o       -INF       .        +INF       .         
+wac .s       -INF   2250.000     +INF       .         
+wac .th      -INF    367.500     +INF       .         
+wac .tss     -INF       .        +INF       .         
 
 
-EXECUTION TIME       =        0.000 SECONDS      2 Mb  WEX239-239 Nov  9, 2012
+**** REPORT SUMMARY :        0     NONOPT
+                             0 INFEASIBLE
+                             0  UNBOUNDED
+                             0     ERRORS
+
+
+EXECUTION TIME       =        0.031 SECONDS      2 Mb  WEX239-239 Nov  9, 2012
 
 
 USER: Dept of Chemical Engineering                   G120809:1617AA-GEN

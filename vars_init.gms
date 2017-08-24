@@ -12,7 +12,7 @@ $Offtext
 positive variables
         F_s(s)                  'flow rate of source water'
         F_s_tu(s,tu)    'flow rate of s entering tu'
-        F_rec(tu,tup)   'flow rate of streams exiting tu that enter tup for recycle'
+        F_rec(tup,tu)   'flow rate of streams exiting tu that enter tup for recycle'
         F_exit(tu)              'flow rate of streams leaving tu to the discharge point'
         F_in(tu)                'flow rate of streams entering tu'
         F_out(tu)               'flow rate of streams directly exiting tu'      ;
@@ -60,4 +60,6 @@ binary variables
 variable
         obj                             'objective variable' ;
 
+variable
+         dummy(tu,c)               ;
 
