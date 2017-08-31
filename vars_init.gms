@@ -20,13 +20,20 @@ positive variables
 F_s.fx('pw') = 475 ;
 F_s.fx('bbd') = 0 ;
 
+F_rec.fx('st','st') = 0;
+F_rec.fx('igf','igf') = 0;
+F_rec.fx('orf','orf') = 0;
+F_rec.fx('hcy','hcy') = 0;
+F_rec.fx('ls','ls') = 0;
+F_rec.fx('evap','evap') = 0;
+F_rec.fx('wac','wac') = 0;
 *CONCENTRATIONS
 
 positive variables
         C_in(tu,c)              'concentration of c in tu inlet'
         C_rout(tu,tup,c)        'concentration of c exiting tu and entering tup for recycle'
         C_exit(tu,c)    'concentration of c leaving tu to the discharge point'
-        C_out(tu,c)             'concentration of streamt directly exiting tu'
+        C_out(tu,c)             'concentration of stream directly exiting tu'
         C_BFW(c)                'concentration of c in BFW'     ;
 
 *MASS LOADS

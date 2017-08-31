@@ -19,6 +19,13 @@ $include minlp_eqns.gms
 
 model water /all/ ;
 
+option minlp=baron;
+option nlp=baron;
+
 Solve  water using minlp minimization obj ;
 
+$GDXOUT minlp_main.gdx
+$UNLOAD
+$GDXOUT
 
+execute_unload 'minlp_main.gdx'

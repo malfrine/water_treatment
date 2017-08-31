@@ -135,19 +135,19 @@ table RR(tu,c)  'removal ratio of contaminant c'
 scalar Bound_up 'upper bound for stream flow rates';
         Bound_up = F_BFW + sum(tu, F_loss(tu));
 *EQN 20
-
+Display Bound_up ;
 scalar Bound_low        'lower bound for stream flow rates'
-        /200/;
+        /0/;
 *arbitrary values - model values not given by Forshomi
 
 parameter NS_max(tu)    'maximum number of streams that can go through tu'
-        /         st    10
-                  igf   10
-                  orf   10
-                  hcy   10
-                  ls    10
-                  evap  10
-                  wac   10      /;
+        /         st    5
+                  igf   5
+                  orf   5
+                  hcy   5
+                  ls    5
+                  evap  5
+                  wac   5      /;
 *arbitrary values - model values not given by Forshomi
 
 scalar HY       'number of operational hours per year'
