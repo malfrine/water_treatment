@@ -1,4 +1,4 @@
-GAMS Rev 239  WEX-WEI 23.9.5 x86_64/MS Windows          08/30/17 15:23:45 Page 1
+GAMS Rev 239  WEX-WEI 23.9.5 x86_64/MS Windows          09/13/17 19:02:46 Page 1
 SAGD Optimization - MILNP Algorithm
 C o m p i l a t i o n
 
@@ -8,10 +8,10 @@ C o m p i l a t i o n
               MILNP Optimization.
    6   
    7   
-   8  *INITIALIZE SETS, DATA, and VARIABLES
+   8  *INITIALIZE SETS, DATA, and VARIABLE
    9   
-INCLUDE    E:\Work\UAlberta-RA\ZL\gams_sagd\sets_init.gms
-GAMS Rev 239  WEX-WEI 23.9.5 x86_64/MS Windows          08/30/17 15:23:45 Page 2
+INCLUDE    E:\Work\Research\water_treatment\gams_sagd\sets_init.gms
+GAMS Rev 239  WEX-WEI 23.9.5 x86_64/MS Windows          09/13/17 19:02:46 Page 2
 sets_init
 C o m p i l a t i o n
 
@@ -52,8 +52,8 @@ C o m p i l a t i o n
   45   
   46   
   47   
-INCLUDE    E:\Work\UAlberta-RA\ZL\gams_sagd\params_init.gms
-GAMS Rev 239  WEX-WEI 23.9.5 x86_64/MS Windows          08/30/17 15:23:45 Page 3
+INCLUDE    E:\Work\Research\water_treatment\gams_sagd\params_init.gms
+GAMS Rev 239  WEX-WEI 23.9.5 x86_64/MS Windows          09/13/17 19:02:46 Page 3
 params_init
 C o m p i l a t i o n
 
@@ -149,287 +149,288 @@ C o m p i l a t i o n
  135                  bbd             1       /;
  136   
  137  parameter cost_fix_s(s) 'fixed cost of s'
- 138          /       pw              1
- 139                  muw             1
- 140                  bbd             1       /;
+ 138          /       pw              0
+ 139                  muw             400
+ 140                  bbd             0       /;
  141   
- 142  parameter cost_var_tu(tu)       'variable cost of tu'
- 143                  /       st             1
- 144                     igf             1
- 145                     orf             1
+ 142  parameter cost_var_tu_a(tu)       'variable cost of tu'
+ 143                  /  st              109.26
+ 144                     igf             432.94
+ 145                     orf             0
  146                     hcy             1
- 147                     ls              1
- 148                     evap            1
- 149                     wac             1       /;
+ 147                     ls              5388
+ 148                     evap            15529
+ 149                     wac             494.23       /;
  150   
- 151   
- 152  parameter cost_fix_tu_a(tu)     'fixed cost of tu - function slope'
- 153             /       st              1
- 154                     igf             1
- 155                     orf             1
- 156                     hcy             1
- 157                     ls              1
- 158                     evap            1
- 159                     wac             1       /;
+ 151  parameter cost_var_tu_b(tu)       'variable cost of tu'
+ 152                  /  st              0
+ 153                     igf             23585
+ 154                     orf             0
+ 155                     hcy             1
+ 156                     ls              -479602
+ 157                     evap            10626
+ 158                     wac             -31.142       /;
+ 159   
  160   
- 161   
- 162  parameter cost_fix_tu_b(tu)     'fixed cost of tu - function intercept'
- 163             /       st              1
- 164                     igf             1
- 165                     orf             1
- 166                     hcy             1
- 167                     ls              1
- 168                     evap            1
- 169                     wac             1       /;
+ 161  parameter cost_fix_tu_a(tu)     'fixed cost of tu - function slope'
+ 162             /       st              2989.5
+ 163                     igf             1906.7
+ 164                     orf             1248.9
+ 165                     hcy             3000
+ 166                     ls              9705.5
+ 167                     evap            28723
+ 168                     wac             1550.9       /;
+ 169   
  170   
- 171  *OTHER PARAMETERS---------------------------------------------------------
+ 171  parameter cost_fix_tu_b(tu)     'fixed cost of tu - function intercept'
+ 172             /       st              0
+ 173                     igf             12292
+ 174                     orf             -401.99
+ 175                     hcy             50000
+ 176                     ls              -860733
+ 177                     evap            12926
+ 178                     wac             -317.74       /;
+ 179   
+ 180  *OTHER PARAMETERS---------------------------------------------------------
       ----------------
- 172   
- 173  table RR(tu,c)  'removal ratio of contaminant c'
- 174                             o       s       th      tss
- 175             st              0.9     0       0       0.5
- 176             igf             0.9     0       0       0.7
- 177             orf             0.91    0       0       0.95
- 178             hcy             0.93    0       0       0
- 179             ls              0       0.9     0.5     0
- 180             evap            0.99    0.99    0.99    0.99
- 181             wac             0       0       0.99    0       ;
- 182   
- 183  scalar Bound_up 'upper bound for stream flow rates';
- 184          Bound_up = F_BFW + sum(tu, F_loss(tu));
- 185  *EQN 20
- 186  Display Bound_up ;
- 187  scalar Bound_low        'lower bound for stream flow rates'
- 188          /0/;
- 189  *arbitrary values - model values not given by Forshomi
- 190   
- 191  parameter NS_max(tu)    'maximum number of streams that can go through tu'
- 192          /         st    5
- 193                    igf   5
- 194                    orf   5
- 195                    hcy   5
- 196                    ls    5
- 197                    evap  5
- 198                    wac   5      /;
- 199  *arbitrary values - model values not given by Forshomi
- 200   
- 201  scalar HY       'number of operational hours per year'
- 202          /8322/;
- 203  **assuming 95% on-stream time
- 204   
- 205   
- 206   
- 207   
- 208   
+ 181   
+ 182  table RR(tu,c)  'removal ratio of contaminant c'
+ 183                             o       s       th      tss
+ 184             st              0.9     0       0       0.5
+ 185             igf             0.9     0       0       0.7
+ 186             orf             0.91    0       0       0.95
+ 187             hcy             0.93    0       0       0
+ 188             ls              0       0.9     0.5     0
+ 189             evap            0.99    0.99    0.99    0.99
+ 190             wac             0       0       0.99    0       ;
+ 191   
+ 192  scalar Bound_up 'upper bound for stream flow rates';
+ 193          Bound_up = F_BFW + sum(tu, F_loss(tu));
+ 194  *EQN 20
+ 195  Display Bound_up ;
+ 196  scalar Bound_low        'lower bound for stream flow rates'
+ 197          /20/;
+ 198  *arbitrary values - model values not given by Forshomi
+ 199   
+ 200  parameter NS_max(tu)    'maximum number of streams that can go through tu'
+ 201          /         st    5
+ 202                    igf   5
+ 203                    orf   5
+ 204                    hcy   5
+ 205                    ls    5
+ 206                    evap  5
+ 207                    wac   5      /;
+ 208  *arbitrary values - model values not given by Forshomi
  209   
- 210   
- 211   
- 212   
+ 210  scalar HY       'number of operational hours per year'
+ 211          /8322/;
+ 212  **assuming 95% on-stream time
  213   
  214   
  215   
  216   
  217   
-INCLUDE    E:\Work\UAlberta-RA\ZL\gams_sagd\vars_init.gms
-GAMS Rev 239  WEX-WEI 23.9.5 x86_64/MS Windows          08/30/17 15:23:45 Page 4
+ 218   
+ 219   
+ 220   
+ 221   
+ 222   
+ 223   
+ 224   
+ 225   
+ 226   
+INCLUDE    E:\Work\Research\water_treatment\gams_sagd\vars_init.gms
+GAMS Rev 239  WEX-WEI 23.9.5 x86_64/MS Windows          09/13/17 19:02:46 Page 4
 vars_init
 C o m p i l a t i o n
 
 
- 220   
+ 229   
        
       The variables for flow rates, concentrations, mass loads, cost, and others
        are
       initialized in this script.
        
- 227   
- 228  *FLOW RATES
- 229   
- 230  positive variables
- 231          F_s(s)                  'flow rate of source water'
- 232          F_s_tu(s,tu)    'flow rate of s entering tu'
- 233          F_rec(tup,tu)   'flow rate of streams exiting tu that enter tup fo
+ 236   
+ 237  *FLOW RATES
+ 238   
+ 239  positive variables
+ 240          F_s(s)                  'flow rate of source water'
+ 241          F_s_tu(s,tu)    'flow rate of s entering tu'
+ 242          F_rec(tup,tu)   'flow rate of streams exiting tu that enter tup fo
       r recycle'
- 234          F_exit(tu)              'flow rate of streams leaving tu to the di
+ 243          F_exit(tu)              'flow rate of streams leaving tu to the di
       scharge point'
- 235          F_in(tu)                'flow rate of streams entering tu'
- 236          F_out(tu)               'flow rate of streams directly exiting tu'
+ 244          F_in(tu)                'flow rate of streams entering tu'
+ 245          F_out(tu)               'flow rate of streams directly exiting tu'
             ;
- 237   
- 238  F_s.fx('pw') = 475 ;
- 239  F_s.fx('bbd') = 0 ;
- 240   
- 241  F_rec.fx('st','st') = 0;
- 242  F_rec.fx('igf','igf') = 0;
- 243  F_rec.fx('orf','orf') = 0;
- 244  F_rec.fx('hcy','hcy') = 0;
- 245  F_rec.fx('ls','ls') = 0;
- 246  F_rec.fx('evap','evap') = 0;
- 247  F_rec.fx('wac','wac') = 0;
- 248  *CONCENTRATIONS
+ 246   
+ 247  F_s.fx('pw') = 475 ;
+ 248  F_s.fx('bbd') = 0 ;
  249   
- 250  positive variables
- 251          C_in(tu,c)              'concentration of c in tu inlet'
- 252          C_rout(tu,tup,c)        'concentration of c exiting tu and enterin
-      g tup for recycle'
- 253          C_exit(tu,c)    'concentration of c leaving tu to the discharge po
-      int'
- 254          C_out(tu,c)             'concentration of stream directly exiting 
-      tu'
- 255          C_BFW(c)                'concentration of c in BFW'     ;
- 256   
- 257  *MASS LOADS
+ 250  F_rec.fx('st','st') = 0;
+ 251  F_rec.fx('igf','igf') = 0;
+ 252  F_rec.fx('orf','orf') = 0;
+ 253  F_rec.fx('hcy','hcy') = 0;
+ 254  F_rec.fx('ls','ls') = 0;
+ 255  F_rec.fx('evap','evap') = 0;
+ 256  F_rec.fx('wac','wac') = 0;
+ 257  *CONCENTRATIONS
  258   
  259  positive variables
- 260          ML_rem_tu_c(tu,c)       'mass load of c removed from tu'
- 261          ML_in(tu,c)             'mass load of c entering tu'
- 262          ML_out(tu,c)    'mass load of c exiting tu'
- 263          ML_rem_c(c)             'mass load of c removed from system'    ;
- 264   
- 265  *COST AND ENERGY VARIABLES
- 266   
- 267  positive variables
- 268          Cost_tot_tu(tu) 'total cost of tu'
- 269          Cost_op                 'operating cost of the system'
- 270          Cost_cap                'capital cost of the system'
- 271          Cost_tot                'total capital cost of the system'
- 272          energy_var(tu)  'energy consumption of tu'
- 273          energy_tot              'total energy consumption of the system' ;
- 274   
- 275  *BINARY VARIABLES
- 276   
- 277  binary variables
- 278          B_s_tu(s,tu)    'binary variable to show the existence of stream s
+ 260          C_in(tu,c)              'concentration of c in tu inlet'
+ 261          C_rout(tu,tup,c)        'concentration of c exiting tu and enterin
+      g tup for recycle'
+ 262          C_exit(tu,c)    'concentration of c leaving tu to the discharge po
+      int'
+ 263          C_out(tu,c)             'concentration of stream directly exiting 
+      tu'
+ 264          C_BFW(c)                'concentration of c in BFW'     ;
+ 265   
+ 266  *MASS LOADS
+ 267   
+ 268  positive variables
+ 269          ML_rem_tu_c(tu,c)       'mass load of c removed from tu'
+ 270          ML_in(tu,c)             'mass load of c entering tu'
+ 271          ML_out(tu,c)    'mass load of c exiting tu'
+ 272          ML_rem_c(c)             'mass load of c removed from system'    ;
+ 273   
+ 274  *COST AND ENERGY VARIABLES
+ 275   
+ 276  positive variables
+ 277          Cost_tot_tu(tu) 'total cost of tu'
+ 278          Cost_op                 'operating cost of the system'
+ 279          Cost_cap                'capital cost of the system'
+ 280          Cost_tot                'total capital cost of the system'
+ 281          energy_var(tu)  'energy consumption of tu'
+ 282          energy_tot              'total energy consumption of the system' ;
+ 283   
+ 284  *BINARY VARIABLES
+ 285   
+ 286  binary variables
+ 287          B_s_tu(s,tu)    'binary variable to show the existence of stream s
        into tu'
- 279          B_tu_tup(tu,tup)        'binary variable to show the existence of 
+ 288          B_tu_tup(tu,tup)        'binary variable to show the existence of 
       tu into tup recylce'
- 280          B_exit(tu)              'binary variable to show the existence of 
+ 289          B_exit(tu)              'binary variable to show the existence of 
       stream from tu to discharge'
- 281          B_tu(tu)                'binary variable to show the existence of 
+ 290          B_tu(tu)                'binary variable to show the existence of 
       tu' ;
- 282   
- 283  *OBJECT
- 284   
- 285  variable
- 286          obj                             'objective variable' ;
- 287   
- 288  variable
- 289           dummy(tu,c)               ;
- 290   
  291   
- 292  *EQUATIONS
+ 292  *OBJECT
  293   
-INCLUDE    E:\Work\UAlberta-RA\ZL\gams_sagd\minlp_eqns.gms
-GAMS Rev 239  WEX-WEI 23.9.5 x86_64/MS Windows          08/30/17 15:23:45 Page 5
+ 294  variable
+ 295          obj                             'objective variable' ;
+ 296   
+ 297   
+ 298  *EQUATIONS
+ 299   
+INCLUDE    E:\Work\Research\water_treatment\gams_sagd\minlp_eqns.gms
+GAMS Rev 239  WEX-WEI 23.9.5 x86_64/MS Windows          09/13/17 19:02:46 Page 5
 minlp_eqns
 C o m p i l a t i o n
 
 
- 296   
+ 302   
        
       The equations for the MINLP algorithm are provided in this file
        
- 302   
- 303   
- 304  *ML of C to be Removed from System
- 305  equation eq17(c); eq17(c) .. ML_rem_c(c) =e= sum( s, F_s(s) * (C_c_s(s,c) 
-      - C_target(c)) );
- 306   
- 307  *Overall Mass Balance
- 308  equation eq4; eq4 .. sum(s, F_s(s)) - F_BFW =e= sum(tu, F_loss(tu)) ;
+ 308   
  309   
- 310  *Splitter 1 Mass Balance
- 311  equation eq5(s); eq5(s) .. F_s(s) =e= sum(tu, F_s_tu(s,tu)) ;
+ 310  *ML of C to be Removed from System
+ 311  equation eq17(c); eq17(c) .. ML_rem_c(c) =e= sum( s, F_s(s) * (C_c_s(s,c) 
+      - C_target(c)) );
  312   
- 313  *Limiting Flow from S to TU
- 314  equation eq21(s,tu); eq21(s,tu) .. F_s_tu(s,tu) - B_s_tu(s,tu) * Bound_up 
+ 313  *Overall Mass Balance
+ 314  equation eq4; eq4 .. sum(s, F_s(s)) - F_BFW =e= sum(tu, F_loss(tu)) ;
+ 315   
+ 316  *Splitter 1 Mass Balance
+ 317  equation eq5(s); eq5(s) .. F_s(s) =e= sum(tu, F_s_tu(s,tu)) ;
+ 318   
+ 319  *Limiting Flow from S to TU
+ 320  equation eq21(s,tu); eq21(s,tu) .. F_s_tu(s,tu) - B_s_tu(s,tu) * Bound_up 
       =l= 0 ;
- 315  equation eq25(s,tu); eq25(s,tu) .. F_s_tu(s,tu) - B_s_tu(s,tu) * Bound_low
+ 321  equation eq25(s,tu); eq25(s,tu) .. F_s_tu(s,tu) - B_s_tu(s,tu) * Bound_low
        =g= 0 ;
- 316   
- 317  *Mixer 1 Mass Balance
- 318  equation eq6(tu); eq6(tu) .. sum(s, F_s_tu(s,tu)) + sum(tup, F_rec(tup,tu)
+ 322   
+ 323  *Mixer 1 Mass Balance
+ 324  equation eq6(tu); eq6(tu) .. sum(s, F_s_tu(s,tu)) + sum(tup, F_rec(tup,tu)
       )  =e= F_in(tu) ;
- 319   
- 320   
- 321  *Limiting TU Inlet Flow
- 322  equation eq24(tu); eq24(tu) .. F_in(tu) - B_tu(tu) * Bound_up * 2 =l= 0 ;
- 323  equation eq28(tu); eq28(tu) .. F_in(tu) - B_tu(tu) * Bound_low =g= 0 ;
- 324   
- 325  *TU Mass Balance
- 326  equation eq9(tu); eq9(tu) .. F_in(tu) - F_out(tu) =e= F_loss(tu) ;
- 327   
- 328  *TU Component Mass Balance
- 329  equation eq12(tu,c); eq12(tu,c) .. sum(tup, F_rec(tup,tu) * C_out(tup,c)) 
-      + sum(s, F_s_tu(s,tu) * C_c_s(s,c)) =e= ML_in(tu,c) ;
- 330  equation eq13(tu,c); eq13(tu,c) .. C_out(tu,c) * ( sum(tup, F_rec(tu,tup))
-       + F_exit(tu) ) =e= ML_out(tu,c) ;
- 331  equation eq10(tu,c); eq10(tu,c) .. (1 - RR(tu,c)) * ML_in(tu,c) - ML_out(t
-      u,c) - F_loss(tu) * C_loss(tu,c) =e= 0 ;
- 332  *equation eq11(tu,c); eq11(tu,c) .. ML_in(tu,c) - ML_out(tu,c) - ML_rem_tu
-      _c(tu,c) =e= F_loss(tu) * C_loss(tu,c) ;
+ 325   
+ 326   
+ 327  *Limiting TU Inlet Flow
+ 328  equation eq24(tu); eq24(tu) .. F_in(tu) - B_tu(tu) * Bound_up * 2 =l= 0 ;
+ 329  equation eq28(tu); eq28(tu) .. F_in(tu) - B_tu(tu) * Bound_low =g= 0 ;
+ 330   
+ 331  *TU Mass Balance
+ 332  equation eq9(tu); eq9(tu) .. F_in(tu) - F_out(tu) =e= F_loss(tu) ;
  333   
- 334  *Concentration Limit for TUs
- 335  equation eq14(tu,c); eq14(tu,c) .. ML_in(tu,c) =l= C_in_max(tu,c) * F_in(t
-      u);
- 336   
- 337  *Splitter 2 Mass Balance - Recycle
- 338  equation eq7(tu); eq7(tu) .. F_out(tu) =e= sum(tup, F_rec(tu,tup)) + F_exi
-      t(tu) ;
+ 334  *TU Component Mass Balance
+ 335  equation eq12(tu,c); eq12(tu,c) .. sum(tup, F_rec(tup,tu) * C_out(tup,c)) 
+      + sum(s, F_s_tu(s,tu) * C_c_s(s,c)) =e= ML_in(tu,c) ;
+ 336  equation eq13(tu,c); eq13(tu,c) .. C_out(tu,c) * ( sum(tup, F_rec(tu,tup))
+       + F_exit(tu) ) =e= ML_out(tu,c) ;
+ 337  equation eq10(tu,c); eq10(tu,c) .. (1 - RR(tu,c)) * ML_in(tu,c) - ML_out(t
+      u,c) - F_loss(tu) * C_loss(tu,c) =e= 0 ;
+ 338  *equation eq11(tu,c); eq11(tu,c) .. ML_in(tu,c) - ML_out(tu,c) - ML_rem_tu
+      _c(tu,c) =e= F_loss(tu) * C_loss(tu,c) ;
  339   
- 340  *Eliminiating Repeated Recycle
- 341  equation eq19(tu,tup); eq19(tu,tup)$(ord(tup) ne ord(tu)) .. B_tu_tup(tu,t
-      up) + B_tu_tup(tup,tu) =l= 1 ;
+ 340  *Concentration Limit for TUs
+ 341  equation eq14(tu,c); eq14(tu,c) .. ML_in(tu,c) =l= C_in_max(tu,c) * F_in(t
+      u);
  342   
- 343  *Limiting Maximum Number of Strems in TU
- 344  equation eq29(tu); eq29(tu) .. sum(s, B_s_tu(s,tu)) + sum( tup, B_tu_tup(t
-      u,tup)) =l= NS_max(tu) ;
+ 343  *Splitter 2 Mass Balance - Recycle
+ 344  equation eq7(tu); eq7(tu) .. F_out(tu) =e= sum(tup, F_rec(tu,tup)) + F_exi
+      t(tu) ;
  345   
- 346  *Limiting Flow from Recycles
- 347  equation eq22(tu,tup); eq22(tu,tup) .. F_rec(tu,tup) - B_tu_tup(tu,tup) * 
+ 346  *Eliminiating Repeated Recycle
+ 347  equation eq19(tu,tup); eq19(tu,tup)$(ord(tup) ne ord(tu)) .. B_tu_tup(tu,t
+      up) + B_tu_tup(tup,tu) =l= 1 ;
+ 348   
+ 349  *Limiting Maximum Number of Strems in TU
+ 350  equation eq29(tu); eq29(tu) .. sum(s, B_s_tu(s,tu)) + sum( tup, B_tu_tup(t
+      u,tup)) =l= NS_max(tu) ;
+ 351   
+ 352  *Limiting Flow from Recycles
+ 353  equation eq22(tu,tup); eq22(tu,tup) .. F_rec(tu,tup) - B_tu_tup(tu,tup) * 
       Bound_up =l= 0 ;
- 348  equation eq26(tu,tup); eq26(tu,tup) .. F_rec(tu,tup) - B_tu_tup(tu,tup) * 
+ 354  equation eq26(tu,tup); eq26(tu,tup) .. F_rec(tu,tup) - B_tu_tup(tu,tup) * 
       Bound_low =g= 0 ;
- 349   
- 350  *Mixer 3 Mass Balance
- 351  equation eq8; eq8 .. sum(tu, F_exit(tu)) =e= F_BFW ;
- 352   
- 353  *Mixer 3 Component Mass Balance
- 354  equation eqX(c); eqX(c) .. sum(tu, F_exit(tu) * C_out(tu,c)) =e= C_BFW(c) 
-      * F_BFW ;
  355   
- 356  *Limiting TU Exit Flow
- 357  equation eq23(tu); eq23(tu) .. F_exit(tu) - B_exit(tu) * Bound_up =l= 0 ;
- 358  equation eq27(tu); eq27(tu) .. F_exit(tu) - B_exit(tu) * Bound_low =g= 0 ;
- 359   
- 360   
+ 356  *Mixer 3 Mass Balance
+ 357  equation eq8; eq8 .. sum(tu, F_exit(tu)) =e= F_BFW ;
+ 358   
+ 359  *Mixer 3 Component Mass Balance
+ 360  equation eqX(c); eqX(c) .. sum(tu, F_exit(tu) * C_out(tu,c)) =e= C_BFW(c) 
+      * F_BFW ;
  361   
- 362  *BFW Concentration Requirements
- 363  equation eq15(c); eq15(c) .. C_BFW(c) * F_BFW =l= C_target(c) * sum(tu, F_
-      exit(tu)) ;
- 364   
+ 362  *Limiting TU Exit Flow
+ 363  equation eq23(tu); eq23(tu) .. F_exit(tu) - B_exit(tu) * Bound_up =l= 0 ;
+ 364  equation eq27(tu); eq27(tu) .. F_exit(tu) - B_exit(tu) * Bound_low =g= 0 ;
  365   
  366   
- 367  *Constraint to Ensure ML of C is Removed from the System
- 368  *equation eq16(c); eq16(c) .. ML_rem_c(c) =l= sum(tu, RR(tu,c) * ML_in(tu,
-      c)) ;
- 369   
- 370  *Cost / Energy of TUs
- 371  *equation eq18(tu); eq18(tu) .. Cost_tot_tu(tu) =e= Cost_var_tu(tu) * F_in
-      (tu) + cost_fix_tu_a(tu) * F_in(tu) + cost_fix_tu_b(tu)
+ 367   
+ 368  *BFW Concentration Requirements
+ 369  equation eq15(c); eq15(c) .. C_BFW(c) * F_BFW =l= C_target(c) * sum(tu, F_
+      exit(tu)) ;
+ 370   
+ 371   
  372   
- 373  *Cost / Energy of System
- 374  *equation eq2; eq2 .. Cost_tot =e= sum(tu, Cost_tot_tu(tu)) + HY * sum(s, 
-      F_s(s) * cost_var_s(s)) ;
+ 373  *Constraint to Ensure ML of C is Removed from the System
+ 374  *equation eq16(c); eq16(c) .. ML_rem_c(c) =l= sum(tu, RR(tu,c) * ML_in(tu,
+      c)) ;
  375   
- 376  *Objective Equation
- 377  equation objective; objective .. obj =e= F_s('muw') ;
+ 376  *Cost / Energy of TUs
+ 377  equation eq18(tu); eq18(tu) .. Cost_tot_tu(tu) =e= Cost_var_tu_a(tu) * F_i
+      n(tu) + Cost_var_tu_b(tu) * B_tu(tu) + cost_fix_tu_a(tu) * F_in(tu) + cost
+      _fix_tu_b(tu) * B_tu(tu);
  378   
- 379   
- 380   
+ 379  *Cost / Energy of System
+ 380  equation eq2; eq2 .. Cost_tot =e= sum(tu, Cost_tot_tu(tu)) + HY * sum(s, F
+      _s(s) * cost_var_s(s)) ;
  381   
- 382   
- 383   
+ 382  *Objective Equation
+ 383  equation objective; objective .. obj =e= Cost_tot ;
  384   
  385   
  386   
@@ -437,49 +438,56 @@ C o m p i l a t i o n
  388   
  389   
  390   
- 391  *SOLVE MINLP
+ 391   
  392   
- 393  model water /all/ ;
+ 393   
  394   
- 395  option minlp=baron;
- 396  option nlp=baron;
- 397   
- 398  Solve  water using minlp minimization obj ;
- 399   
+ 395   
+ 396   
+ 397  *SOLVE MINLP
+ 398   
+ 399  model water /all/ ;
+ 400   
+ 401  option minlp=baron;
+ 402  option nlp=baron;
  403   
- 404  execute_unload 'minlp_main.gdx'
-GAMS Rev 239  WEX-WEI 23.9.5 x86_64/MS Windows          08/30/17 15:23:45 Page 6
+ 404  Solve  water using minlp minimization obj ;
+ 405   
+ 406   
+ 410   
+ 411  execute_unload 'minlp_main.gdx'
+GAMS Rev 239  WEX-WEI 23.9.5 x86_64/MS Windows          09/13/17 19:02:46 Page 6
 minlp_eqns
 Include File Summary
 
 
    SEQ   GLOBAL TYPE      PARENT   LOCAL  FILENAME
 
-     1        1 INPUT          0       0  E:\Work\UAlberta-RA\ZL\gams_sagd\minlp
-                                          _main.gms
-     2       10 INCLUDE        1      10  .E:\Work\UAlberta-RA\ZL\gams_sagd\sets
-                                           _init.gms
-     3       48 INCLUDE        1      11  .E:\Work\UAlberta-RA\ZL\gams_sagd\para
-                                           ms_init.gms
-     4      218 INCLUDE        1      12  .E:\Work\UAlberta-RA\ZL\gams_sagd\vars
-                                           _init.gms
-     5      294 INCLUDE        1      16  .E:\Work\UAlberta-RA\ZL\gams_sagd\minl
-                                           p_eqns.gms
-     6      400 GDXOUT         1      27  E:\Work\UAlberta-RA\ZL\gams_sagd\minlp
-                                          _main.gdx
+     1        1 INPUT          0       0  E:\Work\Research\water_treatment\gams_
+                                          sagd\minlp_main.gms
+     2       10 INCLUDE        1      10  .E:\Work\Research\water_treatment\gams
+                                           _sagd\sets_init.gms
+     3       48 INCLUDE        1      11  .E:\Work\Research\water_treatment\gams
+                                           _sagd\params_init.gms
+     4      227 INCLUDE        1      12  .E:\Work\Research\water_treatment\gams
+                                           _sagd\vars_init.gms
+     5      300 INCLUDE        1      16  .E:\Work\Research\water_treatment\gams
+                                           _sagd\minlp_eqns.gms
+     6      407 GDXOUT         1      28  E:\Work\Research\water_treatment\gams_
+                                          sagd\minlp_main.gdx
 
 
-COMPILATION TIME     =        0.047 SECONDS      3 Mb  WEX239-239 Nov  9, 2012
-GAMS Rev 239  WEX-WEI 23.9.5 x86_64/MS Windows          08/30/17 15:23:45 Page 7
+COMPILATION TIME     =        0.078 SECONDS      3 Mb  WEX239-239 Nov  9, 2012
+GAMS Rev 239  WEX-WEI 23.9.5 x86_64/MS Windows          09/13/17 19:02:46 Page 7
 minlp_eqns
 E x e c u t i o n
 
 
-----    186 PARAMETER Bound_up             =      625.000  upper bound for strea
+----    195 PARAMETER Bound_up             =      625.000  upper bound for strea
                                                            m flow rates
-GAMS Rev 239  WEX-WEI 23.9.5 x86_64/MS Windows          08/30/17 15:23:45 Page 8
+GAMS Rev 239  WEX-WEI 23.9.5 x86_64/MS Windows          09/13/17 19:02:46 Page 8
 minlp_eqns
-Equation Listing    SOLVE water Using MINLP From line 398
+Equation Listing    SOLVE water Using MINLP From line 404
 
 
 ---- eq17  =E=  
@@ -535,11 +543,11 @@ REMAINING 18 ENTRIES SKIPPED
 
 ---- eq25  =G=  
 
-eq25(pw,st)..  F_s_tu(pw,st) =G= 0 ; (LHS = 0)
+eq25(pw,st)..  F_s_tu(pw,st) - 20*B_s_tu(pw,st) =G= 0 ; (LHS = 0)
      
-eq25(pw,igf)..  F_s_tu(pw,igf) =G= 0 ; (LHS = 0)
+eq25(pw,igf)..  F_s_tu(pw,igf) - 20*B_s_tu(pw,igf) =G= 0 ; (LHS = 0)
      
-eq25(pw,orf)..  F_s_tu(pw,orf) =G= 0 ; (LHS = 0)
+eq25(pw,orf)..  F_s_tu(pw,orf) - 20*B_s_tu(pw,orf) =G= 0 ; (LHS = 0)
      
 REMAINING 18 ENTRIES SKIPPED
 
@@ -580,11 +588,11 @@ REMAINING 4 ENTRIES SKIPPED
 
 ---- eq28  =G=  
 
-eq28(st)..  F_in(st) =G= 0 ; (LHS = 0)
+eq28(st)..  F_in(st) - 20*B_tu(st) =G= 0 ; (LHS = 0)
      
-eq28(igf)..  F_in(igf) =G= 0 ; (LHS = 0)
+eq28(igf)..  F_in(igf) - 20*B_tu(igf) =G= 0 ; (LHS = 0)
      
-eq28(orf)..  F_in(orf) =G= 0 ; (LHS = 0)
+eq28(orf)..  F_in(orf) - 20*B_tu(orf) =G= 0 ; (LHS = 0)
      
 REMAINING 4 ENTRIES SKIPPED
 
@@ -761,11 +769,11 @@ REMAINING 46 ENTRIES SKIPPED
 
 ---- eq26  =G=  
 
-eq26(st,st)..  F_rec(st,st) =G= 0 ; (LHS = 0)
+eq26(st,st)..  F_rec(st,st) - 20*B_tu_tup(st,st) =G= 0 ; (LHS = 0)
      
-eq26(st,igf)..  F_rec(st,igf) =G= 0 ; (LHS = 0)
+eq26(st,igf)..  F_rec(st,igf) - 20*B_tu_tup(st,igf) =G= 0 ; (LHS = 0)
      
-eq26(st,orf)..  F_rec(st,orf) =G= 0 ; (LHS = 0)
+eq26(st,orf)..  F_rec(st,orf) - 20*B_tu_tup(st,orf) =G= 0 ; (LHS = 0)
      
 REMAINING 46 ENTRIES SKIPPED
 
@@ -821,11 +829,11 @@ REMAINING 4 ENTRIES SKIPPED
 
 ---- eq27  =G=  
 
-eq27(st)..  F_exit(st) =G= 0 ; (LHS = 0)
+eq27(st)..  F_exit(st) - 20*B_exit(st) =G= 0 ; (LHS = 0)
      
-eq27(igf)..  F_exit(igf) =G= 0 ; (LHS = 0)
+eq27(igf)..  F_exit(igf) - 20*B_exit(igf) =G= 0 ; (LHS = 0)
      
-eq27(orf)..  F_exit(orf) =G= 0 ; (LHS = 0)
+eq27(orf)..  F_exit(orf) - 20*B_exit(orf) =G= 0 ; (LHS = 0)
      
 REMAINING 4 ENTRIES SKIPPED
 
@@ -851,13 +859,39 @@ eq15(th)..  - F_exit(st) - F_exit(igf) - F_exit(orf) - F_exit(hcy) - F_exit(ls)
 REMAINING ENTRY SKIPPED
 
 
+---- eq18  =E=  
+
+eq18(st)..  - 3098.76*F_in(st) + Cost_tot_tu(st) =E= 0 ; (LHS = 0)
+     
+eq18(igf)..  - 2339.64*F_in(igf) + Cost_tot_tu(igf) - 35877*B_tu(igf) =E= 0 ;
+     
+      (LHS = 0)
+     
+eq18(orf)..  - 1248.9*F_in(orf) + Cost_tot_tu(orf) + 401.99*B_tu(orf) =E= 0 ;
+     
+      (LHS = 0)
+     
+REMAINING 4 ENTRIES SKIPPED
+
+
+---- eq2  =E=  
+
+eq2..  - 8322*F_s(pw) - 8322*F_s(muw) - 8322*F_s(bbd) - Cost_tot_tu(st)
+     
+      - Cost_tot_tu(igf) - Cost_tot_tu(orf) - Cost_tot_tu(hcy) - Cost_tot_tu(ls)
+     
+      - Cost_tot_tu(evap) - Cost_tot_tu(wac) + Cost_tot =E= 0 ;
+     
+      (LHS = -3952950, INFES = 3952950 ****)
+     
+
 ---- objective  =E=  
 
-objective..  - F_s(muw) + obj =E= 0 ; (LHS = 0)
+objective..  - Cost_tot + obj =E= 0 ; (LHS = 0)
      
-GAMS Rev 239  WEX-WEI 23.9.5 x86_64/MS Windows          08/30/17 15:23:45 Page 9
+GAMS Rev 239  WEX-WEI 23.9.5 x86_64/MS Windows          09/13/17 19:02:46 Page 9
 minlp_eqns
-Column Listing      SOLVE water Using MINLP From line 398
+Column Listing      SOLVE water Using MINLP From line 404
 
 
 ---- F_s  flow rate of source water
@@ -870,6 +904,7 @@ F_s(pw)
       -49       eq17(tss)
         1       eq4
         1       eq5(pw)
+    -8322       eq2
 
 F_s(muw)
                 (.LO, .L, .UP, .M = 0, 0, +INF, 0)
@@ -879,12 +914,13 @@ F_s(muw)
         1       eq17(tss)
         1       eq4
         1       eq5(muw)
-       -1       objective
+    -8322       eq2
 
 F_s(bbd)
                 (.LO, .L, .UP, .M = 0, 0, 0, 0)
         1       eq4
         1       eq5(bbd)
+    -8322       eq2
 
 
 ---- F_s_tu  flow rate of s entering tu
@@ -1046,6 +1082,7 @@ F_in(st)
      -400       eq14(st,s)
      -400       eq14(st,th)
      -100       eq14(st,tss)
+    -3098.76    eq18(st)
 
 F_in(igf)
                 (.LO, .L, .UP, .M = 0, 0, +INF, 0)
@@ -1057,6 +1094,7 @@ F_in(igf)
      -400       eq14(igf,s)
      -400       eq14(igf,th)
      -100       eq14(igf,tss)
+    -2339.64    eq18(igf)
 
 F_in(orf)
                 (.LO, .L, .UP, .M = 0, 0, +INF, 0)
@@ -1068,6 +1106,7 @@ F_in(orf)
      -400       eq14(orf,s)
      -400       eq14(orf,th)
      -100       eq14(orf,tss)
+    -1248.9     eq18(orf)
 
 REMAINING 4 ENTRIES SKIPPED
 
@@ -1206,21 +1245,51 @@ ML_rem_c(th)
 
 REMAINING ENTRY SKIPPED
 
+---- Cost_tot_tu  total cost of tu
+
+Cost_tot_tu(st)
+                (.LO, .L, .UP, .M = 0, 0, +INF, 0)
+        1       eq18(st)
+       -1       eq2
+
+Cost_tot_tu(igf)
+                (.LO, .L, .UP, .M = 0, 0, +INF, 0)
+        1       eq18(igf)
+       -1       eq2
+
+Cost_tot_tu(orf)
+                (.LO, .L, .UP, .M = 0, 0, +INF, 0)
+        1       eq18(orf)
+       -1       eq2
+
+REMAINING 4 ENTRIES SKIPPED
+
+---- Cost_tot  total capital cost of the system
+
+Cost_tot
+                (.LO, .L, .UP, .M = 0, 0, +INF, 0)
+        1       eq2
+       -1       objective
+
+
 ---- B_s_tu  binary variable to show the existence of stream s into tu
 
 B_s_tu(pw,st)
                 (.LO, .L, .UP, .M = 0, 0, 1, 0)
      -625       eq21(pw,st)
+      -20       eq25(pw,st)
         1       eq29(st)
 
 B_s_tu(pw,igf)
                 (.LO, .L, .UP, .M = 0, 0, 1, 0)
      -625       eq21(pw,igf)
+      -20       eq25(pw,igf)
         1       eq29(igf)
 
 B_s_tu(pw,orf)
                 (.LO, .L, .UP, .M = 0, 0, 1, 0)
      -625       eq21(pw,orf)
+      -20       eq25(pw,orf)
         1       eq29(orf)
 
 REMAINING 18 ENTRIES SKIPPED
@@ -1231,6 +1300,7 @@ B_tu_tup(st,st)
                 (.LO, .L, .UP, .M = 0, 0, 1, 0)
         1       eq29(st)
      -625       eq22(st,st)
+      -20       eq26(st,st)
 
 B_tu_tup(st,igf)
                 (.LO, .L, .UP, .M = 0, 0, 1, 0)
@@ -1238,6 +1308,7 @@ B_tu_tup(st,igf)
         1       eq19(igf,st)
         1       eq29(st)
      -625       eq22(st,igf)
+      -20       eq26(st,igf)
 
 B_tu_tup(st,orf)
                 (.LO, .L, .UP, .M = 0, 0, 1, 0)
@@ -1245,6 +1316,7 @@ B_tu_tup(st,orf)
         1       eq19(orf,st)
         1       eq29(st)
      -625       eq22(st,orf)
+      -20       eq26(st,orf)
 
 REMAINING 46 ENTRIES SKIPPED
 
@@ -1254,14 +1326,17 @@ REMAINING 46 ENTRIES SKIPPED
 B_exit(st)
                 (.LO, .L, .UP, .M = 0, 0, 1, 0)
      -625       eq23(st)
+      -20       eq27(st)
 
 B_exit(igf)
                 (.LO, .L, .UP, .M = 0, 0, 1, 0)
      -625       eq23(igf)
+      -20       eq27(igf)
 
 B_exit(orf)
                 (.LO, .L, .UP, .M = 0, 0, 1, 0)
      -625       eq23(orf)
+      -20       eq27(orf)
 
 REMAINING 4 ENTRIES SKIPPED
 
@@ -1270,14 +1345,19 @@ REMAINING 4 ENTRIES SKIPPED
 B_tu(st)
                 (.LO, .L, .UP, .M = 0, 0, 1, 0)
     -1250       eq24(st)
+      -20       eq28(st)
 
 B_tu(igf)
                 (.LO, .L, .UP, .M = 0, 0, 1, 0)
     -1250       eq24(igf)
+      -20       eq28(igf)
+   -35877       eq18(igf)
 
 B_tu(orf)
                 (.LO, .L, .UP, .M = 0, 0, 1, 0)
     -1250       eq24(orf)
+      -20       eq28(orf)
+      401.99    eq18(orf)
 
 REMAINING 4 ENTRIES SKIPPED
 
@@ -1287,40 +1367,40 @@ obj
                 (.LO, .L, .UP, .M = -INF, 0, +INF, 0)
         1       objective
 
-GAMS Rev 239  WEX-WEI 23.9.5 x86_64/MS Windows         08/30/17 15:23:45 Page 10
+GAMS Rev 239  WEX-WEI 23.9.5 x86_64/MS Windows         09/13/17 19:02:46 Page 10
 minlp_eqns
-Model Statistics    SOLVE water Using MINLP From line 398
+Model Statistics    SOLVE water Using MINLP From line 404
 
 
 MODEL STATISTICS
 
-BLOCKS OF EQUATIONS          24     SINGLE EQUATIONS          368
-BLOCKS OF VARIABLES          16     SINGLE VARIABLES          271
-NON ZERO ELEMENTS         1,582     NON LINEAR N-Z            700
+BLOCKS OF EQUATIONS          26     SINGLE EQUATIONS          376
+BLOCKS OF VARIABLES          18     SINGLE VARIABLES          279
+NON ZERO ELEMENTS         1,697     NON LINEAR N-Z            700
 DERIVATIVE POOL              10     CONSTANT POOL              16
 CODE LENGTH               1,040     DISCRETE VARIABLES         84
 
 
-GENERATION TIME      =        0.046 SECONDS      4 Mb  WEX239-239 Nov  9, 2012
+GENERATION TIME      =        0.047 SECONDS      4 Mb  WEX239-239 Nov  9, 2012
 
 
-EXECUTION TIME       =        0.046 SECONDS      4 Mb  WEX239-239 Nov  9, 2012
-GAMS Rev 239  WEX-WEI 23.9.5 x86_64/MS Windows         08/30/17 15:23:45 Page 11
+EXECUTION TIME       =        0.047 SECONDS      4 Mb  WEX239-239 Nov  9, 2012
+GAMS Rev 239  WEX-WEI 23.9.5 x86_64/MS Windows         09/13/17 19:02:46 Page 11
 minlp_eqns
-Solution Report     SOLVE water Using MINLP From line 398
+Solution Report     SOLVE water Using MINLP From line 404
 
 
                S O L V E      S U M M A R Y
 
      MODEL   water               OBJECTIVE  obj
      TYPE    MINLP               DIRECTION  MINIMIZE
-     SOLVER  BARON               FROM LINE  398
+     SOLVER  BARON               FROM LINE  404
 
-**** SOLVER STATUS     1 Normal Completion         
-**** MODEL STATUS      1 Optimal                   
-**** OBJECTIVE VALUE              150.0000
+**** SOLVER STATUS     3 Resource Interrupt        
+**** MODEL STATUS      8 Integer Solution          
+**** OBJECTIVE VALUE         12725510.3859
 
- RESOURCE USAGE, LIMIT         28.160      1000.000
+ RESOURCE USAGE, LIMIT       1000.000      1000.000
  ITERATION COUNT, LIMIT         0    2000000000
  EVALUATION ERRORS              0             0
 
@@ -1356,46 +1436,46 @@ bbd      .         .         .         .
 
             LOWER     LEVEL     UPPER    MARGINAL
 
-pw .st       -INF   -625.000      .         .         
-pw .igf      -INF   -624.949      .         .         
-pw .orf      -INF       .         .         .         
-pw .hcy      -INF   -625.000      .         .         
-pw .ls       -INF       .         .       -1.000      
-pw .evap     -INF   -150.051      .         .         
-pw .wac      -INF   -625.000      .         .         
-muw.st       -INF   -625.000      .         .         
-muw.igf      -INF   -528.090      .         .         
-muw.orf      -INF   -615.051      .         .         
-muw.hcy      -INF       .         .       -1.000      
-muw.ls       -INF       .         .       -1.000      
-muw.evap     -INF   -581.859      .         .         
-muw.wac      -INF       .         .         .         
-bbd.st       -INF   -625.000      .         .         
-bbd.igf      -INF   -625.000      .         .         
-bbd.orf      -INF   -625.000      .         .         
-bbd.hcy      -INF   -625.000      .         .         
-bbd.ls       -INF       .         .       -1.000      
+pw .st       -INF       .         .         .         
+pw .igf      -INF       .         .         .         
+pw .orf      -INF   -150.000      .         .         
+pw .hcy      -INF       .         .         .         
+pw .ls       -INF       .         .         .         
+pw .evap     -INF       .         .         .         
+pw .wac      -INF       .         .         .         
+muw.st       -INF       .         .         .         
+muw.igf      -INF       .         .         .         
+muw.orf      -INF       .         .         .         
+muw.hcy      -INF       .         .         .         
+muw.ls       -INF       .         .         .         
+muw.evap     -INF       .         .         .         
+muw.wac      -INF   -475.000      .         .         
+bbd.st       -INF       .         .         .         
+bbd.igf      -INF       .         .         .         
+bbd.orf      -INF       .         .         .         
+bbd.hcy      -INF       .         .         .         
+bbd.ls       -INF       .         .         .         
 bbd.evap     -INF       .         .         .         
-bbd.wac      -INF   -625.000      .         .         
+bbd.wac      -INF       .         .         .         
 
 ---- EQU eq25  
 
             LOWER     LEVEL     UPPER    MARGINAL
 
 pw .st        .         .        +INF       .         
-pw .igf       .        0.051     +INF       .         
-pw .orf       .         .        +INF       .         
+pw .igf       .         .        +INF       .         
+pw .orf       .      455.000     +INF       .         
 pw .hcy       .         .        +INF       .         
 pw .ls        .         .        +INF       .         
-pw .evap      .      474.949     +INF       .         
+pw .evap      .         .        +INF       .         
 pw .wac       .         .        +INF       .         
 muw.st        .         .        +INF       .         
-muw.igf       .       96.910     +INF       .         
-muw.orf       .        9.949     +INF       .         
+muw.igf       .         .        +INF       .         
+muw.orf       .         .        +INF       .         
 muw.hcy       .         .        +INF       .         
 muw.ls        .         .        +INF       .         
-muw.evap      .       43.141     +INF       .         
-muw.wac       .         .        +INF       .         
+muw.evap      .         .        +INF       .         
+muw.wac       .      130.000     +INF       .         
 bbd.st        .         .        +INF       .         
 bbd.igf       .         .        +INF       .         
 bbd.orf       .         .        +INF       .         
@@ -1408,49 +1488,49 @@ bbd.wac       .         .        +INF       .
 
         LOWER     LEVEL     UPPER    MARGINAL
 
-st        .         .         .       -1.000      
-igf       .         .         .        1.000      
-orf       .         .         .       -1.000      
-hcy       .         .         .        1.000      
-ls        .         .         .        1.000      
-evap      .         .         .       -1.000      
-wac       .         .         .       -1.000      
+st        .         .         .         .         
+igf       .         .         .         .         
+orf       .         .         .         .         
+hcy       .         .         .         .         
+ls        .         .         .         .         
+evap      .         .         .         .         
+wac       .         .         .         .         
 
 ---- EQU eq24  
 
         LOWER     LEVEL     UPPER    MARGINAL
 
-st       -INF       .         .       -2.000      
-igf      -INF   -655.032      .         .         
-orf      -INF     -0.330      .         .         
-hcy      -INF   -625.000      .         .         
-ls       -INF   -625.000      .         .         
-evap     -INF    -10.279      .         .         
-wac      -INF     -0.330      .         .         
+st       -INF   -625.000      .         .         
+igf      -INF       .         .         .         
+orf      -INF   -775.000      .         .         
+hcy      -INF   -775.000      .         .         
+ls       -INF  -1012.698      .         .         
+evap     -INF       .         .         .         
+wac      -INF   -625.000      .         .         
 
 ---- EQU eq28  
 
         LOWER     LEVEL     UPPER    MARGINAL
 
-st        .         .        +INF       .         
-igf       .      594.968     +INF       .         
-orf       .     1249.670     +INF       .         
-hcy       .      625.000     +INF       .         
-ls        .      625.000     +INF       .         
-evap      .     1239.721     +INF       .         
-wac       .     1249.670     +INF       .         
+st        .      605.000     +INF       .         
+igf       .         .        +INF       .         
+orf       .      455.000     +INF       .         
+hcy       .      455.000     +INF       .         
+ls        .      217.302     +INF       .         
+evap      .         .        +INF       .         
+wac       .      605.000     +INF       .         
 
 ---- EQU eq9  
 
         LOWER     LEVEL     UPPER    MARGINAL
 
-st        .         .         .        1.000      
-igf       .         .         .       -5.837      
-orf       .         .         .       -4.837      
-hcy       .         .         .       -3.837      
-ls        .         .         .       -3.837      
-evap      .         .         .       -3.837      
-wac       .         .         .        3.837      
+st        .         .         .         .         
+igf       .         .         .         .         
+orf       .         .         .         .         
+hcy       .         .         .         .         
+ls        .         .         .         .         
+evap      .         .         .         .         
+wac       .         .         .         .         
 
 ---- EQU eq12  
 
@@ -1462,27 +1542,27 @@ st  .th       .         .         .         .
 st  .tss      .         .         .         .         
 igf .o        .         .         .         .         
 igf .s        .         .         .         .         
-igf .th       .    -3.477E-8      .         .         
+igf .th       .         .         .         .         
 igf .tss      .         .         .         .         
 orf .o        .         .         .         .         
 orf .s        .         .         .         .         
 orf .th       .         .         .         .         
 orf .tss      .         .         .         .         
 hcy .o        .         .         .         .         
-hcy .s        .         .         .         .         
+hcy .s        .    -1.300E-7      .         .         
 hcy .th       .         .         .         .         
 hcy .tss      .         .         .         .         
-ls  .o        .         .         .         .         
-ls  .s        .         .         .         .         
+ls  .o        .    5.9998E-8      .         .         
+ls  .s        .    1.0000E-7      .         .         
 ls  .th       .         .         .         .         
 ls  .tss      .         .         .         .         
-evap.o        .    -5.336E-7      .         .         
-evap.s        .    3.9190E-7      .         .         
+evap.o        .         .         .         .         
+evap.s        .         .         .         .         
 evap.th       .         .         .         .         
-evap.tss      .    -4.061E-8      .         .         
+evap.tss      .         .         .         .         
 wac .o        .         .         .         .         
-wac .s        .         .         .         .         
-wac .th       .         .         .         .         
+wac .s        .    -1.750E-7      .         .         
+wac .th       .    -3.500E-8      .         .         
 wac .tss      .         .         .         .         
 
 ---- EQU eq13  
@@ -1499,13 +1579,13 @@ igf .th       .         .         .         .
 igf .tss      .         .         .         .         
 orf .o        .         .         .         .         
 orf .s        .         .         .         .         
-orf .th       .    1.0486E-8      .         .         
+orf .th       .         .         .         .         
 orf .tss      .         .         .         .         
 hcy .o        .         .         .         .         
-hcy .s        .         .         .         .         
-hcy .th       .         .         .         .         
+hcy .s        .    -1.750E-7      .         .         
+hcy .th       .    -1.500E-8      .         .         
 hcy .tss      .         .         .         .         
-ls  .o        .         .         .         .         
+ls  .o        .    5.9998E-8      .         .         
 ls  .s        .         .         .         .         
 ls  .th       .         .         .         .         
 ls  .tss      .         .         .         .         
@@ -1555,42 +1635,42 @@ wac .tss      .         .         .         .
 
             LOWER     LEVEL     UPPER    MARGINAL
 
-st  .o       -INF       .         .         .         
-st  .s       -INF       .         .         .         
-st  .th      -INF       .         .         .         
-st  .tss     -INF       .         .         .         
-igf .o       -INF  -1.487E+6      .         .         
-igf .s       -INF  -2.361E+5      .         .         
-igf .th      -INF  -2.132E+5      .         .         
-igf .tss     -INF  -5.949E+4      .         .         
-orf .o       -INF  -3.117E+6      .         .         
-orf .s       -INF  -4.988E+5      .         .         
-orf .th      -INF  -4.972E+5      .         .         
-orf .tss     -INF  -1.248E+5      .         .         
-hcy .o       -INF  -1.562E+6      .         .         
-hcy .s       -INF  -2.495E+5      .         .         
-hcy .th      -INF  -2.487E+5      .         .         
-hcy .tss     -INF  -6.250E+4      .         .         
-ls  .o       -INF  -1.560E+6      .         .         
-ls  .s       -INF  -2.493E+5      .         .         
-ls  .th      -INF  -2.500E+5      .         .         
-ls  .tss     -INF  -6.244E+4      .         .         
-evap.o       -INF  -2.149E+6      .         .         
-evap.s       -INF  -3.270E+5      .         .         
-evap.th      -INF  -4.508E+5      .         .         
-evap.tss     -INF  -1.002E+5      .         .         
-wac .o       -INF  -3.119E+6      .         .         
-wac .s       -INF  -4.985E+5      .       -0.370      
-wac .th      -INF  -4.983E+5      .       -0.310      
-wac .tss     -INF  -1.248E+5      .         .         
+st  .o       -INF  -1.557E+6      .         .         
+st  .s       -INF  -1.562E+5      .         .         
+st  .th      -INF  -2.496E+5      .         .         
+st  .tss     -INF  -6.131E+4      .         .         
+igf .o       -INF       .         .         .         
+igf .s       -INF       .         .         .         
+igf .th      -INF       .         .         .         
+igf .tss     -INF       .         .         .         
+orf .o       -INF  -2.375E+5      .         .         
+orf .s       -INF  -2.375E+4      .         .         
+orf .th      -INF  -1.805E+5      .         .         
+orf .tss     -INF  -2.375E+4      .         .         
+hcy .o       -INF  -1.102E+6      .         .         
+hcy .s       -INF  -9.850E+4      .         .         
+hcy .th      -INF  -1.829E+5      .         .         
+hcy .tss     -INF  -4.631E+4      .         .         
+ls  .o       -INF  -5.505E+5      .         .         
+ls  .s       -INF  -1.187E+4      .         .         
+ls  .th      -INF  -9.017E+4      .         .         
+ls  .tss     -INF  -2.314E+4      .         .         
+evap.o       -INF       .         .         .         
+evap.s       -INF       .         .         .         
+evap.th      -INF       .         .         .         
+evap.tss     -INF       .         .         .         
+wac .o       -INF  -1.557E+6      .         .         
+wac .s       -INF  -1.562E+5      .         .         
+wac .th      -INF  -2.061E+5      .         .         
+wac .tss     -INF  -6.131E+4      .         .         
 
 ---- EQU eq7  
 
         LOWER     LEVEL     UPPER    MARGINAL
 
-st        .         .         .        1.000      
-igf       .         .         .       -2.000      
-orf       .         .         .       -1.000      
+st        .         .         .         .         
+igf       .         .         .         .         
+orf       .         .         .         .         
 hcy       .         .         .         .         
 ls        .         .         .         .         
 evap      .         .         .         .         
@@ -1603,111 +1683,111 @@ wac       .         .         .         .
 st  .igf      -INF       .        1.000      .         
 st  .orf      -INF       .        1.000      .         
 st  .hcy      -INF       .        1.000      .         
-st  .ls       -INF      1.000     1.000      .         
-st  .evap     -INF      1.000     1.000      .         
-st  .wac      -INF       .        1.000      .         
+st  .ls       -INF       .        1.000      .         
+st  .evap     -INF       .        1.000      .         
+st  .wac      -INF      1.000     1.000      .         
 igf .st       -INF       .        1.000      .         
 igf .orf      -INF       .        1.000      .         
-igf .hcy      -INF      1.000     1.000      .         
-igf .ls       -INF      1.000     1.000      .         
-igf .evap     -INF      1.000     1.000      .         
+igf .hcy      -INF       .        1.000      .         
+igf .ls       -INF       .        1.000      .         
+igf .evap     -INF       .        1.000      .         
 igf .wac      -INF       .        1.000      .         
 orf .st       -INF       .        1.000      .         
 orf .igf      -INF       .        1.000      .         
 orf .hcy      -INF      1.000     1.000      .         
 orf .ls       -INF      1.000     1.000      .         
-orf .evap     -INF      1.000     1.000      .         
-orf .wac      -INF      1.000     1.000      .         
+orf .evap     -INF       .        1.000      .         
+orf .wac      -INF       .        1.000      .         
 hcy .st       -INF       .        1.000      .         
-hcy .igf      -INF      1.000     1.000      .         
+hcy .igf      -INF       .        1.000      .         
 hcy .orf      -INF      1.000     1.000      .         
-hcy .ls       -INF       .        1.000      .         
-hcy .evap     -INF      1.000     1.000      .         
-hcy .wac      -INF       .        1.000      .         
-ls  .st       -INF      1.000     1.000      .         
-ls  .igf      -INF      1.000     1.000      .         
+hcy .ls       -INF      1.000     1.000      .         
+hcy .evap     -INF       .        1.000      .         
+hcy .wac      -INF      1.000     1.000      .         
+ls  .st       -INF       .        1.000      .         
+ls  .igf      -INF       .        1.000      .         
 ls  .orf      -INF      1.000     1.000      .         
-ls  .hcy      -INF       .        1.000      .         
+ls  .hcy      -INF      1.000     1.000      .         
 ls  .evap     -INF       .        1.000      .         
-ls  .wac      -INF      1.000     1.000      .         
-evap.st       -INF      1.000     1.000      .         
-evap.igf      -INF      1.000     1.000      .         
-evap.orf      -INF      1.000     1.000      .         
-evap.hcy      -INF      1.000     1.000      .         
+ls  .wac      -INF       .        1.000      .         
+evap.st       -INF       .        1.000      .         
+evap.igf      -INF       .        1.000      .         
+evap.orf      -INF       .        1.000      .         
+evap.hcy      -INF       .        1.000      .         
 evap.ls       -INF       .        1.000      .         
-evap.wac      -INF      1.000     1.000      .         
-wac .st       -INF       .        1.000      .         
+evap.wac      -INF       .        1.000      .         
+wac .st       -INF      1.000     1.000      .         
 wac .igf      -INF       .        1.000      .         
-wac .orf      -INF      1.000     1.000      .         
-wac .hcy      -INF       .        1.000      .         
-wac .ls       -INF      1.000     1.000      .         
-wac .evap     -INF      1.000     1.000      .         
+wac .orf      -INF       .        1.000      .         
+wac .hcy      -INF      1.000     1.000      .         
+wac .ls       -INF       .        1.000      .         
+wac .evap     -INF       .        1.000      .         
 
 ---- EQU eq29  
 
         LOWER     LEVEL     UPPER    MARGINAL
 
-st       -INF      5.000     5.000      .         
-igf      -INF      5.000     5.000      .         
-orf      -INF      5.000     5.000      .         
-hcy      -INF      5.000     5.000      .         
-ls       -INF      2.000     5.000      .         
-evap     -INF      5.000     5.000      .         
-wac      -INF      4.000     5.000      .         
+st       -INF       .        5.000      .         
+igf      -INF       .        5.000      .         
+orf      -INF      3.000     5.000      .         
+hcy      -INF      1.000     5.000      .         
+ls       -INF      1.000     5.000      .         
+evap     -INF       .        5.000      .         
+wac      -INF      2.000     5.000      .         
 
 ---- EQU eq22  
 
              LOWER     LEVEL     UPPER    MARGINAL
 
-st  .st       -INF   -625.000      .         .         
+st  .st       -INF       .         .         .         
 st  .igf      -INF       .         .         .         
 st  .orf      -INF       .         .         .         
 st  .hcy      -INF       .         .         .         
 st  .ls       -INF       .         .         .         
-st  .evap     -INF   -625.000      .         .         
+st  .evap     -INF       .         .         .         
 st  .wac      -INF       .         .         .         
 igf .st       -INF       .         .         .         
 igf .igf      -INF       .         .         .         
 igf .orf      -INF       .         .         .         
 igf .hcy      -INF       .         .         .         
-igf .ls       -INF   -624.670      .         .         
-igf .evap     -INF    -30.362      .         .         
+igf .ls       -INF       .         .         .         
+igf .evap     -INF       .         .         .         
 igf .wac      -INF       .         .         .         
 orf .st       -INF       .         .         .         
 orf .igf      -INF       .         .         .         
-orf .orf      -INF   -625.000      .         .         
-orf .hcy      -INF       .         .         .         
-orf .ls       -INF       .         .         .         
+orf .orf      -INF       .         .         .         
+orf .hcy      -INF   -387.302      .         .         
+orf .ls       -INF   -387.698      .         .         
 orf .evap     -INF       .         .         .         
-orf .wac      -INF     -0.330      .         .         
+orf .wac      -INF       .         .         .         
 hcy .st       -INF       .         .         .         
-hcy .igf      -INF   -126.993      .         .         
+hcy .igf      -INF       .         .         .         
 hcy .orf      -INF       .         .         .         
-hcy .hcy      -INF   -625.000      .         .         
+hcy .hcy      -INF       .         .         .         
 hcy .ls       -INF       .         .         .         
-hcy .evap     -INF   -498.007      .         .         
-hcy .wac      -INF       .         .         .         
-ls  .st       -INF   -625.000      .         .         
+hcy .evap     -INF       .         .         .         
+hcy .wac      -INF   -150.000      .         .         
+ls  .st       -INF       .         .         .         
 ls  .igf      -INF       .         .         .         
 ls  .orf      -INF       .         .         .         
-ls  .hcy      -INF       .         .         .         
+ls  .hcy      -INF   -387.698      .         .         
 ls  .ls       -INF       .         .         .         
 ls  .evap     -INF       .         .         .         
 ls  .wac      -INF       .         .         .         
 evap.st       -INF       .         .         .         
 evap.igf      -INF       .         .         .         
-evap.orf      -INF    -10.279      .         .         
+evap.orf      -INF       .         .         .         
 evap.hcy      -INF       .         .         .         
 evap.ls       -INF       .         .         .         
-evap.evap     -INF   -625.000      .         .         
+evap.evap     -INF       .         .         .         
 evap.wac      -INF       .         .         .         
 wac .st       -INF       .         .         .         
 wac .igf      -INF       .         .         .         
 wac .orf      -INF       .         .         .         
 wac .hcy      -INF       .         .         .         
-wac .ls       -INF     -0.330      .         .         
+wac .ls       -INF       .         .         .         
 wac .evap     -INF       .         .         .         
-wac .wac      -INF   -625.000      .         .         
+wac .wac      -INF       .         .         .         
 
 ---- EQU eq26  
 
@@ -1724,48 +1804,48 @@ igf .st        .         .        +INF       .
 igf .igf       .         .        +INF       .         
 igf .orf       .         .        +INF       .         
 igf .hcy       .         .        +INF       .         
-igf .ls        .        0.330     +INF       .         
-igf .evap      .      594.638     +INF       .         
+igf .ls        .         .        +INF       .         
+igf .evap      .         .        +INF       .         
 igf .wac       .         .        +INF       .         
 orf .st        .         .        +INF       .         
 orf .igf       .         .        +INF       .         
 orf .orf       .         .        +INF       .         
-orf .hcy       .      625.000     +INF       .         
-orf .ls        .         .        +INF       .         
+orf .hcy       .      217.698     +INF       .         
+orf .ls        .      217.302     +INF       .         
 orf .evap      .         .        +INF       .         
-orf .wac       .      624.670     +INF       .         
+orf .wac       .         .        +INF       .         
 hcy .st        .         .        +INF       .         
-hcy .igf       .      498.007     +INF       .         
+hcy .igf       .         .        +INF       .         
 hcy .orf       .         .        +INF       .         
 hcy .hcy       .         .        +INF       .         
 hcy .ls        .         .        +INF       .         
-hcy .evap      .      126.993     +INF       .         
-hcy .wac       .         .        +INF       .         
+hcy .evap      .         .        +INF       .         
+hcy .wac       .      455.000     +INF       .         
 ls  .st        .         .        +INF       .         
 ls  .igf       .         .        +INF       .         
-ls  .orf       .      625.000     +INF       .         
-ls  .hcy       .         .        +INF       .         
+ls  .orf       .         .        +INF       .         
+ls  .hcy       .      217.302     +INF       .         
 ls  .ls        .         .        +INF       .         
 ls  .evap      .         .        +INF       .         
 ls  .wac       .         .        +INF       .         
 evap.st        .         .        +INF       .         
 evap.igf       .         .        +INF       .         
-evap.orf       .      614.721     +INF       .         
+evap.orf       .         .        +INF       .         
 evap.hcy       .         .        +INF       .         
 evap.ls        .         .        +INF       .         
 evap.evap      .         .        +INF       .         
-evap.wac       .      625.000     +INF       .         
-wac .st        .         .        +INF       .         
+evap.wac       .         .        +INF       .         
+wac .st        .      605.000     +INF       .         
 wac .igf       .         .        +INF       .         
 wac .orf       .         .        +INF       .         
-wac .hcy       .         .        +INF      1.000      
-wac .ls        .      624.670     +INF       .         
+wac .hcy       .         .        +INF       .         
+wac .ls        .         .        +INF       .         
 wac .evap      .         .        +INF       .         
 wac .wac       .         .        +INF       .         
 
                        LOWER     LEVEL     UPPER    MARGINAL
 
----- EQU eq8          625.000   625.000   625.000    -1.000      
+---- EQU eq8          625.000   625.000   625.000      .         
 
 ---- EQU eqX  
 
@@ -1780,9 +1860,9 @@ tss      .         .         .         .
 
         LOWER     LEVEL     UPPER    MARGINAL
 
-st       -INF   -625.000      .         .         
+st       -INF       .         .         .         
 igf      -INF       .         .         .         
-orf      -INF   -625.000      .         .         
+orf      -INF       .         .         .         
 hcy      -INF       .         .         .         
 ls       -INF       .         .         .         
 evap     -INF       .         .         .         
@@ -1792,25 +1872,38 @@ wac      -INF       .         .         .
 
         LOWER     LEVEL     UPPER    MARGINAL
 
-st        .         .        +INF       .         
+st        .      605.000     +INF       .         
 igf       .         .        +INF       .         
 orf       .         .        +INF       .         
 hcy       .         .        +INF       .         
 ls        .         .        +INF       .         
 evap      .         .        +INF       .         
-wac       .      625.000     +INF       .         
+wac       .         .        +INF       .         
 
 ---- EQU eq15  
 
        LOWER     LEVEL     UPPER    MARGINAL
 
-o       -INF  -3691.373      .         .         
-s       -INF  -9.306E+4      .         .         
-th      -INF   -617.182      .         .         
-tss     -INF   -562.868      .         .         
+o       -INF  -5651.500      .         .         
+s       -INF       .         .         .         
+th      -INF   -186.230      .         .         
+tss     -INF    -31.250      .         .         
+
+---- EQU eq18  
+
+        LOWER     LEVEL     UPPER    MARGINAL
+
+st        .         .         .         .         
+igf       .         .         .         .         
+orf       .         .         .         .         
+hcy       .         .         .         .         
+ls        .    -2.737E-6      .         .         
+evap      .         .         .         .         
+wac       .         .         .         .         
 
                        LOWER     LEVEL     UPPER    MARGINAL
 
+---- EQU eq2             .    -4.000E-5      .         .         
 ---- EQU objective       .         .         .        1.000      
 
 ---- VAR F_s  flow rate of source water
@@ -1825,225 +1918,225 @@ bbd      .         .         .         .
 
             LOWER     LEVEL     UPPER    MARGINAL
 
-pw .st        .         .        +INF      1.000      
-pw .igf       .        0.051     +INF       .         
-pw .orf       .         .        +INF      1.000      
+pw .st        .         .        +INF       .         
+pw .igf       .         .        +INF       .         
+pw .orf       .      475.000     +INF       .         
 pw .hcy       .         .        +INF       .         
 pw .ls        .         .        +INF       .         
-pw .evap      .      474.949     +INF      1.000      
+pw .evap      .         .        +INF       .         
 pw .wac       .         .        +INF       .         
 muw.st        .         .        +INF       .         
-muw.igf       .       96.910     +INF       .         
-muw.orf       .        9.949     +INF       .         
+muw.igf       .         .        +INF       .         
+muw.orf       .         .        +INF       .         
 muw.hcy       .         .        +INF       .         
 muw.ls        .         .        +INF       .         
-muw.evap      .       43.141     +INF       .         
-muw.wac       .         .        +INF       .         
+muw.evap      .         .        +INF       .         
+muw.wac       .      150.000     +INF       .         
 bbd.st        .         .        +INF       .         
 bbd.igf       .         .        +INF       .         
 bbd.orf       .         .        +INF       .         
 bbd.hcy       .         .        +INF       .         
 bbd.ls        .         .        +INF       .         
-bbd.evap      .         .        +INF      1.000      
+bbd.evap      .         .        +INF       .         
 bbd.wac       .         .        +INF       .         
 
 ---- VAR F_rec  flow rate of streams exiting tu that enter tup for recycle
 
              LOWER     LEVEL     UPPER    MARGINAL
 
-st  .st        .         .         .        2.000      
+st  .st        .         .         .         .         
 st  .igf       .         .        +INF       .         
-st  .orf       .         .        +INF      2.000      
+st  .orf       .         .        +INF       .         
 st  .hcy       .         .        +INF       .         
 st  .ls        .         .        +INF       .         
-st  .evap      .         .        +INF      2.000      
-st  .wac       .         .        +INF      2.000      
+st  .evap      .         .        +INF       .         
+st  .wac       .         .        +INF       .         
 igf .st        .         .        +INF       .         
-igf .igf       .         .         .       -3.000      
-igf .orf       .         .        +INF     -1.000      
-igf .hcy       .         .        +INF     -3.000      
-igf .ls        .        0.330     +INF     -3.000      
-igf .evap      .      594.638     +INF     -1.000      
-igf .wac       .         .        +INF     -1.000      
+igf .igf       .         .         .         .         
+igf .orf       .         .        +INF       .         
+igf .hcy       .         .        +INF       .         
+igf .ls        .         .        +INF       .         
+igf .evap      .         .        +INF       .         
+igf .wac       .         .        +INF       .         
 orf .st        .         .        +INF       .         
-orf .igf       .         .        +INF     -2.000      
+orf .igf       .         .        +INF       .         
 orf .orf       .         .         .         .         
-orf .hcy       .      625.000     +INF     -2.000      
-orf .ls        .         .        +INF     -2.000      
+orf .hcy       .      237.698     +INF       .         
+orf .ls        .      237.302     +INF       .         
 orf .evap      .         .        +INF       .         
-orf .wac       .      624.670     +INF       .         
+orf .wac       .         .        +INF       .         
 hcy .st        .         .        +INF       .         
-hcy .igf       .      498.007     +INF       .         
+hcy .igf       .         .        +INF       .         
 hcy .orf       .         .        +INF       .         
-hcy .hcy       .         .         .       -1.000      
+hcy .hcy       .         .         .         .         
 hcy .ls        .         .        +INF       .         
-hcy .evap      .      126.993     +INF       .         
-hcy .wac       .         .        +INF       .         
-ls  .st        .         .        +INF      1.000      
-ls  .igf       .         .        +INF     -1.000      
-ls  .orf       .      625.000     +INF      1.000      
-ls  .hcy       .         .        +INF       .         
-ls  .ls        .         .         .       -1.000      
-ls  .evap      .         .        +INF      1.000      
-ls  .wac       .         .        +INF      1.000      
-evap.st        .         .        +INF      1.000      
-evap.igf       .         .        +INF     -1.000      
-evap.orf       .      614.721     +INF      1.000      
-evap.hcy       .         .        +INF     -1.000      
-evap.ls        .         .        +INF     -1.000      
-evap.evap      .         .         .        1.000      
-evap.wac       .      625.000     +INF      1.000      
-wac .st        .         .        +INF      1.000      
-wac .igf       .         .        +INF     -1.000      
-wac .orf       .         .        +INF      1.000      
-wac .hcy       .         .        +INF     -2.000      
-wac .ls        .      624.670     +INF       .         
-wac .evap      .         .        +INF      1.000      
-wac .wac       .         .         .        1.000      
+hcy .evap      .         .        +INF       .         
+hcy .wac       .      475.000     +INF       .         
+ls  .st        .         .        +INF       .         
+ls  .igf       .         .        +INF       .         
+ls  .orf       .         .        +INF       .         
+ls  .hcy       .      237.302     +INF       .         
+ls  .ls        .         .         .         .         
+ls  .evap      .         .        +INF       .         
+ls  .wac       .         .        +INF       .         
+evap.st        .         .        +INF       .         
+evap.igf       .         .        +INF       .         
+evap.orf       .         .        +INF       .         
+evap.hcy       .         .        +INF       .         
+evap.ls        .         .        +INF       .         
+evap.evap      .         .         .         .         
+evap.wac       .         .        +INF       .         
+wac .st        .      625.000     +INF       .         
+wac .igf       .         .        +INF       .         
+wac .orf       .         .        +INF       .         
+wac .hcy       .         .        +INF       .         
+wac .ls        .         .        +INF       .         
+wac .evap      .         .        +INF       .         
+wac .wac       .         .         .         .         
 
 ---- VAR F_exit  flow rate of streams leaving tu to the discharge point
 
         LOWER     LEVEL     UPPER    MARGINAL
 
-st        .         .        +INF      2.000      
-igf       .         .        +INF     -1.000      
+st        .      625.000     +INF       .         
+igf       .         .        +INF       .         
 orf       .         .        +INF       .         
 hcy       .         .        +INF       .         
-ls        .         .        +INF      1.000      
-evap      .         .        +INF      1.000      
-wac       .      625.000     +INF      1.000      
+ls        .         .        +INF       .         
+evap      .         .        +INF       .         
+wac       .         .        +INF       .         
 
 ---- VAR F_in  flow rate of streams entering tu
 
         LOWER     LEVEL     UPPER    MARGINAL
 
-st        .         .        +INF       .         
-igf       .      594.968     +INF       .         
-orf       .     1249.670     +INF       .         
-hcy       .      625.000     +INF       .         
-ls        .      625.000     +INF       .         
-evap      .     1239.721     +INF       .         
-wac       .     1249.670     +INF       .         
+st        .      625.000     +INF       .         
+igf       .         .        +INF       .         
+orf       .      475.000     +INF       .         
+hcy       .      475.000     +INF       .         
+ls        .      237.302     +INF       .         
+evap      .         .        +INF       .         
+wac       .      625.000     +INF       .         
 
 ---- VAR F_out  flow rate of streams directly exiting tu
 
         LOWER     LEVEL     UPPER    MARGINAL
 
-st        .         .        +INF       .         
-igf       .      594.968     +INF       .         
-orf       .     1249.670     +INF       .         
-hcy       .      625.000     +INF       .         
-ls        .      625.000     +INF       .         
-evap      .     1239.721     +INF       .         
-wac       .     1249.670     +INF       .         
+st        .      625.000     +INF       .         
+igf       .         .        +INF       .         
+orf       .      475.000     +INF       .         
+hcy       .      475.000     +INF       .         
+ls        .      237.302     +INF       .         
+evap      .         .        +INF       .         
+wac       .      625.000     +INF       .         
 
 ---- VAR C_out  concentration of stream directly exiting tu
 
             LOWER     LEVEL     UPPER    MARGINAL
 
-st  .o        .        0.418     +INF       .         
-st  .s        .        2.271     +INF       .         
-st  .th       .       23.958     +INF       .         
-st  .tss      .        0.056     +INF       .         
-igf .o        .        0.020     +INF       .         
-igf .s        .        3.180     +INF       .         
-igf .th       .       41.698     +INF       .         
-igf .tss      .        0.003     +INF       .         
-orf .o        .        0.523     +INF       .         
-orf .s        .        0.845     +INF       .         
-orf .th       .        2.138     +INF       .         
-orf .tss      .        0.007     +INF       .         
-hcy .o        .        0.037     +INF       .         
-hcy .s        .        0.845     +INF       .         
-hcy .th       .        2.138     +INF       .         
-hcy .tss      .        0.007     +INF       .         
-ls  .o        .        4.092     +INF       .         
-ls  .s        .        0.110     +INF       .         
-ls  .th       .        0.017     +INF       .         
-ls  .tss      .        0.099     +INF       .         
-evap.o        .        7.662     +INF       .         
-evap.s        .        1.362     +INF       .         
-evap.th       .        0.364     +INF       .         
-evap.tss      .        0.192     +INF       .         
-wac .o        .        4.094     +INF       .         
-wac .s        .        1.104     +INF       .         
-wac .th       .        0.013     +INF       .         
-wac .tss      .        0.099     +INF       .         
+st  .o        .        0.958     +INF       .         
+st  .s        .      150.000     +INF       .         
+st  .th       .        0.702     +INF       .         
+st  .tss      .        0.950     +INF       .         
+igf .o        .         .        +INF       .         
+igf .s        .         .        +INF       .         
+igf .th       .         .        +INF       .         
+igf .tss      .        0.306     +INF       .         
+orf .o        .      180.000     +INF       .         
+orf .s        .      350.000     +INF       .         
+orf .th       .       20.000     +INF       .         
+orf .tss      .        2.500     +INF       .         
+hcy .o        .       12.600     +INF       .         
+hcy .s        .      192.632     +INF       .         
+hcy .th       .       15.004     +INF       .         
+hcy .tss      .        2.500     +INF       .         
+ls  .o        .      180.000     +INF       .         
+ls  .s        .       35.000     +INF       .         
+ls  .th       .       10.000     +INF       .         
+ls  .tss      .        2.500     +INF       .         
+evap.o        .       23.381     +INF       .         
+evap.s        .        1.854     +INF       .         
+evap.th       .        1.157     +INF       .         
+evap.tss      .     1297.301     +INF       .         
+wac .o        .        9.576     +INF       .         
+wac .s        .      150.000     +INF       .         
+wac .th       .        0.702     +INF       .         
+wac .tss      .        1.900     +INF       .         
 
 ---- VAR C_BFW  concentration of c in BFW
 
        LOWER     LEVEL     UPPER    MARGINAL
 
-o        .        4.094     +INF       .         
-s        .        1.104     +INF       .         
-th       .        0.013     +INF       .         
-tss      .        0.099     +INF       .         
+o        .        0.958     +INF       .         
+s        .      150.000     +INF       .         
+th       .        0.702     +INF       .         
+tss      .        0.950     +INF       .         
 
 ---- VAR ML_in  mass load of c entering tu
 
             LOWER     LEVEL     UPPER    MARGINAL
 
-st  .o        .         .        +INF       .         
-st  .s        .         .        +INF       .         
-st  .th       .         .        +INF       .         
-st  .tss      .         .        +INF       .         
-igf .o        .      120.734     +INF       .         
-igf .s        .     1892.273     +INF       .         
-igf .th       .    24808.747     +INF       .         
-igf .tss      .        6.146     +INF       .         
-orf .o        .     7267.472     +INF       .         
-orf .s        .     1055.660     +INF       .         
-orf .th       .     2672.056     +INF       .         
-orf .tss      .      179.866     +INF       .         
-hcy .o        .      327.123     +INF       .         
-hcy .s        .      527.970     +INF       .         
-hcy .th       .     1336.381     +INF       .         
-hcy .tss      .        4.498     +INF       .         
-ls  .o        .     2557.282     +INF       .         
-ls  .s        .      690.408     +INF       .         
-ls  .th       .       21.584     +INF       .         
-ls  .tss      .       62.100     +INF       .         
-evap.o        .    9.4991E+5     +INF       .         
-evap.s        .    1.6888E+5     +INF       .         
-evap.th       .    45135.152     +INF       .         
-evap.tss      .    23750.195     +INF       .         
-wac .o        .     5115.902     +INF     -0.099      
-wac .s        .     1379.080     +INF       .         
-wac .th       .     1563.222     +INF       .         
-wac .tss      .      124.231     +INF       .         
+st  .o        .     5985.000     +INF       .         
+st  .s        .    93750.000     +INF       .         
+st  .th       .      438.770     +INF       .         
+st  .tss      .     1187.500     +INF       .         
+igf .o        .         .        +INF       .         
+igf .s        .         .        +INF       .         
+igf .th       .         .        +INF       .         
+igf .tss      .         .        +INF       .         
+orf .o        .    9.5000E+5     +INF       .         
+orf .s        .    1.6625E+5     +INF       .         
+orf .th       .     9500.000     +INF       .         
+orf .tss      .    23750.000     +INF       .         
+hcy .o        .    85500.000     +INF       .         
+hcy .s        .    91500.000     +INF       .         
+hcy .th       .     7126.984     +INF       .         
+hcy .tss      .     1187.500     +INF       .         
+ls  .o        .    42714.286     +INF       .         
+ls  .s        .    83055.556     +INF       .         
+ls  .th       .     4746.032     +INF       .         
+ls  .tss      .      593.254     +INF       .         
+evap.o        .         .        +INF       .         
+evap.s        .         .        +INF       .         
+evap.th       .         .        +INF       .         
+evap.tss      .         .        +INF       .         
+wac .o        .     5985.000     +INF       .         
+wac .s        .    93750.000     +INF       .         
+wac .th       .    43876.984     +INF       .         
+wac .tss      .     1187.500     +INF       .         
 
 ---- VAR ML_out  mass load of c exiting tu
 
             LOWER     LEVEL     UPPER    MARGINAL
 
-st  .o        .         .        +INF       .         
-st  .s        .         .        +INF       .         
-st  .th       .         .        +INF       .         
-st  .tss      .         .        +INF       .         
-igf .o        .       12.073     +INF       .         
-igf .s        .     1892.273     +INF       .         
-igf .th       .    24808.747     +INF       .         
-igf .tss      .        1.844     +INF       .         
-orf .o        .      654.072     +INF       .         
-orf .s        .     1055.660     +INF       .         
-orf .th       .     2672.056     +INF       .         
-orf .tss      .        8.993     +INF       .         
-hcy .o        .       22.899     +INF       .         
-hcy .s        .      527.970     +INF       .         
-hcy .th       .     1336.381     +INF       .         
-hcy .tss      .        4.498     +INF       .         
-ls  .o        .     2557.282     +INF       .         
-ls  .s        .       69.041     +INF       .         
-ls  .th       .       10.792     +INF       .         
-ls  .tss      .       62.100     +INF       .         
-evap.o        .     9499.142     +INF       .         
-evap.s        .     1688.777     +INF       .         
-evap.th       .      451.352     +INF       .         
-evap.tss      .      237.502     +INF       .         
-wac .o        .     5115.902     +INF       .         
-wac .s        .     1379.080     +INF       .         
-wac .th       .       15.632     +INF       .         
-wac .tss      .      124.231     +INF       .         
+st  .o        .      598.500     +INF       .         
+st  .s        .    93750.000     +INF       .         
+st  .th       .      438.770     +INF       .         
+st  .tss      .      593.750     +INF       .         
+igf .o        .         .        +INF       .         
+igf .s        .         .        +INF       .         
+igf .th       .         .        +INF       .         
+igf .tss      .         .        +INF       .         
+orf .o        .    85500.000     +INF       .         
+orf .s        .    1.6625E+5     +INF       .         
+orf .th       .     9500.000     +INF       .         
+orf .tss      .     1187.500     +INF       .         
+hcy .o        .     5985.000     +INF       .         
+hcy .s        .    91500.000     +INF       .         
+hcy .th       .     7126.984     +INF       .         
+hcy .tss      .     1187.500     +INF       .         
+ls  .o        .    42714.286     +INF       .         
+ls  .s        .     8305.556     +INF       .         
+ls  .th       .     2373.016     +INF       .         
+ls  .tss      .      593.254     +INF       .         
+evap.o        .         .        +INF       .         
+evap.s        .         .        +INF       .         
+evap.th       .         .        +INF       .         
+evap.tss      .         .        +INF       .         
+wac .o        .     5985.000     +INF       .         
+wac .s        .    93750.000     +INF       .         
+wac .th       .      438.770     +INF       .         
+wac .tss      .     1187.500     +INF       .         
 
 ---- VAR ML_rem_c  mass load of c removed from system
 
@@ -2054,85 +2147,103 @@ s        .    74750.000     +INF       .
 th       .    45625.000     +INF       .         
 tss      .    23125.000     +INF       .         
 
+---- VAR Cost_tot_tu  total cost of tu
+
+        LOWER     LEVEL     UPPER    MARGINAL
+
+st        .    1.9367E+6     +INF       .         
+igf       .         .        +INF       .         
+orf       .    5.9283E+5     +INF       .         
+hcy       .    1.4755E+6     +INF       .         
+ls        .    2.2414E+6     +INF       .         
+evap      .         .        +INF       .         
+wac       .    1.2779E+6     +INF       .         
+
+                       LOWER     LEVEL     UPPER    MARGINAL
+
+---- VAR Cost_tot        .    1.2726E+7     +INF       .         
+
+  Cost_tot  total capital cost of the system
+
 ---- VAR B_s_tu  binary variable to show the existence of stream s into tu
 
             LOWER     LEVEL     UPPER    MARGINAL
 
-pw .st        .        1.000     1.000      EPS       
-pw .igf       .        1.000     1.000      EPS       
-pw .orf       .         .        1.000      EPS       
-pw .hcy       .        1.000     1.000 97268.059      
-pw .ls        .         .        1.000  -625.000      
-pw .evap      .        1.000     1.000 97268.059      
-pw .wac       .        1.000     1.000 97268.059      
-muw.st        .        1.000     1.000 69221.809      
-muw.igf       .        1.000     1.000 67971.809      
-muw.orf       .        1.000     1.000 69221.809      
-muw.hcy       .         .        1.000  -625.000      
-muw.ls        .         .        1.000  -625.000      
-muw.evap      .        1.000     1.000 69221.809      
-muw.wac       .         .        1.000   625.000      
-bbd.st        .        1.000     1.000  7654.655      
-bbd.igf       .        1.000     1.000  7654.655      
-bbd.orf       .        1.000     1.000  7654.655      
-bbd.hcy       .        1.000     1.000  7654.655      
-bbd.ls        .         .        1.000  -625.000      
+pw .st        .         .        1.000      EPS       
+pw .igf       .         .        1.000      EPS       
+pw .orf       .        1.000     1.000      EPS       
+pw .hcy       .         .        1.000      EPS       
+pw .ls        .         .        1.000      EPS       
+pw .evap      .         .        1.000      EPS       
+pw .wac       .         .        1.000      EPS       
+muw.st        .         .        1.000      EPS       
+muw.igf       .         .        1.000      EPS       
+muw.orf       .         .        1.000      EPS       
+muw.hcy       .         .        1.000      EPS       
+muw.ls        .         .        1.000      EPS       
+muw.evap      .         .        1.000      EPS       
+muw.wac       .        1.000     1.000      EPS       
+bbd.st        .         .        1.000      EPS       
+bbd.igf       .         .        1.000      EPS       
+bbd.orf       .         .        1.000      EPS       
+bbd.hcy       .         .        1.000      EPS       
+bbd.ls        .         .        1.000      EPS       
 bbd.evap      .         .        1.000      EPS       
-bbd.wac       .        1.000     1.000  7654.655      
+bbd.wac       .         .        1.000      EPS       
 
 ---- VAR B_tu_tup  binary variable to show the existence of tu into tup recylce
 
              LOWER     LEVEL     UPPER    MARGINAL
 
-st  .st        .        1.000     1.000      EPS       
+st  .st        .         .        1.000      EPS       
 st  .igf       .         .        1.000      EPS       
 st  .orf       .         .        1.000      EPS       
 st  .hcy       .         .        1.000      EPS       
 st  .ls        .         .        1.000      EPS       
-st  .evap      .        1.000     1.000      EPS       
+st  .evap      .         .        1.000      EPS       
 st  .wac       .         .        1.000      EPS       
 igf .st        .         .        1.000      EPS       
 igf .igf       .         .        1.000      EPS       
 igf .orf       .         .        1.000      EPS       
 igf .hcy       .         .        1.000      EPS       
-igf .ls        .        1.000     1.000      EPS       
-igf .evap      .        1.000     1.000      EPS       
+igf .ls        .         .        1.000      EPS       
+igf .evap      .         .        1.000      EPS       
 igf .wac       .         .        1.000      EPS       
 orf .st        .         .        1.000      EPS       
 orf .igf       .         .        1.000      EPS       
-orf .orf       .        1.000     1.000      EPS       
+orf .orf       .         .        1.000      EPS       
 orf .hcy       .        1.000     1.000      EPS       
-orf .ls        .         .        1.000      EPS       
+orf .ls        .        1.000     1.000      EPS       
 orf .evap      .         .        1.000      EPS       
-orf .wac       .        1.000     1.000      EPS       
+orf .wac       .         .        1.000      EPS       
 hcy .st        .         .        1.000      EPS       
-hcy .igf       .        1.000     1.000      EPS       
+hcy .igf       .         .        1.000      EPS       
 hcy .orf       .         .        1.000      EPS       
-hcy .hcy       .        1.000     1.000      EPS       
+hcy .hcy       .         .        1.000      EPS       
 hcy .ls        .         .        1.000      EPS       
-hcy .evap      .        1.000     1.000      EPS       
-hcy .wac       .         .        1.000      EPS       
-ls  .st        .        1.000     1.000      EPS       
+hcy .evap      .         .        1.000      EPS       
+hcy .wac       .        1.000     1.000      EPS       
+ls  .st        .         .        1.000      EPS       
 ls  .igf       .         .        1.000      EPS       
-ls  .orf       .        1.000     1.000      EPS       
-ls  .hcy       .         .        1.000      EPS       
+ls  .orf       .         .        1.000      EPS       
+ls  .hcy       .        1.000     1.000      EPS       
 ls  .ls        .         .        1.000      EPS       
 ls  .evap      .         .        1.000      EPS       
 ls  .wac       .         .        1.000      EPS       
 evap.st        .         .        1.000      EPS       
 evap.igf       .         .        1.000      EPS       
-evap.orf       .        1.000     1.000      EPS       
+evap.orf       .         .        1.000      EPS       
 evap.hcy       .         .        1.000      EPS       
 evap.ls        .         .        1.000      EPS       
-evap.evap      .        1.000     1.000      EPS       
-evap.wac       .        1.000     1.000      EPS       
-wac .st        .         .        1.000      EPS       
+evap.evap      .         .        1.000      EPS       
+evap.wac       .         .        1.000      EPS       
+wac .st        .        1.000     1.000      EPS       
 wac .igf       .         .        1.000      EPS       
 wac .orf       .         .        1.000      EPS       
 wac .hcy       .         .        1.000      EPS       
-wac .ls        .        1.000     1.000      EPS       
+wac .ls        .         .        1.000      EPS       
 wac .evap      .         .        1.000      EPS       
-wac .wac       .        1.000     1.000      EPS       
+wac .wac       .         .        1.000      EPS       
 
 ---- VAR B_exit  binary variable to show the existence of stream from tu to disc
                  harge
@@ -2141,27 +2252,27 @@ wac .wac       .        1.000     1.000      EPS
 
 st        .        1.000     1.000      EPS       
 igf       .         .        1.000      EPS       
-orf       .        1.000     1.000      EPS       
+orf       .         .        1.000      EPS       
 hcy       .         .        1.000      EPS       
 ls        .         .        1.000      EPS       
 evap      .         .        1.000      EPS       
-wac       .        1.000     1.000      EPS       
+wac       .         .        1.000      EPS       
 
 ---- VAR B_tu  binary variable to show the existence of tu
 
         LOWER     LEVEL     UPPER    MARGINAL
 
-st        .         .        1.000 -2500.000      
-igf       .        1.000     1.000 73112.130      
-orf       .        1.000     1.000 69362.130      
-hcy       .        1.000     1.000 70612.130      
-ls        .        1.000     1.000 70612.130      
-evap      .        1.000     1.000 68112.130      
-wac       .        1.000     1.000 28234.281      
+st        .        1.000     1.000      EPS       
+igf       .         .        1.000      EPS       
+orf       .        1.000     1.000      EPS       
+hcy       .        1.000     1.000      EPS       
+ls        .        1.000     1.000      EPS       
+evap      .         .        1.000      EPS       
+wac       .        1.000     1.000      EPS       
 
                        LOWER     LEVEL     UPPER    MARGINAL
 
----- VAR obj            -INF    150.000     +INF       .         
+---- VAR obj            -INF  1.2726E+7     +INF       .         
 
   obj  objective variable
 
@@ -2170,7 +2281,7 @@ wac       .        1.000     1.000 28234.281
                              0 INFEASIBLE
                              0  UNBOUNDED
                              0     ERRORS
-GAMS Rev 239  WEX-WEI 23.9.5 x86_64/MS Windows         08/30/17 15:23:45 Page 12
+GAMS Rev 239  WEX-WEI 23.9.5 x86_64/MS Windows         09/13/17 19:02:46 Page 12
 minlp_eqns
 E x e c u t i o n
 
@@ -2185,5 +2296,5 @@ USER: Dept of Chemical Engineering                   G120809:1617AA-GEN
 
 **** FILE SUMMARY
 
-Input      E:\Work\UAlberta-RA\ZL\gams_sagd\minlp_main.gms
-Output     E:\Work\UAlberta-RA\ZL\gams_sagd\minlp_main.lst
+Input      E:\Work\Research\water_treatment\gams_sagd\minlp_main.gms
+Output     E:\Work\Research\water_treatment\gams_sagd\minlp_main.lst

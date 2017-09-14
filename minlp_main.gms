@@ -5,7 +5,7 @@ $Ontext
 $Offtext
 
 
-*INITIALIZE SETS, DATA, and VARIABLES
+*INITIALIZE SETS, DATA, and VARIABLE
 
 $include sets_init.gms
 $include params_init.gms
@@ -23,6 +23,7 @@ option minlp=baron;
 option nlp=baron;
 
 Solve  water using minlp minimization obj ;
+
 
 $GDXOUT minlp_main.gdx
 $UNLOAD

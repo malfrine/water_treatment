@@ -67,6 +67,3 @@ binary variables
 variable
         obj                             'objective variable' ;
 
-variable
-         dummy(tu,c)               ;
-

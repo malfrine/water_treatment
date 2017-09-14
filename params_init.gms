@@ -87,38 +87,47 @@ parameter cost_var_s(s) 'variable cost of s'
                 bbd             1       /;
 
 parameter cost_fix_s(s) 'fixed cost of s'
-        /       pw              1
-                muw             1
-                bbd             1       /;
+        /       pw              0
+                muw             400
+                bbd             0       /;
 
-parameter cost_var_tu(tu)       'variable cost of tu'
-                /       st             1
-                   igf             1
-                   orf             1
+parameter cost_var_tu_a(tu)       'variable cost of tu'
+                /  st              109.26
+                   igf             432.94
+                   orf             0
                    hcy             1
-                   ls              1
-                   evap            1
-                   wac             1       /;
+                   ls              5388
+                   evap            15529
+                   wac             494.23       /;
+
+parameter cost_var_tu_b(tu)       'variable cost of tu'
+                /  st              0
+                   igf             23585
+                   orf             0
+                   hcy             1
+                   ls              -479602
+                   evap            10626
+                   wac             -31.142       /;
 
 
 parameter cost_fix_tu_a(tu)     'fixed cost of tu - function slope'
-           /       st              1
-                   igf             1
-                   orf             1
-                   hcy             1
-                   ls              1
-                   evap            1
-                   wac             1       /;
+           /       st              2989.5
+                   igf             1906.7
+                   orf             1248.9
+                   hcy             3000
+                   ls              9705.5
+                   evap            28723
+                   wac             1550.9       /;
 
 
 parameter cost_fix_tu_b(tu)     'fixed cost of tu - function intercept'
-           /       st              1
-                   igf             1
-                   orf             1
-                   hcy             1
-                   ls              1
-                   evap            1
-                   wac             1       /;
+           /       st              0
+                   igf             12292
+                   orf             -401.99
+                   hcy             50000
+                   ls              -860733
+                   evap            12926
+                   wac             -317.74       /;
 
 *OTHER PARAMETERS-------------------------------------------------------------------------
 
@@ -137,7 +146,7 @@ scalar Bound_up 'upper bound for stream flow rates';
 *EQN 20
 Display Bound_up ;
 scalar Bound_low        'lower bound for stream flow rates'
-        /0/;
+        /20/;
 *arbitrary values - model values not given by Forshomi
 
 parameter NS_max(tu)    'maximum number of streams that can go through tu'

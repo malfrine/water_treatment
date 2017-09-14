@@ -1,5 +1,3 @@
-clear
-clc
 %% init
 load minlp_main.mat
 

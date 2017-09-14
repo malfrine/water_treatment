@@ -74,13 +74,13 @@ equation eq15(c); eq15(c) .. C_BFW(c) * F_BFW =l= C_target(c) * sum(tu, F_exit(t
 *equation eq16(c); eq16(c) .. ML_rem_c(c) =l= sum(tu, RR(tu,c) * ML_in(tu,c)) ;
 
 *Cost / Energy of TUs
-*equation eq18(tu); eq18(tu) .. Cost_tot_tu(tu) =e= Cost_var_tu(tu) * F_in(tu) + cost_fix_tu_a(tu) * F_in(tu) + cost_fix_tu_b(tu)
+equation eq18(tu); eq18(tu) .. Cost_tot_tu(tu) =e= Cost_var_tu_a(tu) * F_in(tu) + Cost_var_tu_b(tu) * B_tu(tu) + cost_fix_tu_a(tu) * F_in(tu) + cost_fix_tu_b(tu) * B_tu(tu);
 
 *Cost / Energy of System
-*equation eq2; eq2 .. Cost_tot =e= sum(tu, Cost_tot_tu(tu)) + HY * sum(s, F_s(s) * cost_var_s(s)) ;
+equation eq2; eq2 .. Cost_tot =e= sum(tu, Cost_tot_tu(tu)) + HY * sum(s, F_s(s) * cost_var_s(s)) ;
 
 *Objective Equation
-equation objective; objective .. obj =e= F_s('muw') ;
+equation objective; objective .. obj =e= Cost_tot ;
 
 
 

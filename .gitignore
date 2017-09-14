@@ -4,5 +4,14 @@
 *.log
 *.dat
 *.gpr
+*.pdf
+*.log
+*.xlsx
+*.gz
+*.aux
+225a/
+225b/
+$gms1.par
+tmp/
 !minlp_main.lst
 decomp_algo.gms
