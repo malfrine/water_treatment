@@ -82,13 +82,13 @@ $Offtext
 *COST PARAMETERS--------------------------------------------------------------------------
 
 parameter cost_var_s(s) 'variable cost of s'
-        /       pw              1
-                muw             1
-                bbd             1       /;
+        /       pw              0
+                muw             1.59
+                bbd             0       /;
 
 parameter cost_fix_s(s) 'fixed cost of s'
         /       pw              0
-                muw             400
+                muw             0
                 bbd             0       /;
 
 parameter cost_var_tu_a(tu)       'variable cost of tu'
