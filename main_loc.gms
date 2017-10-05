@@ -19,15 +19,18 @@ $include minlp_eqns.gms
 
 model water /all/ ;
 
-option minlp=baron;
-option nlp=baron;
+option nlp=CONOPT;
+option minlp=DICOPT;
 option optcr = 0.01;
 option reslim = 86400;
+
+*STARTING POINTS
+$include starting_points.gms
 
 Solve  water using minlp minimization obj ;
 
 
-$GDXOUT minlp_main.gdx
+$GDXOUT main_loc.gdx
 $UNLOAD
 $GDXOUT
 

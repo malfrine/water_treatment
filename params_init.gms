@@ -5,7 +5,7 @@ $Ontext
 The parameters for flow rates, concentrations, mass loads, cost, and others are
 initialized in this script.
 
-***PARAMETERS ARE FOR CASE 1 ONLY FOR NOW***
+***PARAMETERS ARE FOR CASE 2 ONLY FOR NOW***
 ***NEED TO FIND INFO FOR F_loss(tu), C_in_max(tu,c), C_loss(tu,c), and ALL cost parameters
 $Offtext
 

@@ -36,30 +36,30 @@ positive variables
         C_out(tu,c)             'concentration of stream directly exiting tu'
         C_BFW(c)                'concentration of c in BFW'     ;
 
-*C_in.up(tu,'o') = 2000;
-*C_in.up(tu,'s') = 350;
-*C_in.up(tu,'th') = 245;
-*C_in.up(tu,'tss') = 50;
+C_in.up(tu,'o') = 2000;
+C_in.up(tu,'s') = 350;
+C_in.up(tu,'th') = 245;
+C_in.up(tu,'tss') = 50;
 
-*C_rout.up(tu,tup,'o') = 2000;
-*C_rout.up(tu,tup,'s') = 350;
-*C_rout.up(tu,tup,'th') = 245;
-*C_rout.up(tu,tup,'tss') = 50;
+C_rout.up(tu,tup,'o') = 2000;
+C_rout.up(tu,tup,'s') = 350;
+C_rout.up(tu,tup,'th') = 245;
+C_rout.up(tu,tup,'tss') = 50;
 
-*C_exit.up(tu,'o') = 2000;
-*C_exit.up(tu,'s') = 350;
-*C_exit.up(tu,'th') = 245;
-*C_exit.up(tu,'tss') = 50;
+C_exit.up(tu,'o') = 2000;
+C_exit.up(tu,'s') = 350;
+C_exit.up(tu,'th') = 245;
+C_exit.up(tu,'tss') = 50;
 
-*C_out.up(tu,'o') = 2000;
-*C_out.up(tu,'s') = 350;
-*C_out.up(tu,'th') = 245;
-*C_out.up(tu,'tss') = 50;
+C_out.up(tu,'o') = 2000;
+C_out.up(tu,'s') = 350;
+C_out.up(tu,'th') = 245;
+C_out.up(tu,'tss') = 50;
 
-*C_BFW.up('o') = 2000;
-*C_BFW.up('s') = 350;
-*C_BFW.up('th') = 245;
-*C_BFW.up('tss') = 50;
+C_BFW.up('o') = 2000;
+C_BFW.up('s') = 350;
+C_BFW.up('th') = 245;
+C_BFW.up('tss') = 50;
 
 
 *MASS LOADS
@@ -90,6 +90,6 @@ binary variables
 
 *OBJECT
 
-positive variable
+variable
         obj                             'objective variable' ;
 
