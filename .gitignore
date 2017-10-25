@@ -8,6 +8,11 @@
 *.xlsx
 *.gz
 *.aux
+*.tmp
+*.dvi
+*.par
+*.tui
+
 225a/
 225b/
 $gms1.par
