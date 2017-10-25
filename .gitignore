@@ -3,7 +3,6 @@
 *.~gm
 *.log
 *.dat
-*.gpr
 *.log
 *.xlsx
 *.gz
@@ -12,7 +11,7 @@
 *.dvi
 *.par
 *.tui
-
+*.mp
 225a/
 225b/
 $gms1.par
