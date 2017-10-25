@@ -7,31 +7,35 @@ $Offtext
 
 *INITIALIZE SETS, DATA, and VARIABLE
 
-$include sets_init.gms
-$include params_init.gms
-$include vars_init.gms
+$include sets.gms
+$include params.gms
+$include vars.gms
 
 *EQUATIONS
 
-$include minlp_eqns.gms
+$include eqns.gms
 
 *SOLVE MINLP
 
-model water /all/ ;
+model water /all/;
 
-option nlp=CONOPT;
-option minlp=DICOPT;
+option nlp = CONOPT;
+option minlp = DICOPT;
 option optcr = 0.01;
 option reslim = 86400;
 
-*STARTING POINTS
-$include starting_points.gms
+*ITERATION 1 - Fix the binary connections
+$include ipoints1.gms
+solve  water using minlp minimization obj;
 
-Solve  water using minlp minimization obj ;
+*ITERATION 2 - Use previous solution as starting point - Relax the binary
+*              connections
+$include ipoints2.gms
+solve  water using minlp minimization obj;
 
-
+*Export the solution as .gdx file
 $GDXOUT main_loc.gdx
 $UNLOAD
 $GDXOUT
 
-execute_unload 'minlp_main.gdx'
+execute_unload 'main_loc.gdx'

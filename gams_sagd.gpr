@@ -1,0 +1,648 @@
+[PROJECT]
+
+[RP:GDXEXECUTE_UNLOADEXAMPLE4]
+1=
+
+[RP:COMPTIMEWRITETRNSPORTGDX]
+1=
+
+[GDXDISP: B_exit Var 1]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+Order=1,2
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: C_out Var 2]
+PlaneDim=0
+RowDim=2
+Squeeze=1
+Order=1,2,3
+Decim=7
+PlaneRownr=-1
+
+[RP:GDXINEXAMPLE3]
+1=
+
+[GDXDISP: C_loss Par 2]
+PlaneDim=0
+RowDim=2
+Squeeze=1
+Order=1,2
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: ML_rem_c Var 1]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+Order=1,2
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: ML_out Var 2]
+PlaneDim=0
+RowDim=2
+Squeeze=1
+Order=1,2,3
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: Cost_tot_tu Var 1]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+Order=1,2
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: energy_var Var 1]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+Order=1,2
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: ML_in Var 2]
+PlaneDim=0
+RowDim=2
+Squeeze=1
+Order=1,2,3
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: ML_rem_tu_c Var 2]
+PlaneDim=0
+RowDim=2
+Squeeze=1
+Order=1,2,3
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: C_BFW Var 1]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+Order=1,2
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: C_exit Var 2]
+PlaneDim=0
+RowDim=2
+Squeeze=1
+Order=1,2,3
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: C_rout Var 3]
+PlaneDim=0
+RowDim=3
+Squeeze=1
+Order=1,2,3,4
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: C_in Var 2]
+PlaneDim=0
+RowDim=2
+Squeeze=1
+Order=1,2,3
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: F_out Var 1]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+Order=1,2
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: F_in Var 1]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+Order=1,2
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: F_exit Var 1]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+Order=1,2
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: F_rec Var 2]
+PlaneDim=0
+RowDim=2
+Squeeze=1
+Order=1,2,3
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: F_s_tu Var 2]
+PlaneDim=0
+RowDim=2
+Squeeze=1
+Order=1,2,3
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: F_s Var 1]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+Order=1,2
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: HY Par 0]
+PlaneDim=0
+RowDim=0
+Squeeze=1
+Order=
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: NS_max Par 1]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+Order=1
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: Bound_low Par 0]
+PlaneDim=0
+RowDim=0
+Squeeze=1
+Order=
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: Bound_up Par 0]
+PlaneDim=0
+RowDim=0
+Squeeze=1
+Order=
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: RR Par 2]
+PlaneDim=0
+RowDim=2
+Squeeze=1
+Order=1,2
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: cost_fix_tu_b Par 1]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+Order=1
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: cost_fix_tu_a Par 1]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+Order=1
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: cost_var_tu Par 1]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+Order=1
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: cost_fix_s Par 1]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+Order=1
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: cost_var_s Par 1]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+Order=1
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: C_target Par 1]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+Order=1
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: C_in_max Par 2]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+Order=2,1
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: C_c_s Par 2]
+PlaneDim=0
+RowDim=2
+Squeeze=1
+Order=1,2
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: F_loss Par 1]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+Order=1
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: F_BFW Par 0]
+PlaneDim=0
+RowDim=0
+Squeeze=1
+Order=
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: tup Set 1]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+Order=1
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: cs Set 1]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+Order=1
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: s Set 1]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+Order=1
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: c Set 1]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+Order=1
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: tu Set 1]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+Order=1
+Decim=7
+PlaneRownr=-1
+
+[RP:MDB2GDX2]
+1=
+
+[RP:GDXVIEWEREXAMPLE]
+1=
+
+[RP:GDXXRWEXAMPLE11A]
+1=
+
+[RP:GDXXRWEXAMPLE14]
+1=
+
+[GDXDISP: B_tu_tup Var 2]
+PlaneDim=0
+RowDim=2
+Squeeze=1
+Order=1,2,3
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: eqX Equ 1]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+Order=1,2
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: eq9 Equ 1]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+Order=1,2
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: eq8 Equ 0]
+PlaneDim=0
+RowDim=0
+Squeeze=1
+Order=1
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: eq7 Equ 1]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+Order=1,2
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: eq6 Equ 1]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+Order=1,2
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: eq5 Equ 1]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+Order=1,2
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: eq4 Equ 0]
+PlaneDim=0
+RowDim=0
+Squeeze=1
+Order=1
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: eq29 Equ 1]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+Order=1,2
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: eq28 Equ 1]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+Order=1,2
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: eq27 Equ 1]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+Order=1,2
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: eq26 Equ 2]
+PlaneDim=0
+RowDim=2
+Squeeze=1
+Order=1,2,3
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: eq25 Equ 2]
+PlaneDim=0
+RowDim=2
+Squeeze=1
+Order=1,2,3
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: eq24 Equ 1]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+Order=1,2
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: eq23 Equ 1]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+Order=1,2
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: eq22 Equ 2]
+PlaneDim=0
+RowDim=2
+Squeeze=1
+Order=1,2,3
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: eq21 Equ 2]
+PlaneDim=0
+RowDim=2
+Squeeze=1
+Order=1,2,3
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: eq19 Equ 2]
+PlaneDim=0
+RowDim=2
+Squeeze=1
+Order=1,2,3
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: eq17 Equ 1]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+Order=1,2
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: eq15 Equ 1]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+Order=1,2
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: eq14 Equ 2]
+PlaneDim=0
+RowDim=2
+Squeeze=1
+Order=1,2,3
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: eq13 Equ 2]
+PlaneDim=0
+RowDim=2
+Squeeze=1
+Order=1,2,3
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: eq12 Equ 2]
+PlaneDim=0
+RowDim=2
+Squeeze=1
+Order=1,2,3
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: eq10 Equ 2]
+PlaneDim=0
+RowDim=2
+Squeeze=1
+Order=1,2,3
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: dummy Var 2]
+PlaneDim=0
+RowDim=2
+Squeeze=1
+Order=1,2,3
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: B_tu Var 1]
+PlaneDim=0
+RowDim=1
+Squeeze=1
+Order=1,2
+Decim=7
+PlaneRownr=-1
+
+[GDXDISP: B_s_tu Var 2]
+PlaneDim=0
+RowDim=2
+Squeeze=1
+Order=1,2,3
+Decim=7
+PlaneRownr=-1
+
+[RP:MINLP_MAIN]
+1=
+
+[RP:MAIN_GLOB]
+1=
+
+[RP:VARS_INIT]
+1=
+
+[RP:MINLP_EQNS]
+1=
+
+[RP:PARAMS_INIT]
+1=
+
+[RP:STARTING_POINTS]
+1=
+
+[RP:STARTING_POINTS_TEST]
+1=
+
+[RP:TEST]
+1=
+
+[RP:EQNS_SGU]
+1=
+
+[RP:PARAMS_INIT1]
+1=
+
+[RP:PARAMS_INIT2]
+1=
+
+[RP:SETS_INIT]
+1=
+
+[RP:PARAMS_TU]
+1=
+
+[RP:UNTITLED_1]
+1=
+
+[RP:VARS_SGU]
+1=
+
+[RP:VARS_TU]
+1=
+
+[RP:PARAMS]
+1=
+
+[RP:EQNS_TU]
+1=
+
+[RP:VARS]
+1=
+
+[RP:SETS]
+1=
+
+[RP:IPOINTS1]
+1=
+
+[RP:IPOINTS2]
+1=
+
+[RP:MAIN_LOC]
+1=
+
+[RP:EQNS]
+1=
+
+[MRUFILES]
+1=C:\Users\Malfy Das\Google Drive\Documents\Work\Research\water_treatment\gams_sagd\eqns_tu.gms
+2=C:\Users\Malfy Das\Google Drive\Documents\Work\Research\water_treatment\gams_sagd\vars_tu.gms
+3=C:\Users\Malfy Das\Google Drive\Documents\Work\Research\water_treatment\gams_sagd\vars_sgu.gms
+4=C:\Users\Malfy Das\Google Drive\Documents\Work\Research\water_treatment\gams_sagd\Untitled_1.gms
+5=C:\Users\Malfy Das\Google Drive\Documents\Work\Research\water_treatment\gams_sagd\params_tu.gms
+6=C:\Users\Malfy Das\Google Drive\Documents\Work\Research\water_treatment\gams_sagd\sets_init.gms
+7=C:\Users\Malfy Das\Google Drive\Documents\Work\Research\water_treatment\gams_sagd\params_init2.gms
+
+[OPENWINDOW_1]
+FILE0=C:\Users\Malfy Das\Google Drive\Documents\Work\Research\water_treatment\gams_sagd\eqns.gms
+FILE1=C:\Users\Malfy Das\Google Drive\Documents\Work\Research\water_treatment\gams_sagd\eqns.lst
+FILE2=C:\Users\Malfy Das\Google Drive\Documents\Work\Research\water_treatment\gams_sagd\ipoints1.gms
+FILE3=C:\Users\Malfy Das\Google Drive\Documents\Work\Research\water_treatment\gams_sagd\ipoints2.gms
+FILE4=C:\Users\Malfy Das\Google Drive\Documents\Work\Research\water_treatment\gams_sagd\main_loc.gms
+FILE5=C:\Users\Malfy Das\Google Drive\Documents\Work\Research\water_treatment\gams_sagd\main_loc.lst
+FILE6=C:\Users\Malfy Das\Google Drive\Documents\Work\Research\water_treatment\gams_sagd\params.gms
+FILE7=C:\Users\Malfy Das\Google Drive\Documents\Work\Research\water_treatment\gams_sagd\sets.gms
+FILE8=C:\Users\Malfy Das\Google Drive\Documents\Work\Research\water_treatment\gams_sagd\vars.gms
+FILE9=C:\Users\Malfy Das\Google Drive\Documents\Work\Research\water_treatment\gams_sagd\main_loc.gms
+MAXIM=0
+TOP=10
+LEFT=39
+HEIGHT=700
+WIDTH=724
