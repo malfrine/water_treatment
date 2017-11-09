@@ -21,6 +21,7 @@ model water /all/;
 
 option nlp = CONOPT;
 option minlp = DICOPT;
+*option minlp = sbb;
 option optcr = 0.01;
 option reslim = 86400;
 

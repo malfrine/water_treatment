@@ -87,7 +87,12 @@ binary variables
         B_s_tu(s,tu)    'binary variable to show the existence of stream s into tu'
         B_tu_tup(tu,tup)        'binary variable to show the existence of tu into tup recylce'
         B_exit(tu,sgu)              'binary variable to show the existence of stream from tu to discharge'
-        B_tu(tu)                'binary variable to show the existence of tu' ;
+        B_tu(tu)                'binary variable to show the existence of tu'
+        B_in_sgu(sgu)    ' binary variable to show the existence of streams entering sgu'
+        B_exit_sgu(sgu,pro)   binary variable to show the existence of streams exiting sgu'
+        B_rec_otsg_bbd   'binary variable to show the existence of recycle from otsg to bbd'
+        B_pro(pro)      'binary variable to show the existence of streams exiting and entering pro';
+                                                                                  ;
 
 *OBJECT
 

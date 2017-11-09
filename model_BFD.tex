@@ -1,36 +1,46 @@
 % Title: water_treatment model super structure
 % Author: Malfrine Das
 \documentclass[tikz,14pt,border=10pt]{standalone}
-\usepackage{textcomp}
+\usepackage{textcomp,tikz}
 \usetikzlibrary{shapes,arrows}
 \begin{document}
 % Definition of blocks:
 \tikzset{%
-  unit/.style    = {draw, thick, rectangle, minimum height = 2em, minimum width = 6em},
+  unit/.style    = {draw, thick, rectangle, minimum height = 2em, minimum width = 4em},
   splitter/.style    = {draw, rectangle, minimum height = 1em, minimum width = 1em, fill = black},
-  dot/.style = {draw, circle, minimum height = 1em, minimum width = 1em, fill = black, inner sep = 0pt},
+  dot/.style = {draw, circle, minimum height = 0.5em, minimum width = 0.5em, fill = black, inner sep=0pt},
   mixer/.style = {draw, circle, node distance = 2cm, fill=black}
 }
+\tikzstyle{null} = [coordinate]
 
-\begin{tikzpicture}[auto, thick, node distance=2cm, >=triangle 45]
+
+\begin{tikzpicture}[auto, node distance= 2cm, >=triangle 45]
+
+	\node[draw=none, fill=none] at (0,0) (start_pw) {pw};
+	\node[draw=none, fill=none, below of = start_pw] (start_muw) {muw};
+	\node[draw=none, fill=none, below of = start_muw] (start_bbd) {bbd};
+	
+	%mixer 6
+	\draw
+		node [mixer, right of = start_pw] (mixer6_pw) {}
+		node [mixer, right of = start_bbd] (mixer6_bbd) {};
 	
 	%splitter 1
 	\draw
-		node [splitter] at (0,0) (splitter1_pw) {}
+		node [splitter, right of = mixer6_pw] (splitter1_pw) {}
 		node [splitter, below of = splitter1_pw] (splitter1_muw) {}
 		node [splitter, below of = splitter1_muw] (splitter1_bbd) {};
 		
 	%mixer 1
 	\draw
-		node [mixer, right of = splitter1_pw] (mixer1_st) {}
-		node [mixer, below of = mixer1_st] (mixer1_igf) {}
-		node [mixer, below of = mixer1_igf] (mixer1_orf) {}
+		node [mixer, right of = splitter1_pw] (mixer1_orf) {}
+		node [mixer, above of = mixer1_orf] (mixer1_igf) {}
+		node [mixer, above of = mixer1_igf] (mixer1_st) {}
 		node [mixer, below of = mixer1_orf] (mixer1_hcy) {}
 		node [mixer, below of = mixer1_hcy] (mixer1_ls) {}
 		node [mixer, below of = mixer1_ls] (mixer1_wac) {}
 		node [mixer, below of = mixer1_wac] (mixer1_evap) {};
 		
-	
 	%treatment units
 	\draw
 		node [unit, right of = mixer1_st] (st) {st} 
@@ -43,64 +53,95 @@
 	
 	%mixer 2
 	\draw
-		node [dot, above right of = st] (mixer2_st) {}
+		node [dot, above right of = st, yshift = -0.5cm] (mixer2_st) {}
 		node [dot, below of = mixer2_st] (mixer2_igf) {}
 		node [dot, below of = mixer2_igf] (mixer2_orf) {}
 		node [dot, below of = mixer2_orf] (mixer2_hcy) {}
 		node [dot, below of = mixer2_hcy] (mixer2_ls) {}
 		node [dot, below of = mixer2_ls] (mixer2_wac) {}
 		node [dot, below of = mixer2_wac] (mixer2_evap) {};
-	
+	\draw
+		node [null, left of = mixer2_st] (m2null_st) {}
+		node [null, left of = mixer2_igf] (m2null_igf) {}
+		node [null, left of = mixer2_orf] (m2null_orf) {}
+		node [null, left of = mixer2_hcy] (m2null_hcy) {}
+		node [null, left of = mixer2_ls] (m2null_ls) {}
+		node [null, left of = mixer2_wac] (m2null_wac) {}
+		node [null, left of = mixer2_evap] (m2null_evap) {};
+		
 	%splitter 2
 	\draw
-		node [splitter, below right of = mixer2_st] (splitter2_st) {}
+		node [splitter, below right of = mixer2_st, yshift = 0.5cm, xshift = 0.5cm] (splitter2_st) {}
 		node [splitter, below of = splitter2_st] (splitter2_igf) {}
 		node [splitter, below of = splitter2_igf] (splitter2_orf) {}
 		node [splitter, below of = splitter2_orf] (splitter2_hcy) {}
 		node [splitter, below of = splitter2_hcy] (splitter2_ls) {}
 		node [splitter, below of = splitter2_ls] (splitter2_wac) {}
-		node [splitter, below of = splitter2_wac] (splitter2_evap) {};
+		node [splitter, below of = splitter2_wac] (splitter2_evap) {};	
 	
 	%mixer 3
 	\draw
-		node [mixer, right of = splitter2_st] (mixer3_1) {}
-		node [mixer, below of = mixer3_1] (mixer3_2) {};
+		node [mixer, right of = splitter2_orf] (mixer3_db) {}
+		node [mixer, below of = mixer3_db] (mixer3_hrsg) {}
+		node [mixer, below of = mixer3_hrsg] (mixer3_otsg) {};
 	
+		
 	%steam generation
 	\draw
-		node [unit, right of = mixer3_1] (otsg) {otsg}
-		node [unit, below of = otsg] (db) {db}
-		node [unit, below of = db] (hrsg) {hrsg};
+		node [unit, right of = mixer3_db] (db) {db}
+		node [unit, below of = db] (hrsg) {hrsg}
+		node [unit, below of = hrsg] (otsg) {otsg};
 		
-	%splitter 3
+	%mixer 4
 	\draw
-		node [mixer, right of = otsg] (mixer4_wi) {}
+		node [mixer, right of = db, yshift = -1cm] (mixer4_wi) {}
 		node [mixer, below of = mixer4_wi ] (mixer4_eg) {};
-		
 	
 	%production
 	\draw
 		node [unit, right of = mixer4_wi] (wi) {wi}
 		node [unit, below of = wi] (eg) {eg};
 		
-	%recycle
+	%prod recycle to pw
 	\draw
-		node [mixer, right of = wi] (mixer5) {};
+		node [null, below of = wi, yshift =8.5cm] (pr1) {pr1}
+		node [null] (pr2) at (pr1 -| mixer6_pw) {pr2};
 
-	%arrows
-	\input arrows.tex
-	\draw[->] (mixer3_1) -- (otsg);
-	\draw[->] (mixer3_2) -- (db);
-	\draw[->] (mixer3_2) -- (hrsg);
-	\draw[->] (otsg) -- (mixer4_wi);
-	\draw[->] (db) -- (mixer4_wi);
-	\draw[->] (otsg) -- (mixer4_eg);
-	\draw[->] (db) -- (mixer4_eg);
-	\draw[->] (mixer4_wi) -- (wi);
-	\draw[->] (mixer4_eg) -- (eg);
-	\draw[->] (wi) -- (mixer5);
-	\draw[->] (eg) -- (mixer5);
+
 	
+	%db recycle to bbd
+	\draw
+		node [null, below of = otsg, yshift = -3cm] (otsgr1) {otsgr1}
+		node [null] (otsgr2) at (otsgr1 -| mixer6_bbd) {otsgr2}
+		node [null] (egr)   at (otsgr1 -| eg) {egr};
+		
+	%unit class labels
+	\node[above of = splitter1_pw, yshift = 4cm] (s1_label) {s1};
+	\node[draw=none, fill=none, above of = mixer1_st] (m1_label) {m1};
+	\node[draw=none, fill=none, above of = st] (tu_label) {tu};
+	\node[draw=none, fill=none, above of = mixer2_st, yshift = -0.91cm] (m2_label) {m2};
+	\node[draw=none, fill=none, above of = splitter2_st] (s2_label) {s2};
+	\node[draw=none, fill=none, above of = mixer3_db, yshift = 4cm] (m3_label) {m3};
+	\node[draw=none, fill=none, above of = db, yshift = 3.9cm] (sgu_label) {sgu};
+	\node[draw=none, fill=none, above of = mixer4_wi, yshift = 4.95cm] (m4_label) {m4};
+	\node[draw=none, fill=none, above of = wi, yshift = 4.95cm] (prod_label) {prod};
+	
+	%arrows
+		%start to s1
+	\draw[->](mixer6_pw)--(splitter1_pw);
+	\draw[->](start_muw)--(splitter1_muw);
+	\draw[->](mixer6_bbd)--(splitter1_bbd); 
+	\input{arrows.tex}
+		%pu to m5
+	\draw[-] (wi) -- (pr1);
+	\draw[-] (eg) -- (egr);
+	\draw[-] (egr) -- (otsgr1);
+		%pr to pw
+	\draw[-] (pr1) -- (pr2);
+	\draw[->] (pr2) -- (mixer6_pw);
+		%otsgr to bbd
+	\draw[-] (otsgr1) -- (otsgr2);
+	\draw[->] (otsgr2) -- (mixer6_bbd);
 	
 \end{tikzpicture}
 \end{document}

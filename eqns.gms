@@ -10,12 +10,20 @@ $Offtext
 *ML of C to be Removed from System
 *equation eq17(c); eq17(c) .. ML_rem_c(c) =e= sum( s, F_s(s) * (C_c_s(s,c) - C_target(c,'hrsg')) );
 
+***TROUBLE SHOOTING
+*fixing feed
+F_s.fx('pw') = 300;
+*F_s.fx('muw') = 100;
+*F_s.fx('bbd') = 0;
 *Production to Source Mass Balance
-*equation eq4; eq4 .. sum(s, F_s(s)) - F_BFW =e= sum(tu, F_loss(tu)) ;
-equation eq4(s);
-eq4('muw') .. F_s('muw') =e= sum(tu, F_loss(tu));
-eq4('pw') .. F_s('pw') =e= F_pro('wi');
-eq4('bbd') .. F_s('bbd') =e= F_pro('eg') + F_rec_otsg_bbd;
+*equation eq4; eq4 .. sum(s, F_s(s)) - sum(sgu, F_in_sgu(sgu)) =e= sum(tu, F_loss(tu)) ;
+
+
+equation eq4muw(s); eq4muw(s)$(ord(s) = 2) .. F_s(s)$(ord(s) = 2) =e= sum(tu, F_loss(tu));
+*equation eq4pw(s,pro); eq4pw(s,pro)$(ord(s) = 1 and ord(pro) eq 1)  .. F_s(s)$(ord(s) eq 1) =e= F_pro(pro)$(ord(pro) eq 1);
+equation eq4bbd(s,pro); eq4bbd(s,pro)$(ord(s) = 3 and ord(pro) = 2) .. F_s(s)$(ord(s) eq 3) =e= F_pro(pro)$(ord(pro) eq 2) + F_rec_otsg_bbd;
+***
+
 
 *Splitter 1 Mass Balance
 equation eq5(s); eq5(s) .. F_s(s) =e= sum(tu, F_s_tu(s,tu)) ;
@@ -74,19 +82,39 @@ equation eq15(c,sgu); eq15(c,sgu) .. C_sgu(c,sgu) * F_in_sgu(sgu) =l= C_target(c
 *equation eq16(c); eq16(c) .. ML_rem_c(c) =l= sum(tu, RR(tu,c) * ML_in(tu,c)) ;
 
 *sgu Mass Balance
-equation eq31(sgu);
-eq31('hrsg') .. F_in_sgu('hrsg') =e= sum(pro, F_exit_sgu('hrsg',pro));
-eq31('db') .. F_in_sgu('db') =e= sum(pro, F_exit_sgu('db',pro));
-eq31('otsg') .. F_in_sgu('otsg') =e= sum(pro, F_exit_sgu('otsg',pro)) + F_rec_otsg_bbd;
+equation eq31hrsg(sgu); eq31hrsg(sgu)$(ord(sgu) eq 1) .. F_in_sgu(sgu) =e= sum(pro, F_exit_sgu(sgu,pro));
+equation eq31db(sgu); eq31db(sgu)$(ord(sgu) eq 2) .. F_in_sgu(sgu) =e= sum(pro, F_exit_sgu(sgu,pro));
+equation eq31otsg(sgu); eq31otsg(sgu)$(ord(sgu) eq 3) .. F_in_sgu(sgu) =e= sum(pro, F_exit_sgu(sgu,pro)) + F_rec_otsg_bbd;
+
+
+**TROUBLE SHOOTING - fix SGU
+*F_in_sgu.fx('hrsg') = 100;
+*F_in_sgu.fx('otsg') = 100;
+*F_in_sgu.fx('db') = 100;
+*Limiting sgu inlet flow
+equation eq33(sgu); eq33(sgu) .. F_in_sgu(sgu) - B_in_sgu(sgu) * Bound_up =l= 0 ;
+equation eq34(sgu); eq34(sgu) .. F_in_sgu(sgu) - B_in_sgu(sgu) * Bound_low =g= 0 ;
 
 *Mixer 4 Mass Balance
 equation eq32(pro); eq32(pro) .. sum(sgu, F_exit_sgu(sgu,pro)) =e= F_pro(pro);
 
-*wi Flow Demand
-equation dem_F; dem_F .. F_pro('wi') =e= F_wi_demand;
+*Limiting sgu exit flow
+equation eq35(sgu,pro); eq35(sgu,pro) .. F_exit_sgu(sgu,pro) - B_exit_sgu(sgu,pro) * Bound_up =l= 0 ;
+equation eq36(sgu,pro); eq36(sgu,pro) .. F_exit_sgu(sgu,pro) - B_exit_sgu(sgu,pro) * Bound_low =g= 0 ;
 
-*Power Generation Demand
-equation dem_pow; dem_pow .. a_hrsg * F_in_sgu('hrsg') + a_eg * F_pro('eg') =e= pow_demand;
+*wi Flow Demand
+equation dem_F(pro); dem_F(pro)$(ord(pro) eq 1) .. F_pro(pro) =g= F_wi_demand;
+
+*Limiting wi flow
+equation eq40(pro); eq40(pro) .. F_pro(pro) - B_pro(pro) * Bound_up =l= 0 ;
+equation eq41(pro); eq41(pro) .. F_pro(pro) - B_pro(pro) * Bound_low =g= 0 ;
+
+*Limiting rec_otsg_bbd flow
+equation eq38; eq38 .. F_rec_otsg_bbd - B_rec_otsg_bbd * Bound_up =l= 0 ;
+equation eq39; eq39 .. F_rec_otsg_bbd - B_rec_otsg_bbd * Bound_low =g= 0 ;
+
+*Powe Generation Demand
+*equation dem_pow(sgu,pro); dem_pow(sgu,pro)$(ord(sgu) eq 1 and ord(pro) eq 2) .. a_hrsg * F_in_sgu(sgu) + a_eg * F_pro(pro) =e= pow_demand;
 
 *Cost / Energy of TUs
 equation eq18(tu); eq18(tu) .. Cost_tot_tu(tu) =e= Cost_var_tu_a(tu) * F_in(tu) + Cost_var_tu_b(tu) * B_tu(tu) + cost_fix_tu_a(tu) * F_in(tu) + cost_fix_tu_b(tu) * B_tu(tu);

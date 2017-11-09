@@ -1,4 +1,4 @@
-$Title sets_init
+$Title sets
 
 *SUPERSETS
 
@@ -29,7 +29,7 @@ sets
 
         sgu             'steam generation units'
                 / hrsg  hr steam generation
-                  db    drum boiler
+                 db    drum boiler
                   otsg  one time steam generation
                 /
 

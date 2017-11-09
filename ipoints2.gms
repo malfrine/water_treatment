@@ -9,6 +9,8 @@ $Offtext
 
 *Binary Variables
 
+*Binary Variables
+
 *s_tu
 B_s_tu.lo('pw','st') = 0;
 B_s_tu.lo('muw','wac') = 0;
@@ -32,31 +34,19 @@ B_exit.lo('igf','otsg') = 0;
 B_exit.lo('orf','otsg') = 0;
 B_exit.lo('ls','otsg') = 0;
 B_exit.lo('wac','otsg') = 0;
+B_exit.lo('igf','db') = 0;
+B_exit.lo('orf','db') = 0;
+B_exit.lo('ls','db') = 0;
+B_exit.lo('wac','db') = 0;
+B_exit.lo('igf','hrsg') = 0;
+B_exit.lo('orf','hrsg') = 0;
+B_exit.lo('ls','hrsg') = 0;
+B_exit.lo('wac','hrsg') = 0;
 
+*exit sgu
+*B_exit_sgu.lo('otsg','wi') = 0;
+*B_exit_sgu.lo('otsg','eg') = 0;
 
+*rec otsg to bbd
+*B_rec_otsg_bbd.lo = 0;
 
-*Binary Variables
-
-*s_tu
-B_s_tu.up('pw','st') = 1;
-B_s_tu.up('muw','wac') = 1;
-
-*tu
-B_tu.up('st') = 1;
-B_tu.up('igf') = 1;
-B_tu.up('orf') = 1;
-B_tu.up('ls') = 1;
-B_tu.up('wac') = 1;
-
-*tu_tup
-B_tu_tup.up('st','igf') = 1;
-B_tu_tup.up('st','orf') = 1;
-B_tu_tup.up('igf','orf') = 1;
-B_tu_tup.up('orf','ls') = 1;
-B_tu_tup.up('ls','wac') = 1;
-
-*exit
-B_exit.up('igf','otsg') = 1;
-B_exit.up('orf','otsg') = 1;
-B_exit.up('ls','otsg') = 1;
-B_exit.up('wac','otsg') = 1;
