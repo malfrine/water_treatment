@@ -12,17 +12,17 @@ $Offtext
 
 ***TROUBLE SHOOTING
 *fixing feed
-F_s.fx('pw') = 300;
-*F_s.fx('muw') = 100;
+*F_s.fx('pw') = 300;
+F_s.fx('muw') = 1;
 *F_s.fx('bbd') = 0;
 *Production to Source Mass Balance
 *equation eq4; eq4 .. sum(s, F_s(s)) - sum(sgu, F_in_sgu(sgu)) =e= sum(tu, F_loss(tu)) ;
 
 
 equation eq4muw(s); eq4muw(s)$(ord(s) = 2) .. F_s(s)$(ord(s) = 2) =e= sum(tu, F_loss(tu));
-*equation eq4pw(s,pro); eq4pw(s,pro)$(ord(s) = 1 and ord(pro) eq 1)  .. F_s(s)$(ord(s) eq 1) =e= F_pro(pro)$(ord(pro) eq 1);
-equation eq4bbd(s,pro); eq4bbd(s,pro)$(ord(s) = 3 and ord(pro) = 2) .. F_s(s)$(ord(s) eq 3) =e= F_pro(pro)$(ord(pro) eq 2) + F_rec_otsg_bbd;
-***
+*equation eq4pw; eq4pw  .. F_s('muw') =e= 0.95*F_pro('wi');
+*equation eq4bbd; eq4bbd .. F_s('bbd') =e= F_pro('eg') + F_rec_otsg_bbd;
+***                (s,pro)$(ord(s) = 1 and ord(pro) eq 1)
 
 
 *Splitter 1 Mass Balance
@@ -53,7 +53,7 @@ equation eq10(tu,c); eq10(tu,c) .. (1 - RR(tu,c)) * ML_in(tu,c) - ML_out(tu,c) -
 equation eq14(tu,c); eq14(tu,c) .. ML_in(tu,c) =l= C_in_max(tu,c) * F_in(tu);
 
 *Splitter 2 Mass Balance - Recycle
-equation eq7(tu,sgu); eq7(tu,sgu) .. F_out(tu) =e= sum(tup, F_rec(tu,tup)) + F_exit(tu,sgu) ;
+equation eq7(tu); eq7(tu) .. F_out(tu) =e= sum(tup, F_rec(tu,tup)) + sum(sgu, F_exit(tu,sgu)) ;
 
 *Eliminiating Repeated Recycle
 equation eq19(tu,tup); eq19(tu,tup)$(ord(tup) ne ord(tu)) .. B_tu_tup(tu,tup) + B_tu_tup(tup,tu) =l= 1 ;
@@ -102,8 +102,7 @@ equation eq32(pro); eq32(pro) .. sum(sgu, F_exit_sgu(sgu,pro)) =e= F_pro(pro);
 equation eq35(sgu,pro); eq35(sgu,pro) .. F_exit_sgu(sgu,pro) - B_exit_sgu(sgu,pro) * Bound_up =l= 0 ;
 equation eq36(sgu,pro); eq36(sgu,pro) .. F_exit_sgu(sgu,pro) - B_exit_sgu(sgu,pro) * Bound_low =g= 0 ;
 
-*wi Flow Demand
-equation dem_F(pro); dem_F(pro)$(ord(pro) eq 1) .. F_pro(pro) =g= F_wi_demand;
+
 
 *Limiting wi flow
 equation eq40(pro); eq40(pro) .. F_pro(pro) - B_pro(pro) * Bound_up =l= 0 ;
@@ -115,6 +114,10 @@ equation eq39; eq39 .. F_rec_otsg_bbd - B_rec_otsg_bbd * Bound_low =g= 0 ;
 
 *Powe Generation Demand
 *equation dem_pow(sgu,pro); dem_pow(sgu,pro)$(ord(sgu) eq 1 and ord(pro) eq 2) .. a_hrsg * F_in_sgu(sgu) + a_eg * F_pro(pro) =e= pow_demand;
+
+*wi Flow Demand
+*equation dem_wi(pro); dem_wi(pro)$(ord(pro) eq 1) .. F_pro(pro) =g= 0.001*F_wi_demand;
+*equation dem_eg(pro); dem_eg(pro)$(ord(pro) eq 2) .. F_pro(pro) =g= 300;
 
 *Cost / Energy of TUs
 equation eq18(tu); eq18(tu) .. Cost_tot_tu(tu) =e= Cost_var_tu_a(tu) * F_in(tu) + Cost_var_tu_b(tu) * B_tu(tu) + cost_fix_tu_a(tu) * F_in(tu) + cost_fix_tu_b(tu) * B_tu(tu);

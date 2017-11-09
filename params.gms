@@ -38,7 +38,7 @@ parameter F_loss(tu)    'flow loss in tu'
 table C_c_s(s,c)        'concentration of c in s'
                    o         s       th      tss
           pw       2000     350     20       50
-          muw      0        15      245      0
+          muw      0        15      150      0
           bbd      10       150     1        1       ;
 **pw and muw data collected from Forshomi thesis Table 3-1
 **muw is assumed to be fresh no brackish
@@ -145,7 +145,7 @@ table RR(tu,c)  'removal ratio of contaminant c'
 
 *EQN 20
 scalar Bound_low        'lower bound for stream flow rates'
-        /1/;
+        /0/;
 *arbitrary values - model values not given by Forshomi
 
 parameter NS_max(tu)    'maximum number of streams that can go through tu'

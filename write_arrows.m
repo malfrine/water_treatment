@@ -1,4 +1,5 @@
 %% init
+clear; clc;
 load minlp_main.mat
 
 %splitter 1 to mixer 1 -'\draw[->] (splitter1_pw) -- (mixer1_igf);'
@@ -83,9 +84,9 @@ for i = 1:length(I)
 end
 
 if B_rec_otsg_bbd.val == 1
-   strM10 = '\\draw[->] (otsg) -- (otsgr1) \n';
+   strM10 = {'\\draw[->] (otsg) -- (otsgr1); \n'};
 else
-   strM10 = '';
+   strM10 = {''};
 end
 
 %mixer4 to pro - '\draw[->] (mixer4_pro) -- (pro);'
@@ -103,7 +104,10 @@ for i = 1:length(str_array)
             %str2 = strrep(char(str2),';',';\n');
             fprintf(fid,str1);
         catch
-            
+            str1 = strjoin(str_array{i});
+            str1 = strrep(char(['\',sprintf(str1)]),' ','');
+            %str2 = strrep(char(str2),';',';\n');
+            fprintf(fid,str1);
         end
         
     end

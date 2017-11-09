@@ -31,8 +31,8 @@ solve  water using minlp minimization obj;
 
 *ITERATION 2 - Use previous solution as starting point - Relax the binary
 *              connections
-$include ipoints2.gms
-solve  water using minlp minimization obj;
+*$include ipoints2.gms
+*solve  water using minlp minimization obj;
 
 *Export the solution as .gdx file
 $GDXOUT main_loc.gdx
